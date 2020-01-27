@@ -3,12 +3,12 @@ package com.basketbandit.rizumu;
 import java.util.Map;
 
 public class SystemConfiguration {
-    public final int width = 1280;
-    public final int height = 720;
+    public final static int width = 1280;
+    public final static int height = 720;
     public static double tickRate = 1000000000.0 / (60 + 0.0);
     public static boolean cappedFramerate = false;
     public static int noteSpeedScale = 9;
-    private Map<Integer, Integer> speedAdjustment;
+    public static Map<Integer, Integer> speedAdjustment;
 
     public SystemConfiguration() {
         speedAdjustment = Map.of(
@@ -24,15 +24,15 @@ public class SystemConfiguration {
         );
     }
 
-    public int getSpeedMultiplier() {
+    public static int getSpeedMultiplier() {
         return speedAdjustment.get(noteSpeedScale);
     }
 
-    public int getHeight() {
+    public static int getHeight() {
         return height;
     }
 
-    public int getWidth() {
+    public static int getWidth() {
         return width;
     }
 

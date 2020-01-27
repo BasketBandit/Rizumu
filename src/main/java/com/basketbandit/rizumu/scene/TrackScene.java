@@ -1,34 +1,35 @@
 package com.basketbandit.rizumu.scene;
 
 
+import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrator;
 import com.basketbandit.rizumu.drawable.Note;
 import com.basketbandit.rizumu.drawable.Registrator;
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.score.Statistics;
-import com.basketbandit.rizumu.track.NoteAutoLoader;
+import com.basketbandit.rizumu.track.NoteLoader;
 import com.basketbandit.rizumu.track.Track;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Timer;
 
 public class TrackScene implements Scene {
-    private SystemConfiguration sys;
     private TrackRender renderObject = new TrackRender();
     private TrackTicker tickObject = new TrackTicker();
 
     private Statistics statistics = new Statistics();
 
     private Track track;
+    private NoteLoader noteLoader;
     private ArrayList<Note> notes = new ArrayList<>();
     private Registrator registrator = new Registrator();
     private ExtendedRegistrator extendedRegistrator = new ExtendedRegistrator();
 
-    public TrackScene(SystemConfiguration sys, Track track) {
-        this.sys = sys;
+    public TrackScene(Track track) {
         this.track = track;
+        this.noteLoader = new NoteLoader(this, track);
     }
 
     public ArrayList<Note> getNotes() {
@@ -74,19 +75,15 @@ public class TrackScene implements Scene {
     }
 
     private class TrackTicker implements TickObject {
-        boolean isInit = false;
-        Timer timer = new Timer(true);
 
         @Override
         public void tick() {
-            if(!isInit) {
-                timer.schedule(new NoteAutoLoader(TrackScene.this, track), track.getIntroLength(), (long)track.getNoteInterval());
-                isInit = true;
-            }
+            noteLoader.run();
 
             for(Note note: notes) {
-                note.translate(0, sys.getNoteSpeedScale());
+                note.translate(0, SystemConfiguration.getNoteSpeedScale());
 
+                registrator.intersects(note);
                 if(note.getType() == 1 && registrator.intersects(note) && KeyInput.isDown(note.getKey())) {
                     if(!note.hit()) {
                         note.setHit(true);
@@ -96,12 +93,16 @@ public class TrackScene implements Scene {
 
                 //if(note.getType() == 2 && registrator.intersects(note) && KeyInput.isDown(note.getKey() && KeyInput.wasReleased())
 
-                if((note.y >= sys.getHeight() || (extendedRegistrator.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit()) {
+                if((note.y >= SystemConfiguration.getHeight() || (extendedRegistrator.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit()) {
                     statistics.incrementMissed();
                 }
             }
 
-            notes.removeIf(note -> note.hit() || note.y >= sys.getHeight() || (extendedRegistrator.intersects(note) && KeyInput.isDown(note.getKey())));
+            notes.removeIf(note -> note.hit() || note.y >= SystemConfiguration.getHeight() || (extendedRegistrator.intersects(note) && KeyInput.isDown(note.getKey())));
+
+            if(KeyInput.isDown(KeyEvent.VK_ESCAPE)) {
+                Rizumu.engine.changeScene(new MenuScene());
+            }
         }
     }
 }

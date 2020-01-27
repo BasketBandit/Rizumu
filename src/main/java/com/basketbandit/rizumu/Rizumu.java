@@ -15,7 +15,7 @@ public class Rizumu {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true");
         loadTracks();
-        engine = new Engine(sys);
+        engine = new Engine();
         engine.changeScene(new MenuScene());
         engine.run();
     }

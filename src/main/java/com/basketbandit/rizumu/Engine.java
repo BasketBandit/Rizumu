@@ -3,7 +3,6 @@ package com.basketbandit.rizumu;
 import com.basketbandit.rizumu.scene.Scene;
 
 public class Engine {
-    private SystemConfiguration sys;
     private Renderer renderer;
     private Ticker ticker;
 
@@ -12,10 +11,9 @@ public class Engine {
     private int tps, fps = 0;
     private int frames, ticks = 0;
 
-    public Engine(SystemConfiguration sys) {
-        this.sys = sys;
-        this.renderer = new Renderer(sys);
-        this.ticker = new Ticker(sys);
+    public Engine() {
+        this.renderer = new Renderer();
+        this.ticker = new Ticker();
     }
 
     public void run() {
@@ -26,7 +24,7 @@ public class Engine {
 
         while(isRunning = true) {
             long now = System.nanoTime();
-            unprocessed += (now - lastTime) / sys.getTickRate();
+            unprocessed += (now - lastTime) / SystemConfiguration.getTickRate();
             lastTime = now;
 
             if(unprocessed >= 1.0) {
@@ -53,11 +51,11 @@ public class Engine {
         }
     }
 
-    public int getFps() {
+    int getFps() {
         return frames;
     }
 
-    public int getTps() {
+    int getTps() {
         return ticks;
     }
 

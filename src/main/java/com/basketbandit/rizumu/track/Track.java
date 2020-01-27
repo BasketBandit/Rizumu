@@ -13,7 +13,6 @@ public class Track {
     private double trackLength;
     private int introLength;
     private ArrayList<NoteGroup> noteGroups = new ArrayList<>();
-    private Iterator<NoteGroup> noteIterator;
 
     public Track(String title, int beatsPerMinute, int introLength, Collection<NoteGroup> noteGroups) {
         this.title = title;
@@ -22,7 +21,6 @@ public class Track {
         this.noteGroups.addAll(noteGroups);
         this.noteInterval = (60.0/beatsPerMinute)*1000;
         this.trackLength = noteGroups.size()*noteInterval;
-        this.noteIterator = noteGroups.iterator();
     }
 
     public void addNote(NoteGroup noteGroup) {
@@ -57,7 +55,8 @@ public class Track {
         return noteGroups;
     }
 
-    public NoteGroup nextNoteGroup() {
-        return noteIterator.hasNext() ? noteIterator.next() : null;
+    public Iterator<NoteGroup> getNoteGroupIterator() {
+        ArrayList<NoteGroup> noteGroupsTemp = new ArrayList<>(noteGroups);
+        return noteGroupsTemp.iterator();
     }
 }

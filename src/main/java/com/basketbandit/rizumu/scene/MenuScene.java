@@ -1,7 +1,6 @@
 package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.MouseInput;
 
@@ -13,10 +12,6 @@ public class MenuScene implements Scene {
     private MenuTicker tickObject = new MenuTicker();
 
     private Button button = new Button(80, 80, 100, 50);
-
-    public MenuScene() {
-        Rizumu.engine.changeScene(this);
-    }
 
     @Override
     public RenderObject getRenderObject() {
@@ -48,7 +43,7 @@ public class MenuScene implements Scene {
         @Override
         public void tick() {
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                Rizumu.engine.changeScene(new TrackScene(new SystemConfiguration(), Rizumu.getTracks().get("testtrack01")));
+                Rizumu.engine.changeScene(new TrackScene(Rizumu.getTracks().get("testtrack01")));
             }
         }
     }

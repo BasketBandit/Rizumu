@@ -9,15 +9,13 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Renderer extends Canvas {
-    private SystemConfiguration sys;
     private JFrame frame;
     private RenderObject renderObject;
 
     private GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
     private Font[] fonts = ge.getAllFonts();
 
-    Renderer(SystemConfiguration sys) {
-        this.sys = sys;
+    Renderer() {
         addMouseListener(new MouseInput());
         addKeyListener(new KeyInput());
         initFrame();
@@ -51,7 +49,7 @@ public class Renderer extends Canvas {
         Graphics2D g = (Graphics2D)bs.getDrawGraphics();
 
         g.setColor(Color.DARK_GRAY);
-        g.fillRect(0, 0, sys.getWidth(), sys.getHeight());
+        g.fillRect(0, 0, SystemConfiguration.getWidth(), SystemConfiguration.getHeight());
 
         g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
         g.setColor(Color.WHITE);

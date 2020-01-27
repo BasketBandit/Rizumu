@@ -3,11 +3,9 @@ package com.basketbandit.rizumu;
 import com.basketbandit.rizumu.scene.TickObject;
 
 public class Ticker {
-    private SystemConfiguration sys;
     private TickObject tickObject;
 
-    Ticker(SystemConfiguration sys) {
-        this.sys = sys;
+    Ticker() {
     }
 
     public void setTickObject(TickObject tickObject) {

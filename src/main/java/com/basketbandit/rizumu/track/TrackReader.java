@@ -16,8 +16,7 @@ public class TrackReader {
 
     public TrackReader(String location) {
         try {
-            File file = new File(getClass().getResource(location).getFile());
-            this.bufferedReader = new BufferedReader(new FileReader(file));
+            this.bufferedReader = new BufferedReader(new FileReader(new File(getClass().getResource(location).getFile())));
         } catch(FileNotFoundException ex) {
             ex.printStackTrace();
         }

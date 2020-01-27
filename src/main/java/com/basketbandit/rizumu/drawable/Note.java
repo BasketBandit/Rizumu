@@ -12,6 +12,8 @@ public class Note extends Rectangle {
     private Color color;
     private SystemConfiguration sys = new SystemConfiguration();
 
+    private int timingOffset = 0;
+
     public Note() {
     }
 
@@ -50,6 +52,10 @@ public class Note extends Rectangle {
     }
 
     public boolean hit() { return hit; }
+
+    public int getTimingOffset() {
+        return timingOffset;
+    }
 
     public int getKey() {
         return key;
