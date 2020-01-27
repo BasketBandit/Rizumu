@@ -12,7 +12,7 @@ public class Note extends Rectangle {
     private Color color;
     private SystemConfiguration sys = new SystemConfiguration();
 
-    private int timingOffset = 0;
+    private int timingOffset = 100;
 
     public Note() {
     }

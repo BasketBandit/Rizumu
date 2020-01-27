@@ -22,14 +22,14 @@ public class TrackScene implements Scene {
     private Statistics statistics = new Statistics();
 
     private Track track;
-    private NoteLoader noteLoader;
     private ArrayList<Note> notes = new ArrayList<>();
     private Registrator registrator = new Registrator();
     private ExtendedRegistrator extendedRegistrator = new ExtendedRegistrator();
 
     public TrackScene(Track track) {
         this.track = track;
-        this.noteLoader = new NoteLoader(this, track);
+        new NoteLoader(track, this);
+        System.out.println("a");
     }
 
     public ArrayList<Note> getNotes() {
@@ -78,8 +78,6 @@ public class TrackScene implements Scene {
 
         @Override
         public void tick() {
-            noteLoader.run();
-
             for(Note note: notes) {
                 note.translate(0, SystemConfiguration.getNoteSpeedScale());
 

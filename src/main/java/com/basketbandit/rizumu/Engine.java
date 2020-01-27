@@ -33,7 +33,7 @@ public class Engine {
                 unprocessed--;
                 canRender = true;
             } else {
-                canRender = true;
+                canRender = false; // setting to true unlocked framerate but adds possibility for concurrent modification exceptions - need to fix this urgently
             }
 
             if(canRender) {
