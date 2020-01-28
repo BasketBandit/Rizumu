@@ -3,13 +3,14 @@ package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.beatmap.Beatmap;
+import com.basketbandit.rizumu.beatmap.Note;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrator;
-import com.basketbandit.rizumu.drawable.Note;
 import com.basketbandit.rizumu.drawable.Registrator;
 import com.basketbandit.rizumu.input.KeyInput;
+import com.basketbandit.rizumu.scheduler.ScheduleHandler;
+import com.basketbandit.rizumu.scheduler.jobs.BeatmapDelayJob;
 import com.basketbandit.rizumu.score.Statistics;
-import com.basketbandit.rizumu.track.NoteLoader;
-import com.basketbandit.rizumu.track.Track;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -21,15 +22,14 @@ public class TrackScene implements Scene {
 
     private Statistics statistics = new Statistics();
 
-    private Track track;
+    private Beatmap beatmap;
     private ArrayList<Note> notes = new ArrayList<>();
     private Registrator registrator = new Registrator();
     private ExtendedRegistrator extendedRegistrator = new ExtendedRegistrator();
 
-    public TrackScene(Track track) {
-        this.track = track;
-        new NoteLoader(track, this);
-        System.out.println("a");
+    public TrackScene(Beatmap beatmap) {
+        this.beatmap = beatmap;
+        ScheduleHandler.registerUniqueJob(new BeatmapDelayJob(beatmap, this)); // Will start loading the notes for the beatmap after the map-defined delay period.
     }
 
     public ArrayList<Note> getNotes() {
@@ -82,7 +82,7 @@ public class TrackScene implements Scene {
                 note.translate(0, SystemConfiguration.getNoteSpeedScale());
 
                 registrator.intersects(note);
-                if(note.getType() == 1 && registrator.intersects(note) && KeyInput.isDown(note.getKey())) {
+                if(note.getNoteType().equals("single") && registrator.intersects(note) && KeyInput.isDown(note.getKey())) {
                     if(!note.hit()) {
                         note.setHit(true);
                         statistics.incrementHit();

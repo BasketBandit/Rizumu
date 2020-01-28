@@ -1,16 +1,16 @@
 package com.basketbandit.rizumu;
 
+import com.basketbandit.rizumu.beatmap.Beatmap;
 import com.basketbandit.rizumu.scene.MenuScene;
-import com.basketbandit.rizumu.track.Track;
-import com.basketbandit.rizumu.track.TrackReader;
+import com.basketbandit.rizumu.beatmap.BeatmapParser;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Rizumu {
     private static SystemConfiguration sys = new SystemConfiguration();
     public static Engine engine;
-    private static HashMap<String, Track> tracks = new HashMap<>();
-    private static String tracksResource = "/tracks/testtrack.track";
+    private static ArrayList<Beatmap> beatmaps = new ArrayList<>();
+    private static String tracksResource = "src/main/resources/beatmaps/beatmap-schema_example.yaml";
 
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true");
@@ -21,12 +21,10 @@ public class Rizumu {
     }
 
     private static void loadTracks() {
-        Track track = new TrackReader(tracksResource).build();
-        tracks.put(track.getTitle(), track);
+        beatmaps = new BeatmapParser(tracksResource).getBeatmaps();
     }
 
-    public static HashMap<String, Track> getTracks() {
-        return tracks;
+    public static ArrayList<Beatmap> getBeatmaps() {
+        return beatmaps;
     }
-
 }

@@ -43,7 +43,7 @@ public class MenuScene implements Scene {
         @Override
         public void tick() {
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                Rizumu.engine.changeScene(new TrackScene(Rizumu.getTracks().get("testtrack01")));
+                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
             }
         }
     }
