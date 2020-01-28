@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.scheduler.tasks;
 
-import com.basketbandit.rizumu.drawable.Note;
+import com.basketbandit.rizumu.beatmap.Note;
 import com.basketbandit.rizumu.scene.TrackScene;
 import com.basketbandit.rizumu.scheduler.Task;
 
