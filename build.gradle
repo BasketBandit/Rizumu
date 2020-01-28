@@ -14,9 +14,9 @@ repositories {
 }
 
 ext {
-    gson                         = '2.8.6'
-    jacksonAnnotations           = '2.10.1'
-    jacksonDatabind              = '2.10.1'
+    jacksonAnnotations           = '2.10.2'
+    jacksonDatabind              = '2.10.2'
+    jacksonDataFormatYAML        = '2.10.2'
     okHttp3                      = '4.3.1'
     slf4jSimple                  = '2.0.0-alpha1'
     jUnit                        = '4.12'
@@ -24,6 +24,9 @@ ext {
 
 dependencies {
     compile group: 'org.slf4j', name: 'slf4j-simple', version: slf4jSimple
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jacksonAnnotations
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonDatabind
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: jacksonDataFormatYAML
 
     testCompile group: 'junit', name: 'junit', version: jUnit
 }
