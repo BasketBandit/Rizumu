@@ -24,24 +24,7 @@ public class NoteLoader{
             List<Note> notes = segment.getNotes();
             for(Note note: notes) {
                 note.setTime(loadOffset + note.getTime()); // Set the relative segment note time to absolute beatmap time
-                note.setColor(note.getKeyNum()); // Sets note colour based on key number
-                switch(note.getKeyNum()) {
-                    case 0:
-                        note.x = 25;
-                        note.setColor(0);
-                        break;
-                    case 1:
-                        note.x = 75;
-                        note.setColor(1);
-                        break;
-                    case 2:
-                        note.x = 125;
-                        note.setColor(2);
-                        break;
-                    case 3:
-                        note.x = 175;
-                        note.setColor(3);
-                }
+                note.initNote(note.getKeyNum()); // Set things such as x position, size, colour and hit_key of the note
                 ScheduleHandler.registerUniqueJob(new NoteLoadJob(note, scene));
             }
             loadOffset += segment.getLength();
