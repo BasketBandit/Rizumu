@@ -42,12 +42,16 @@ beatmap:
     - time: 0000
       key_num: 0
       note_type: 'single_long'
+      note_length: 1000
     - time: 0000
       key_num: 1
       note_type: 'single_long'
+      note_length: 2000
     - time: 0000
       key_num: 2
       note_type: 'single_long'
+      note_length: 3000
     - time: 0000
       key_num: 3
       note_type: 'single_long'
+      note_length: 4000
