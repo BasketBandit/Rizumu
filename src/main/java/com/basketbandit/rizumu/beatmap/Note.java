@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu.beatmap;
 
+import com.basketbandit.rizumu.SystemConfiguration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -11,19 +12,21 @@ import java.awt.event.KeyEvent;
 @JsonPropertyOrder({
         "time",
         "key_num",
-        "note_type"
+        "note_type",
+        "note_length"
 })
 public class Note extends Rectangle {
     @JsonProperty("time")
     private int time;
     @JsonProperty("key_num")
     private int keyNum;
-
-    // single, single_long
-    @JsonProperty("note_type")
+    @JsonProperty("note_type") // single, single_long
     private String noteType;
+    @JsonProperty("note_length")
+    private int noteLength;
 
     private boolean hit;
+    private boolean held;
     private int key;
     private Color color;
 
@@ -31,23 +34,33 @@ public class Note extends Rectangle {
         super(0, -23, 50, 23);
     }
 
-    void setColor(int num) {
-        switch(num) {
+    void initNote(int keyNum) {
+        switch(keyNum) {
             case 0:
+                this.x = 25;
                 this.key = KeyEvent.VK_Q;
                 this.color = Color.GREEN;
-                return;
+                break;
             case 1:
+                this.x = 75;
                 this.key = KeyEvent.VK_W;
                 this.color = Color.RED;
-                return;
+                break;
             case 2:
+                this.x = 125;
                 this.key = KeyEvent.VK_E;
                 this.color = Color.YELLOW;
-                return;
+                break;
             case 3:
+                this.x = 175;
                 this.key = KeyEvent.VK_R;
                 this.color = Color.BLUE;
+        }
+        if(noteType.equals("single_long")) {
+            // The calculation of note length is based on time (not sure if that's correct!) (will need to be modified for half second long notes!)
+            // note length / 1000 to get number of seconds, times that by the speed multiplier to get the total number of note lengths are needed (-1 to account for a single note size)
+            this.y = -23*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
+            this.height = 23*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
         }
     }
 
@@ -55,11 +68,19 @@ public class Note extends Rectangle {
         return color;
     }
 
-    public void setHit(boolean hit) {
-        this.hit = hit;
+    public void setHit() {
+        this.hit = true;
     }
 
     public boolean hit() { return hit; }
+
+    public void setHeld() {
+        this.held = true;
+    }
+
+    public boolean wasHeld() {
+        return held;
+    }
 
     public int getKey() {
         return key;
@@ -83,5 +104,10 @@ public class Note extends Rectangle {
     @JsonProperty("note_type")
     public String getNoteType() {
         return noteType;
+    }
+
+    @JsonProperty("note_length")
+    public int getNoteLength() {
+        return noteLength;
     }
 }
