@@ -2,10 +2,10 @@ package com.basketbandit.rizumu.drawable;
 
 import java.awt.*;
 
-public class ExtendedRegistrator extends Rectangle {
+public class ExtendedRegistrar extends Rectangle {
     private Color color = new Color(100, 0,0, 50);
 
-    public ExtendedRegistrator() {
+    public ExtendedRegistrar() {
         super(0, 585, 1280, 150);
     }
 
