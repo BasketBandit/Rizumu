@@ -7,7 +7,7 @@ public class SystemConfiguration {
     public final static int height = 720;
     public static double tickRate = 1000000000.0 / (60 + 0.0);
     public static boolean cappedFramerate = false;
-    public static int noteSpeedScale = 9;
+    public static int noteSpeedScale = 3;
     public static Map<Integer, Integer> speedAdjustment;
 
     public SystemConfiguration() {

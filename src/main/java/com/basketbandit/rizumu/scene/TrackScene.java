@@ -5,8 +5,8 @@ import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.beatmap.Beatmap;
 import com.basketbandit.rizumu.beatmap.Note;
-import com.basketbandit.rizumu.drawable.ExtendedRegistrator;
-import com.basketbandit.rizumu.drawable.Registrator;
+import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
+import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapDelayJob;
@@ -24,8 +24,8 @@ public class TrackScene implements Scene {
 
     private Beatmap beatmap;
     private ArrayList<Note> notes = new ArrayList<>();
-    private Registrator registrator = new Registrator();
-    private ExtendedRegistrator extendedRegistrator = new ExtendedRegistrator();
+    private Registrar registrar = new Registrar();
+    private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
     public TrackScene(Beatmap beatmap) {
         this.beatmap = beatmap;
@@ -60,43 +60,63 @@ public class TrackScene implements Scene {
             g.setColor(Color.WHITE);
             g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getHitRate(), 10, 40);
 
-            g.setColor(extendedRegistrator.getColor());
-            g.fillRect(extendedRegistrator.x, extendedRegistrator.y, extendedRegistrator.width, extendedRegistrator.height);
+            g.setColor(extendedRegistrar.getColor());
+            g.fill(extendedRegistrar);
 
-            g.setColor(registrator.getColor());
-            g.fillRect(registrator.x, registrator.y, registrator.width, registrator.height);
+            g.setColor(registrar.getColor());
+            g.fill(registrar);
 
             for(Note note: notes) {
                 g.setColor(note.getColor());
-                g.fillRect(note.x, note.y, note.width, note.height);
+                g.fill(note);
+
+                // creates a boarder around notes and make single_long's hit/release radius easy to see
+                g.setColor(Color.BLACK);
+                g.drawRect(note.x, note.y, note.width, note.height);
+                if(note.getNoteType().equals("single_long")) {
+                    g.drawRect(note.x, note.y, note.width, 23);
+                    g.drawRect(note.x, note.y + (note.height - 23), note.width, 23);
+                }
             }
         }
 
     }
 
     private class TrackTicker implements TickObject {
-
         @Override
         public void tick() {
             for(Note note: notes) {
-                note.translate(0, SystemConfiguration.getNoteSpeedScale());
+                note.translate(0, SystemConfiguration.getNoteSpeedScale()); // translate each note in positive y
 
-                registrator.intersects(note);
-                if(note.getNoteType().equals("single") && registrator.intersects(note) && KeyInput.isDown(note.getKey())) {
-                    if(!note.hit()) {
-                        note.setHit(true);
+                if(!note.hit() && note.getNoteType().equals("single") && registrar.intersects(note) && KeyInput.isDown(note.getKey())) {
+                    note.setHit();
+                    statistics.incrementHit();
+                }
+
+                // TODO: make missing single_long increase miss counter
+                if(note.getNoteType().equals("single_long") && registrar.intersects(note)) {
+                    if(KeyInput.isDown(note.getKey()) && ((note.getMaxY() <= registrar.getMaxY()+23) && !note.wasHeld())) {
+                        note.setHeld();
+                    }
+                    if(!KeyInput.isDown(note.getKey()) && note.wasHeld()) {
+                        note.setHit();
+                    }
+                    if(KeyInput.isDown(note.getKey()) && note.wasHeld()) {
                         statistics.incrementHit();
                     }
                 }
 
-                //if(note.getType() == 2 && registrator.intersects(note) && KeyInput.isDown(note.getKey() && KeyInput.wasReleased())
-
-                if((note.y >= SystemConfiguration.getHeight() || (extendedRegistrator.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit()) {
+                // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
+                if((note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && !registrar.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit()) {
                     statistics.incrementMissed();
                 }
             }
 
-            notes.removeIf(note -> note.hit() || note.y >= SystemConfiguration.getHeight() || (extendedRegistrator.intersects(note) && KeyInput.isDown(note.getKey())));
+            // single was hit (hit on time)
+            // single has passed the registrar (hit too late or not at all)
+            // single hasn't passed the registrar but intersects the extendedRegistrar with the key down (hit to early)
+            // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
+            notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.wasHeld()) || ((note.getMaxY() >= registrar.getMaxY()+23) && !note.wasHeld()));
 
             if(KeyInput.isDown(KeyEvent.VK_ESCAPE)) {
                 Rizumu.engine.changeScene(new MenuScene());
