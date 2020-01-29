@@ -4,23 +4,32 @@ import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
-import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.MouseInput;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
-public class MenuScene implements Scene {
+public class SplashScene implements Scene {
     private MenuRender renderObject = new MenuRender();
     private MenuTicker tickObject = new MenuTicker();
 
+    BufferedImage logo;
     AudioPlayer audioPlayer;
-    private Button button = new Button(80, 80, 100, 50);
-    private Button frameRateButton = new Button(80, 140, 100, 50);
 
-    public MenuScene() {
+    public SplashScene() {
+        try {
+            logo = ImageIO.read(new File("src/main/resources/assets/logo.png"));
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
         audioPlayer = AudioPlayerController.getAudioPlayer("menu");
-        audioPlayer.resume();
+        audioPlayer.changeTrack("src/main/resources/assets/menu.wav");
+        audioPlayer.loop(-1);
+        audioPlayer.play();
     }
 
     @Override
@@ -39,26 +48,19 @@ public class MenuScene implements Scene {
 
         @Override
         public void render(Graphics2D g) {
-            g.setColor(button.getColor());
-            g.fill(button);
-            g.fill(frameRateButton);
+            g.drawImage(logo, (SystemConfiguration.getWidth()/2)-(logo.getWidth()/4), (SystemConfiguration.getHeight()/2)-(logo.getHeight()/4)-50, logo.getWidth()/2, logo.getHeight()/2, null);
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
-            g.setColor(Color.WHITE);
-            g.drawString("Play Song!", (int)button.getCenterX(), (int)button.getCenterY());
-            g.drawString("Toggle Framerate Capping", (int)frameRateButton.getCenterX(), (int)frameRateButton.getCenterY());
+            g.setColor(Color.BLACK);
+            g.drawString("Click to start!", SystemConfiguration.getWidth()/2-50, SystemConfiguration.getHeight()/2+50);
         }
     }
 
     private class MenuTicker implements TickObject {
         @Override
         public void tick() {
-            if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                audioPlayer.pause();
-                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
-            }
-            if(MouseInput.isPressed(MouseEvent.BUTTON1) && frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                SystemConfiguration.toggleUnlockedFramerate();
+            if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
+                Rizumu.engine.changeScene(new MenuScene());
             }
         }
     }

@@ -48,11 +48,11 @@ public class Renderer extends Canvas {
 
         Graphics2D g = (Graphics2D)bs.getDrawGraphics();
 
-        g.setColor(Color.DARK_GRAY);
+        g.setColor(Color.WHITE);
         g.fillRect(0, 0, SystemConfiguration.getWidth(), SystemConfiguration.getHeight());
 
-        g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
-        g.setColor(Color.WHITE);
+        g.setFont(fonts[368].deriveFont(Font.BOLD, 12));
+        g.setColor(Color.GRAY);
         g.drawString(Rizumu.engine.getFps() + " FPS | " + Rizumu.engine.getTps() + " TPS", 10, 20);
 
         renderObject.render(g);
