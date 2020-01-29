@@ -13,7 +13,8 @@ public class Rizumu {
     private static String tracksResource = "src/main/resources/beatmaps/beatmap-schema_example.yaml";
 
     public static void main(String[] args) {
-        System.setProperty("sun.java2d.opengl", "true");
+        System.setProperty("sun.java2d.opengl", args[0]); // OpenGL
+        //System.setProperty("sun.java2d.3d3", args[0]); // DirectX
         loadTracks();
         engine = new Engine();
         engine.changeScene(new MenuScene());

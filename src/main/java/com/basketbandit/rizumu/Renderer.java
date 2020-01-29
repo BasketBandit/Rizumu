@@ -42,7 +42,7 @@ public class Renderer extends Canvas {
         BufferStrategy bs = getBufferStrategy();
 
         if(bs == null) {
-            createBufferStrategy(3);
+            createBufferStrategy(2); // Double buffered - increasing this value will chunk framerate (if uncapped)
             return;
         }
 
@@ -59,6 +59,8 @@ public class Renderer extends Canvas {
 
         g.dispose();
         bs.show();
+
+        Toolkit.getDefaultToolkit().sync();
     }
 
 }

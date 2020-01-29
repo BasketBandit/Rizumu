@@ -1,6 +1,7 @@
 package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.MouseInput;
 
@@ -12,6 +13,7 @@ public class MenuScene implements Scene {
     private MenuTicker tickObject = new MenuTicker();
 
     private Button button = new Button(80, 80, 100, 50);
+    private Button frameRateButton = new Button(80, 140, 100, 50);
 
     @Override
     public RenderObject getRenderObject() {
@@ -30,12 +32,13 @@ public class MenuScene implements Scene {
         @Override
         public void render(Graphics2D g) {
             g.setColor(button.getColor());
-            g.fillRect(button.x, button.y, button.width, button.height);
+            g.fill(button);
+            g.fill(frameRateButton);
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
             g.setColor(Color.WHITE);
-
-            g.drawString("Play Song!", 102, 110);
+            g.drawString("Play Song!", (int)button.getCenterX(), (int)button.getCenterY());
+            g.drawString("Toggle Framerate Capping", (int)frameRateButton.getCenterX(), (int)frameRateButton.getCenterY());
         }
     }
 
@@ -44,6 +47,9 @@ public class MenuScene implements Scene {
         public void tick() {
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
+            }
+            if(MouseInput.isPressed(MouseEvent.BUTTON1) && frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                SystemConfiguration.toggleUnlockedFramerate();
             }
         }
     }
