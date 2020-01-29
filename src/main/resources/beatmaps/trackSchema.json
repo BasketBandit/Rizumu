@@ -1,0 +1,91 @@
+{
+  "beatmap": [
+    {
+      "name": "easy",
+      "start_delay": "2000",
+      "segments": [
+        {
+          "name": "The starting Line",
+          "length": "5000",
+          "keys": "4",
+          "notes": [
+            {
+              "time": "0000",
+              "key_num": "0",
+              "note_type": "single"
+            },
+            {
+              "time": "1000",
+              "key_num": "1",
+              "note_type": "single"
+            },
+            {
+              "time": "2000",
+              "key_num": "2",
+              "note_type": "single"
+            },
+            {
+              "time": "3000",
+              "key_num": "3",
+              "note_type": "single"
+            }
+          ]
+        },
+        {
+          "name": "Middle Bit",
+          "length": "2000",
+          "keys": "4",
+          "notes": [
+            {
+              "time": "0000",
+              "key_num": "0",
+              "note_type": "single"
+            },
+            {
+              "time": "0500",
+              "key_num": "1",
+              "note_type": "single"
+            },
+            {
+              "time": "1000",
+              "key_num": "2",
+              "note_type": "single"
+            },
+            {
+              "time": "1500",
+              "key_num": "3",
+              "note_type": "single"
+            }
+          ]
+        },
+        {
+          "name": "Keyboard Slam Finale",
+          "length": "1000",
+          "keys": "4",
+          "notes": [
+            {
+              "time": "0000",
+              "key_num": "0",
+              "note_type": "single_long"
+            },
+            {
+              "time": "0000",
+              "key_num": "1",
+              "note_type": "single_long"
+            },
+            {
+              "time": "0000",
+              "key_num": "2",
+              "note_type": "single_long"
+            },
+            {
+              "time": "0000",
+              "key_num": "3",
+              "note_type": "single_long"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
