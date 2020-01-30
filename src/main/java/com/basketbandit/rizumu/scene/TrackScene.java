@@ -57,7 +57,7 @@ public class TrackScene implements Scene {
         public void render(Graphics2D g) {
             // Draw framerate and tickrate.
             g.setFont(fonts[368].deriveFont(Font.PLAIN,12));
-            g.setColor(Color.WHITE);
+            g.setColor(Color.GRAY);
             g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getHitRate(), 10, 40);
 
             g.setColor(extendedRegistrar.getColor());
@@ -79,7 +79,6 @@ public class TrackScene implements Scene {
                 }
             }
         }
-
     }
 
     private class TrackTicker implements TickObject {

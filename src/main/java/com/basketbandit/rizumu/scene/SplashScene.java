@@ -18,6 +18,7 @@ public class SplashScene implements Scene {
 
     BufferedImage logo;
     AudioPlayer audioPlayer;
+    int i, x = 0;
 
     public SplashScene() {
         try {
@@ -48,7 +49,7 @@ public class SplashScene implements Scene {
 
         @Override
         public void render(Graphics2D g) {
-            g.drawImage(logo, (SystemConfiguration.getWidth()/2)-(logo.getWidth()/4), (SystemConfiguration.getHeight()/2)-(logo.getHeight()/4)-50, logo.getWidth()/2, logo.getHeight()/2, null);
+            g.drawImage(logo, (SystemConfiguration.getWidth()/2)-(logo.getWidth()/4)-(x/4), (SystemConfiguration.getHeight()/2)-(logo.getHeight()/4)-50-(x/2), (logo.getWidth()/2)+(x/2), (logo.getHeight()/2)+(x/2), null); // logo with pulsing (remove the additions relating to `x` to stop that)
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
             g.setColor(Color.BLACK);
@@ -59,6 +60,7 @@ public class SplashScene implements Scene {
     private class MenuTicker implements TickObject {
         @Override
         public void tick() {
+            x = (x < 41) ? x+1 : 0; // logo pulse effect counter
             if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
                 Rizumu.engine.changeScene(new MenuScene());
             }

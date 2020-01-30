@@ -3,6 +3,7 @@ package com.basketbandit.rizumu.audio;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.io.File;
 
 public class AudioPlayer {
@@ -10,6 +11,8 @@ public class AudioPlayer {
     private Clip clip;
     private String status;
     private String path;
+    private FloatControl gainControl;
+    private float gain = -5.0f;
 
     public AudioPlayer() {
     }
@@ -24,6 +27,8 @@ public class AudioPlayer {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(path).getAbsoluteFile());
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
+            gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            gainControl.setValue(gain);
         } catch(Exception ex) {
             ex.printStackTrace();
         }
@@ -63,4 +68,22 @@ public class AudioPlayer {
     public void loop(int type) {
         clip.loop(type);
     }
+
+    public float getMasterGain() {
+        return gain;
+    }
+
+    public void setMasterGain(float gain) {
+        this.gain = gain;
+    }
+
+    public float getGain() {
+        return gainControl.getValue();
+    }
+
+    public void setGain(float gain) {
+        gainControl.setValue(gain);
+    }
+
+
 }
