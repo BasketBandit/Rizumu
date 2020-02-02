@@ -1,0 +1,59 @@
+---
+beatmap:
+- name: 'Kenaston'
+  artist: 'Chilly Gonzales'
+  audio_filename: 'ChillyGonzalesKenaston'
+  start_delay: 0
+  segments:
+  - name: 'Intro'
+    length: 3200
+    keys: 4
+    notes:
+    - time: 0000
+      key_num: 0
+      note_type: 'single'
+    - time: 0000
+      key_num: 1
+      note_type: 'single'
+    - time: 0000
+      key_num: 2
+      note_type: 'single'
+    - time: 0800
+      key_num: 0
+      note_type: 'single'
+    - time: 0800
+      key_num: 1
+      note_type: 'single'
+    - time: 0800
+      key_num: 3
+      note_type: 'single'
+    - time: 1600
+      key_num: 1
+      note_type: 'single'
+    - time: 1600
+      key_num: 2
+      note_type: 'single'
+    - time: 1600
+      key_num: 3
+      note_type: 'single'
+    - time: 2400
+      key_num: 0
+      note_type: 'single'
+    - time: 2400
+      key_num: 2
+      note_type: 'single'
+    - time: 2400
+      key_num: 3
+      note_type: 'single'
+    - time: 3200
+      key_num: 0
+      note_type: 'single'
+    - time: 3200
+      key_num: 1
+      note_type: 'single'
+    - time: 3200
+      key_num: 2
+      note_type: 'single'
+    - time: 3200
+      key_num: 3
+      note_type: 'single'

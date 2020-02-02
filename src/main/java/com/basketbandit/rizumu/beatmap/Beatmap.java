@@ -9,16 +9,22 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "name",
+        "artist",
         "start_delay",
+        "audio_filename",
         "segments"
 })
 public class Beatmap {
     @JsonProperty("name")
     private String name;
+    @JsonProperty("artist")
+    private String artist;
     @JsonProperty("start_delay")
     private int startDelay;
     @JsonProperty("segments")
     private List<Segment> segments = null;
+    @JsonProperty("audio_filename")
+    private String audioFilename;
 
     @JsonProperty("name")
     public String getName() {
@@ -33,5 +39,10 @@ public class Beatmap {
     @JsonProperty("segments")
     public List<Segment> getSegments() {
         return segments;
+    }
+
+    @JsonProperty("audio_filename")
+    public String getAudioFilename() {
+        return audioFilename;
     }
 }
