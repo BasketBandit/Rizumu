@@ -7,6 +7,8 @@ public class SystemConfiguration {
     private static final int height = 720;
     private static double tickRate = 1000000000.0 / (60 + 0.0);
     private static boolean unlockedFramerate = false;
+    private static String beatmapResourcePath = "src/main/resources/beatmaps/";
+    private static float globalGain = -60.0f;
     private static int noteSpeedScale = 3;
     private static Map<Integer, Integer> speedAdjustment;
 
@@ -50,5 +52,9 @@ public class SystemConfiguration {
 
     public static boolean isUnlockedFramerate() {
         return unlockedFramerate;
+    }
+
+    public static String getBeatmapResourcePath() {
+        return beatmapResourcePath;
     }
 }

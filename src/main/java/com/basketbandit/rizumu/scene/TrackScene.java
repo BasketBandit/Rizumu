@@ -3,13 +3,15 @@ package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.audio.AudioPlayer;
+import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.Beatmap;
 import com.basketbandit.rizumu.beatmap.Note;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
-import com.basketbandit.rizumu.scheduler.jobs.BeatmapDelayJob;
+import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
 
 import java.awt.*;
@@ -20,6 +22,7 @@ public class TrackScene implements Scene {
     private TrackRender renderObject = new TrackRender();
     private TrackTicker tickObject = new TrackTicker();
 
+    private AudioPlayer audioPlayer;
     private Statistics statistics = new Statistics();
 
     private Beatmap beatmap;
@@ -28,12 +31,21 @@ public class TrackScene implements Scene {
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
     public TrackScene(Beatmap beatmap) {
+        this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.beatmap = beatmap;
-        ScheduleHandler.registerUniqueJob(new BeatmapDelayJob(beatmap, this)); // Will start loading the notes for the beatmap after the map-defined delay period.
+        ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
     }
 
     public ArrayList<Note> getNotes() {
         return notes;
+    }
+
+    public AudioPlayer getAudioPlayer() {
+        return audioPlayer;
+    }
+
+    public Beatmap getBeatmap() {
+        return beatmap;
     }
 
     @Override

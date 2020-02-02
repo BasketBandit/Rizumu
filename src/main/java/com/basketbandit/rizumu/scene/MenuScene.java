@@ -61,7 +61,7 @@ public class MenuScene implements Scene {
         public void tick() {
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 audioPlayer.pause();
-                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
+                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(1)));
             }
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 SystemConfiguration.toggleUnlockedFramerate();

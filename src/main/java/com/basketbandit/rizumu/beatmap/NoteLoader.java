@@ -7,12 +7,12 @@ import com.basketbandit.rizumu.scheduler.jobs.NoteLoadJob;
 import java.util.List;
 
 public class NoteLoader{
-    private Beatmap beatmap;
     private TrackScene scene;
+    private Beatmap beatmap;
 
-    public NoteLoader(Beatmap beatmap, TrackScene scene) {
-        this.beatmap = beatmap;
+    public NoteLoader(TrackScene scene, Beatmap beatmap) {
         this.scene = scene;
+        this.beatmap = beatmap;
         parseNotes();
     }
 
