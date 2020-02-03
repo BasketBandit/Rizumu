@@ -13,21 +13,20 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class SplashScene implements Scene {
-    private MenuRender renderObject = new MenuRender();
-    private MenuTicker tickObject = new MenuTicker();
+    private SplashRenderer renderObject = new SplashRenderer();
+    private SplashTicker tickObject = new SplashTicker();
 
-    BufferedImage logo;
-    AudioPlayer audioPlayer;
-    int i, x = 0;
+    private BufferedImage logo;
+    private int x = 0;
 
     public SplashScene() {
         try {
             logo = ImageIO.read(new File("src/main/resources/assets/logo.png"));
         } catch(Exception ex) {
-            ex.printStackTrace();
+            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
 
-        audioPlayer = AudioPlayerController.getAudioPlayer("menu");
+        AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("menu");
         audioPlayer.changeTrack("src/main/resources/assets/menu.wav");
         audioPlayer.loop(-1);
         audioPlayer.play();
@@ -43,10 +42,7 @@ public class SplashScene implements Scene {
         return tickObject;
     }
 
-    private class MenuRender implements RenderObject {
-        private GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        private Font[] fonts = ge.getAllFonts();
-
+    private class SplashRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
             g.drawImage(logo, (SystemConfiguration.getWidth()/2)-(logo.getWidth()/4)-(x/4), (SystemConfiguration.getHeight()/2)-(logo.getHeight()/4)-50-(x/2), (logo.getWidth()/2)+(x/2), (logo.getHeight()/2)+(x/2), null); // logo with pulsing (remove the additions relating to `x` to stop that)
@@ -57,7 +53,7 @@ public class SplashScene implements Scene {
         }
     }
 
-    private class MenuTicker implements TickObject {
+    private class SplashTicker implements TickObject {
         @Override
         public void tick() {
             x = (x < 41) ? x+1 : 0; // logo pulse effect counter

@@ -1,6 +1,5 @@
 package com.basketbandit.rizumu.scene;
 
-
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
@@ -19,7 +18,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class TrackScene implements Scene {
-    private TrackRender renderObject = new TrackRender();
+    private TrackRenderer renderObject = new TrackRenderer();
     private TrackTicker tickObject = new TrackTicker();
 
     private AudioPlayer audioPlayer;
@@ -58,13 +57,7 @@ public class TrackScene implements Scene {
         return tickObject;
     }
 
-    private class TrackRender implements RenderObject {
-        private String framesPerSecondText = "0 FPS";
-        private String ticksPerSecondText = "0 TPS";
-
-        private GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        private Font[] fonts = ge.getAllFonts();
-
+    private class TrackRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
             // Draw framerate and tickrate.

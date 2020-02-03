@@ -11,10 +11,10 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class MenuScene implements Scene {
-    private MenuRender renderObject = new MenuRender();
+    private MenuRenderer renderObject = new MenuRenderer();
     private MenuTicker tickObject = new MenuTicker();
 
-    AudioPlayer audioPlayer;
+    private AudioPlayer audioPlayer;
     private Button button = new Button(80, 80, 100, 50);
     private Button frameRateButton = new Button(80, 140, 100, 50);
     private Button volumeUpButton = new Button(220, 140, 100, 50);
@@ -35,10 +35,7 @@ public class MenuScene implements Scene {
         return tickObject;
     }
 
-    private class MenuRender implements RenderObject {
-        private GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        private Font[] fonts = ge.getAllFonts();
-
+    private class MenuRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
             g.setColor(button.getColor());
@@ -61,7 +58,7 @@ public class MenuScene implements Scene {
         public void tick() {
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 audioPlayer.pause();
-                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(1)));
+                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
             }
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 SystemConfiguration.toggleUnlockedFramerate();

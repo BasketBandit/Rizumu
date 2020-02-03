@@ -1,5 +1,8 @@
 package com.basketbandit.rizumu.audio;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -7,12 +10,14 @@ import javax.sound.sampled.FloatControl;
 import java.io.File;
 
 public class AudioPlayer {
+    private static final Logger log = LoggerFactory.getLogger(AudioPlayer.class);
+
     private long currentFrame;
     private Clip clip;
     private String status;
     private String path;
     private FloatControl gainControl;
-    private float gain = -10.0f;
+    private float gain = 0.0f;
 
     public AudioPlayer() {
     }
@@ -30,13 +35,14 @@ public class AudioPlayer {
             gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             gainControl.setValue(gain);
         } catch(Exception ex) {
-            ex.printStackTrace();
+            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
     }
 
     public void play() {
         clip.start();
         status = "playing";
+        log.info("playing track: " + path + ", level: " + clip.getLevel() + ", length: " + clip.getMicrosecondLength()/1000000 + " seconds");
     }
 
     public void pause() {

@@ -1,8 +1,12 @@
 package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.scene.Scene;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Engine {
+    private static final Logger log = LoggerFactory.getLogger(Engine.class);
+
     private Renderer renderer;
     private Ticker ticker;
 
@@ -62,6 +66,7 @@ public class Engine {
     public void changeScene(Scene scene) {
         this.renderer.setRenderObject(scene.getRenderObject());
         this.ticker.setTickObject(scene.getTickObject());
+        log.info("render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
     }
 
 }
