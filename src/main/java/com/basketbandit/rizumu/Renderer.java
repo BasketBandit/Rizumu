@@ -46,7 +46,7 @@ public class Renderer extends Canvas {
             return;
         }
 
-        Graphics2D g = (Graphics2D)bs.getDrawGraphics();
+        Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, SystemConfiguration.getWidth(), SystemConfiguration.getHeight());

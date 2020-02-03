@@ -29,7 +29,6 @@ public class NoteLoader{
             }
             loadOffset += segment.getLength();
         }
-        System.out.println("Loaded next notes...");
     }
 }
 

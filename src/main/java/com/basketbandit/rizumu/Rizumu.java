@@ -14,6 +14,7 @@ public class Rizumu {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", args[0]); // OpenGL
         //System.setProperty("sun.java2d.3d3", args[0]); // DirectX
+
         new SystemConfiguration(); // Initialises system configs.
         loadTracks();
         new AudioPlayerController(); // Initialises the AudioPlayerController
