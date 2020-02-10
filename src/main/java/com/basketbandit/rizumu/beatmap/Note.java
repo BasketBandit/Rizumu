@@ -31,7 +31,7 @@ public class Note extends Rectangle {
     private Color color;
 
     public Note() {
-        super(0, -23, 50, 23);
+        super(0, -25, 50, 25);
     }
 
     void initNote(int keyNum) {

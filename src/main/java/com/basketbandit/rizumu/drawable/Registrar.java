@@ -6,7 +6,7 @@ public class Registrar extends Rectangle {
     private Color color = Color.WHITE;
 
     public Registrar() {
-        super(0, 600, 1280, 15);
+        super(0, 600, 1280, 25);
     }
 
     public Color getColor() {

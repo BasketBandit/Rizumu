@@ -6,7 +6,7 @@ public class SystemConfiguration {
     private static final int width = 1280;
     private static final int height = 720;
     private static double tickRate = 1000000000.0 / (60 + 0.0);
-    private static boolean unlockedFramerate = false;
+    private static boolean unlockedFramerate = true;
     private static String beatmapResourcePath = "src/main/resources/beatmaps/";
     private static float globalGain = -10.0f;
     private static int noteSpeedScale = 3;

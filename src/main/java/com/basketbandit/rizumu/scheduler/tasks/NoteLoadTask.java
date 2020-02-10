@@ -13,7 +13,7 @@ public class NoteLoadTask implements Task {
         this.scene = scene;
     }
 
-    // This override of the run method is made to be synchronized since its almost certain that multiple threads are going to be adding to this collection at once.
+    // run() is made to be synchronized to prevent ConcurrentModificationExceptions, ensuring that all notes DO load correctly.
     @Override
     public synchronized void run() {
         scene.getNotes().add(note);
