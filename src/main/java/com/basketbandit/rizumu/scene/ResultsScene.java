@@ -5,6 +5,9 @@ import com.basketbandit.rizumu.score.Statistics;
 import java.awt.*;
 
 public class ResultsScene implements Scene {
+    private ResultsRenderer renderObject = new ResultsRenderer();
+    private ResultsTicker tickObject = new ResultsTicker();
+
     private final Statistics statistics;
 
     ResultsScene(Statistics statistics) {
@@ -13,12 +16,12 @@ public class ResultsScene implements Scene {
 
     @Override
     public RenderObject getRenderObject() {
-        return null;
+        return renderObject;
     }
 
     @Override
     public TickObject getTickObject() {
-        return null;
+        return tickObject;
     }
 
     private class ResultsRenderer implements RenderObject {

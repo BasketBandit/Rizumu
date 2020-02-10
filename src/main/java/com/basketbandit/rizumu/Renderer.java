@@ -2,6 +2,7 @@ package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseInput;
+import com.basketbandit.rizumu.scene.DefaultBackgroundRenderObject;
 import com.basketbandit.rizumu.scene.RenderObject;
 
 import javax.swing.*;
@@ -10,10 +11,9 @@ import java.awt.image.BufferStrategy;
 
 public class Renderer extends Canvas {
     private JFrame frame;
-    private RenderObject renderObject;
-
-    private GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-    private Font[] fonts = ge.getAllFonts();
+    private RenderObject backgroundRenderObject = new DefaultBackgroundRenderObject();
+    private RenderObject primaryRenderObject;
+    private RenderObject secondaryRenderObject;
 
     Renderer() {
         addMouseListener(new MouseInput());
@@ -34,11 +34,19 @@ public class Renderer extends Canvas {
         this.frame.requestFocus();
     }
 
-    public void setRenderObject(RenderObject renderObject) {
-        this.renderObject = renderObject;
+    void setBackgroundRenderObject(RenderObject renderObject) {
+        this.backgroundRenderObject = renderObject;
     }
 
-    public void render() {
+    void setPrimaryRenderObject(RenderObject renderObject) {
+        this.primaryRenderObject = renderObject;
+    }
+
+    void setSecondaryRenderObject(RenderObject renderObject) {
+        this.secondaryRenderObject = renderObject;
+    }
+
+    void render() {
         BufferStrategy bs = getBufferStrategy();
 
         if(bs == null) {
@@ -48,19 +56,20 @@ public class Renderer extends Canvas {
 
         Graphics2D g = (Graphics2D) bs.getDrawGraphics();
 
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, SystemConfiguration.getWidth(), SystemConfiguration.getHeight());
+        if(backgroundRenderObject != null) {
+            backgroundRenderObject.render(g);
+        }
 
-        g.setFont(fonts[368].deriveFont(Font.BOLD, 12));
-        g.setColor(Color.GRAY);
-        g.drawString(Rizumu.engine.getFps() + " FPS | " + Rizumu.engine.getTps() + " TPS", 10, 20);
+        if(primaryRenderObject != null) {
+            primaryRenderObject.render(g);
+        }
 
-        renderObject.render(g);
+        if(secondaryRenderObject != null) {
+            secondaryRenderObject.render(g);
+        }
 
         g.dispose();
         bs.show();
-
-        Toolkit.getDefaultToolkit().sync();
     }
 
 }

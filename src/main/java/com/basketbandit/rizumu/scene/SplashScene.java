@@ -58,7 +58,7 @@ public class SplashScene implements Scene {
         public void tick() {
             x = (x < 41) ? x+1 : 0; // logo pulse effect counter
             if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
-                Rizumu.engine.changeScene(new MenuScene());
+                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
             }
         }
     }

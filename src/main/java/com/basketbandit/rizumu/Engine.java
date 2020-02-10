@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu;
 
+import com.basketbandit.rizumu.scene.RenderObject;
 import com.basketbandit.rizumu.scene.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,23 +11,23 @@ public class Engine {
     private Renderer renderer;
     private Ticker ticker;
 
-    private boolean isRunning;
+    private boolean isRunning = true;
 
     private int tps, fps = 0;
     private int frames, ticks = 0;
 
-    public Engine() {
+    Engine() {
         this.renderer = new Renderer();
         this.ticker = new Ticker();
     }
 
-    public void run() {
+    void run() {
         long time = System.currentTimeMillis();
         long lastTime = System.nanoTime();
         double unprocessed = 0.0;
         boolean canRender;
 
-        while(isRunning = true) {
+        while(isRunning) {
             long now = System.nanoTime();
             unprocessed += (now - lastTime) / SystemConfiguration.getTickRate();
             lastTime = now;
@@ -55,18 +56,43 @@ public class Engine {
         }
     }
 
-    int getFps() {
+    public int getFps() {
         return frames;
     }
 
-    int getTps() {
+    public int getTps() {
         return ticks;
     }
 
-    public void changeScene(Scene scene) {
-        this.renderer.setRenderObject(scene.getRenderObject());
-        this.ticker.setTickObject(scene.getTickObject());
-        log.info("render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+    void setPrimaryScene(Scene scene) {
+        this.renderer.setPrimaryRenderObject(scene.getRenderObject());
+        this.ticker.setPrimaryTickObject(scene.getTickObject());
+        log.info("primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+    }
+
+    void setSecondaryScene(Scene scene) {
+        if(scene != null) {
+            this.renderer.setSecondaryRenderObject(scene.getRenderObject());
+            this.ticker.setSecondaryTickObject(scene.getTickObject());
+            log.info("secondary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+            return;
+        }
+
+        this.renderer.setSecondaryRenderObject(null);
+        this.ticker.setSecondaryTickObject(null);
+        log.info("secondary render/tick objects removed");
+    }
+
+    void setBackgroundRenderObject(RenderObject renderObject) {
+        this.renderer.setBackgroundRenderObject(renderObject);
+    }
+
+    void setPrimaryRenderObject(RenderObject renderObject) {
+        this.renderer.setPrimaryRenderObject(renderObject);
+    }
+
+    void setSecondaryRenderObject(RenderObject renderObject) {
+        this.renderer.setSecondaryRenderObject(renderObject);
     }
 
 }

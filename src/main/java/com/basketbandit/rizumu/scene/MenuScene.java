@@ -14,14 +14,13 @@ public class MenuScene implements Scene {
     private MenuRenderer renderObject = new MenuRenderer();
     private MenuTicker tickObject = new MenuTicker();
 
-    private AudioPlayer audioPlayer;
+    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("menu");
     private Button button = new Button(80, 80, 100, 50);
     private Button frameRateButton = new Button(80, 140, 100, 50);
     private Button volumeUpButton = new Button(220, 140, 100, 50);
     private Button volumeDownButton = new Button(340, 140, 100, 50);
 
     public MenuScene() {
-        audioPlayer = AudioPlayerController.getAudioPlayer("menu");
         audioPlayer.resume();
     }
 
@@ -38,7 +37,7 @@ public class MenuScene implements Scene {
     private class MenuRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
-            g.setColor(button.getColor());
+            g.setColor(Color.DARK_GRAY);
             g.fill(button);
             g.fill(frameRateButton);
             g.fill(volumeUpButton);
@@ -56,18 +55,23 @@ public class MenuScene implements Scene {
     private class MenuTicker implements TickObject {
         @Override
         public void tick() {
+            audioPlayer.resume();
+
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 audioPlayer.pause();
-                Rizumu.engine.changeScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
+                Rizumu.setPrimaryScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
             }
+
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 SystemConfiguration.toggleUnlockedFramerate();
             }
+
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && volumeUpButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 if(audioPlayer.getGain()+0.1 < 6.0206) {
                     audioPlayer.setGain(audioPlayer.getGain()+0.1f);
                 }
             }
+
             if(MouseInput.isPressed(MouseEvent.BUTTON1) && volumeDownButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                 audioPlayer.setGain(audioPlayer.getGain()-0.1f);
             }

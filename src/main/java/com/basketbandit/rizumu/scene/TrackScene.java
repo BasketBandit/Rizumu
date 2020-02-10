@@ -15,27 +15,31 @@ import com.basketbandit.rizumu.score.Statistics;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledFuture;
 
 public class TrackScene implements Scene {
     private TrackRenderer renderObject = new TrackRenderer();
     private TrackTicker tickObject = new TrackTicker();
 
+    private final ScheduledFuture beatmapJob;
+    private boolean isPaused;
     private AudioPlayer audioPlayer;
     private Statistics statistics = new Statistics();
 
     private Beatmap beatmap;
-    private ArrayList<Note> notes = new ArrayList<>();
+    private List<Note> notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
     public TrackScene(Beatmap beatmap) {
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.beatmap = beatmap;
-        ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
+        this.beatmapJob = ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
     }
 
-    public ArrayList<Note> getNotes() {
+    public List<Note> getNotes() {
         return notes;
     }
 
@@ -111,7 +115,7 @@ public class TrackScene implements Scene {
                 }
 
                 // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
-                if((note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && !registrar.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit()) {
+                if((note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && !registrar.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit() || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.wasHeld())) {
                     statistics.incrementMissed();
                 }
             }
@@ -120,10 +124,10 @@ public class TrackScene implements Scene {
             // single has passed the registrar (hit too late or not at all)
             // single hasn't passed the registrar but intersects the extendedRegistrar with the key down (hit to early)
             // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
-            notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.wasHeld()) || ((note.getMaxY() >= registrar.getMaxY()+23) && !note.wasHeld()));
+            notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.wasHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.wasHeld()));
 
-            if(KeyInput.isDown(KeyEvent.VK_ESCAPE)) {
-                Rizumu.engine.changeScene(new MenuScene());
+            if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
+                Rizumu.setSecondaryScene(Rizumu.getStaticScene(Scenes.PAUSE));
             }
         }
     }
