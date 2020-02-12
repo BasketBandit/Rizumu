@@ -14,7 +14,7 @@ public class AudioPlayer {
 
     private long currentFrame;
     private Clip clip;
-    private String status;
+    private String status = "stopped";
     private String path;
     private FloatControl gainControl;
     private float gain = 0.0f;
@@ -26,9 +26,9 @@ public class AudioPlayer {
         changeTrack(path);
     }
 
-    public void changeTrack(String path) {
+    public void changeTrack(String inPath) {
         try {
-            this.path = path;
+            path = inPath;
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(path).getAbsoluteFile());
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -46,26 +46,27 @@ public class AudioPlayer {
     }
 
     public void pause() {
-        if(status.equals("paused")) {
+        if(status.equals("paused") || status.equals("stopped")) {
             return;
         }
         status = "paused";
-        this.currentFrame = this.clip.getMicrosecondPosition();
+        currentFrame = clip.getMicrosecondPosition();
         clip.stop();
     }
 
     public void resume() {
-        if(status.equals("playing")) {
+        if(status.equals("playing") || status.equals("stopped")) {
             return;
         }
         status = "playing";
         clip.close();
         changeTrack(path);
         clip.setMicrosecondPosition(currentFrame);
-        this.play();
+        play();
     }
 
     public void stop() {
+        status = "stopped";
         currentFrame = 0L;
         clip.stop();
         clip.close();

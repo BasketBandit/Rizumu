@@ -5,7 +5,7 @@ import com.basketbandit.rizumu.scene.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Engine {
+public class Engine extends Thread {
     private static final Logger log = LoggerFactory.getLogger(Engine.class);
 
     private Renderer renderer;
@@ -17,11 +17,12 @@ public class Engine {
     private int frames, ticks = 0;
 
     Engine() {
+        this.setName("Engine");
         this.renderer = new Renderer();
         this.ticker = new Ticker();
     }
 
-    void run() {
+    public void run() {
         long time = System.currentTimeMillis();
         long lastTime = System.nanoTime();
         double unprocessed = 0.0;
@@ -93,6 +94,10 @@ public class Engine {
 
     void setSecondaryRenderObject(RenderObject renderObject) {
         this.renderer.setSecondaryRenderObject(renderObject);
+    }
+
+    boolean secondaryRenderObjectIsNull() {
+        return this.renderer.secondaryRenderObjectIsNull();
     }
 
 }

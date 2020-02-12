@@ -17,13 +17,11 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledFuture;
 
 public class TrackScene implements Scene {
     private TrackRenderer renderObject = new TrackRenderer();
     private TrackTicker tickObject = new TrackTicker();
 
-    private final ScheduledFuture beatmapJob;
     private boolean isPaused;
     private AudioPlayer audioPlayer;
     private Statistics statistics = new Statistics();
@@ -36,7 +34,7 @@ public class TrackScene implements Scene {
     public TrackScene(Beatmap beatmap) {
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.beatmap = beatmap;
-        this.beatmapJob = ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
+        ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
     }
 
     public List<Note> getNotes() {
@@ -93,6 +91,18 @@ public class TrackScene implements Scene {
     private class TrackTicker implements TickObject {
         @Override
         public void tick() {
+            // if the secondary render object is NOT null (implies pause menu is open)
+            if(!Rizumu.secondaryRenderObjectIsNull()) {
+                audioPlayer.pause();
+                return;
+            }
+
+            if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
+                Rizumu.setSecondaryScene(Rizumu.getStaticScene(Scenes.PAUSE));
+            }
+
+            audioPlayer.resume();
+
             for(Note note: notes) {
                 note.translate(0, SystemConfiguration.getNoteSpeedScale()); // translate each note in positive y
 
@@ -125,10 +135,6 @@ public class TrackScene implements Scene {
             // single hasn't passed the registrar but intersects the extendedRegistrar with the key down (hit to early)
             // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
             notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.wasHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.wasHeld()));
-
-            if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
-                Rizumu.setSecondaryScene(Rizumu.getStaticScene(Scenes.PAUSE));
-            }
         }
     }
 }

@@ -34,16 +34,29 @@ public class Renderer extends Canvas {
         this.frame.requestFocus();
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
     void setBackgroundRenderObject(RenderObject renderObject) {
         this.backgroundRenderObject = renderObject;
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
     void setPrimaryRenderObject(RenderObject renderObject) {
         this.primaryRenderObject = renderObject;
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
     void setSecondaryRenderObject(RenderObject renderObject) {
         this.secondaryRenderObject = renderObject;
+    }
+
+    boolean secondaryRenderObjectIsNull() {
+        return secondaryRenderObject == null;
     }
 
     void render() {
