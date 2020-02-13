@@ -31,7 +31,6 @@ public class Rizumu {
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
         staticScenes.put(Scenes.MENU, new MenuScene());
-        staticScenes.put(Scenes.PAUSE, new PauseMenuScene());
 
         engine.setPrimaryScene(getStaticScene(Scenes.SPLASH));
         engine.start();

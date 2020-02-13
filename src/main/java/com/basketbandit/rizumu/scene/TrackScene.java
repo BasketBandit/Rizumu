@@ -6,21 +6,26 @@ import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.Beatmap;
 import com.basketbandit.rizumu.beatmap.Note;
+import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyInput;
+import com.basketbandit.rizumu.input.MouseInput;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TrackScene implements Scene {
     private TrackRenderer renderObject = new TrackRenderer();
     private TrackTicker tickObject = new TrackTicker();
+
+    private PauseMenu pauseMenu = new PauseMenu();
 
     private boolean isPaused;
     private AudioPlayer audioPlayer;
@@ -98,7 +103,8 @@ public class TrackScene implements Scene {
             }
 
             if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
-                Rizumu.setSecondaryScene(Rizumu.getStaticScene(Scenes.PAUSE));
+                Rizumu.setSecondaryScene(pauseMenu);
+                ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
             }
 
             audioPlayer.resume();
@@ -135,6 +141,64 @@ public class TrackScene implements Scene {
             // single hasn't passed the registrar but intersects the extendedRegistrar with the key down (hit to early)
             // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
             notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.wasHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.wasHeld()));
+        }
+    }
+
+    /**
+     * PauseMenu subclass, not given a separate class file due to it only being used in the context of a TrackScene.
+     */
+    public class PauseMenu implements Scene {
+        private PauseMenuRenderer renderObject = new PauseMenuRenderer();
+        private PauseMenuTicker tickObject = new PauseMenuTicker();
+
+        private Color transGray = new Color(50,50,50, 235);
+
+        private com.basketbandit.rizumu.drawable.Button resumeButton = new com.basketbandit.rizumu.drawable.Button(80, 80, 100, 50);
+        private com.basketbandit.rizumu.drawable.Button quitButton = new Button(80, 140, 100, 50);
+
+        @Override
+        public RenderObject getRenderObject() {
+            return renderObject;
+        }
+
+        @Override
+        public TickObject getTickObject() {
+            return tickObject;
+        }
+
+        private class PauseMenuRenderer implements RenderObject {
+            @Override
+            public void render(Graphics2D g) {
+                g.setColor(transGray);
+                g.fillRect(0, 0, SystemConfiguration.getWidth(), SystemConfiguration.getHeight());
+
+                g.setColor(resumeButton.getColor());
+                g.fill(resumeButton);
+                g.fill(quitButton);
+
+                g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
+                g.setColor(Color.WHITE);
+                g.drawString("Resume!", (int)resumeButton.getMinX(), (int)resumeButton.getCenterY());
+                g.drawString("Quit!", (int)quitButton.getMinX(), (int)quitButton.getCenterY());
+            }
+        }
+
+        private class PauseMenuTicker implements TickObject {
+            @Override
+            public void tick() {
+                // if left-click is pushed and the cursor is in the bounds of the 'resume' button, close the pause menu
+                if(MouseInput.isPressed(MouseEvent.BUTTON1) && resumeButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    Rizumu.setSecondaryScene(null);
+                    ScheduleHandler.resumeExecution();
+                }
+
+                // if left-click is pushed and the cursor is in the bounds of the 'quit' button, got back to the main menu
+                if(MouseInput.isPressed(MouseEvent.BUTTON1) && quitButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    audioPlayer.stop();
+                    Rizumu.setSecondaryScene(null);
+                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
+                }
+            }
         }
     }
 }

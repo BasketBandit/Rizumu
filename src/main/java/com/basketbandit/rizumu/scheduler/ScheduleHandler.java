@@ -3,16 +3,19 @@ package com.basketbandit.rizumu.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class ScheduleHandler {
     private static final Logger log = LoggerFactory.getLogger(ScheduleHandler.class);
-    private static final Set<ScheduledFuture<?>> tasks = new HashSet<>();
-    private static final ScheduledExecutorService schedulerService = Executors.newScheduledThreadPool(1, Executors.defaultThreadFactory());
+
+    private static final ScheduledExecutorService schedulerService = Executors.newSingleThreadScheduledExecutor();
+    private static final HashMap<Job, ScheduledFuture<?>> tasks = new HashMap<>();
+    private static final ArrayList<Job> pausedTasks = new ArrayList<>();
 
     /**
      * Registers a job that will be repeatedly executed at a fixed rate.
@@ -20,7 +23,7 @@ public class ScheduleHandler {
      */
     public static void registerJob(Job job) {
         log.info("recurring job registered: " + job.toString() + ", delay: " + job.getDelay() + job.getUnit() + ", period: " + job.getPeriod());
-        tasks.add(schedulerService.scheduleAtFixedRate(job, job.getDelay(), job.getPeriod(), job.getUnit()));
+        tasks.put(job, schedulerService.scheduleAtFixedRate(job, job.getDelay(), job.getPeriod(), job.getUnit()));
     }
 
     /**
@@ -29,6 +32,30 @@ public class ScheduleHandler {
      */
     public static void registerUniqueJob(Job job) {
         log.info("unique job registered: " + job.toString() + ", delay: " + job.getDelay() + job.getUnit());
-        tasks.add(schedulerService.schedule(job, job.getDelay(), job.getUnit()));
+        tasks.put(job, schedulerService.schedule(job, job.getDelay(), job.getUnit()));
     }
+
+    /**
+     * Pauses (effectively) execution of the ScheduledExecutorService
+     */
+    public static void pauseExecution() {
+        for(Job job : tasks.keySet()) {
+            ScheduledFuture<?> task = tasks.get(job);
+            if(task.getDelay(TimeUnit.MILLISECONDS) > -1 && !task.isCancelled()) {
+                job.setDelay(task.getDelay(TimeUnit.MILLISECONDS));
+                pausedTasks.add(job);
+            }
+            task.cancel(true);
+        }
+        tasks.clear();
+    }
+
+    /**
+     * Resumes execution of the ScheduledExecutorService
+     */
+    public static void resumeExecution() {
+        pausedTasks.forEach(ScheduleHandler::registerUniqueJob);
+        pausedTasks.clear();
+    }
+
 }

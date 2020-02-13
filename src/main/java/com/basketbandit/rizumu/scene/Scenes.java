@@ -2,8 +2,7 @@ package com.basketbandit.rizumu.scene;
 
 public enum Scenes {
     SPLASH("splash"),
-    MENU("menu"),
-    PAUSE("pause");
+    MENU("menu");
 
     Scenes(String scene) {
     }

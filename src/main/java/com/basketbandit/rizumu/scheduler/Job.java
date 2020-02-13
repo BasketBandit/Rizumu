@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit;
 
 public abstract class Job extends TimerTask {
     private static final Logger log = LoggerFactory.getLogger(Job.class);
-    private final long delay;
-    private final long period;
+    private long delay;
+    private long period;
     private final TimeUnit unit;
 
     protected Job(long delay, long period, TimeUnit unit) {
@@ -22,8 +22,16 @@ public abstract class Job extends TimerTask {
         return delay;
     }
 
+    void setDelay(long delay) {
+        this.delay = delay;
+    }
+
     long getPeriod() {
         return period;
+    }
+
+    void setPeriod(long period) {
+        this.period = period;
     }
 
     TimeUnit getUnit() {
