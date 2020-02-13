@@ -11,7 +11,6 @@ import java.util.List;
         "beatmap"
 })
 public class BeatmapContainer {
-
     @JsonProperty("beatmap")
     private List<Beatmap> beatmaps = null;
 

@@ -5,9 +5,11 @@ import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseInput;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class MenuScene implements Scene {
@@ -57,23 +59,35 @@ public class MenuScene implements Scene {
         public void tick() {
             audioPlayer.resume();
 
-            if(MouseInput.isPressed(MouseEvent.BUTTON1) && button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                audioPlayer.pause();
-                Rizumu.setPrimaryScene(new TrackScene(Rizumu.getBeatmaps().get(0)));
+            if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
+                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH));
             }
 
-            if(MouseInput.isPressed(MouseEvent.BUTTON1) && frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                SystemConfiguration.toggleUnlockedFramerate();
-            }
-
-            if(MouseInput.isPressed(MouseEvent.BUTTON1) && volumeUpButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                if(audioPlayer.getGain()+0.1 < 6.0206) {
-                    audioPlayer.setGain(audioPlayer.getGain()+0.1f);
+            if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
+                if(button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    audioPlayer.pause();
+                    TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
+                    Rizumu.setPrimaryScene(trackScene.initScene(Rizumu.getBeatmapParser().parseMap("ChillyGonzalesKenaston.yaml").getBeatmaps().get(0)));
+                    return;
                 }
-            }
 
-            if(MouseInput.isPressed(MouseEvent.BUTTON1) && volumeDownButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                audioPlayer.setGain(audioPlayer.getGain()-0.1f);
+                if(frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    SystemConfiguration.toggleUnlockedFramerate();
+                    return;
+                }
+
+                if(volumeUpButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    if(audioPlayer.getGain()+0.1 < 6.0206) {
+                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
+                    }
+                    return;
+                }
+
+                if(volumeDownButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    if(audioPlayer.getGain()+0.1 < 6.0206) {
+                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
+                    }
+                }
             }
         }
     }

@@ -1,18 +1,16 @@
 package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.audio.AudioPlayerController;
-import com.basketbandit.rizumu.beatmap.Beatmap;
 import com.basketbandit.rizumu.beatmap.BeatmapParser;
 import com.basketbandit.rizumu.scene.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Rizumu {
     private static boolean debug;
     public static Engine engine = new Engine();
     private static HashMap<Scenes, Scene> staticScenes = new HashMap<>();
-    private static ArrayList<Beatmap> beatmaps = new ArrayList<>();
+    private static BeatmapParser beatmapParser;
 
     public static void main(String[] args) {
         debug =  Boolean.parseBoolean(args[0]);
@@ -24,13 +22,14 @@ public class Rizumu {
         new SystemConfiguration();
 
         // loads and parses beatmaps
-        beatmaps = new BeatmapParser(SystemConfiguration.getBeatmapResourcePath()).getBeatmaps();
+        beatmapParser = new BeatmapParser(SystemConfiguration.getBeatmapResourcePath());
 
         // initialises AudioPlayerController
         new AudioPlayerController();
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
         staticScenes.put(Scenes.MENU, new MenuScene());
+        staticScenes.put(Scenes.TRACK, new TrackScene());
 
         engine.setPrimaryScene(getStaticScene(Scenes.SPLASH));
         engine.start();
@@ -41,10 +40,10 @@ public class Rizumu {
     }
 
     /**
-     * @return {@link ArrayList<Beatmap>}
+     * @return {@link BeatmapParser}
      */
-    public static ArrayList<Beatmap> getBeatmaps() {
-        return beatmaps;
+    public static BeatmapParser getBeatmapParser() {
+        return beatmapParser;
     }
 
     /**

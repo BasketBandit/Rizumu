@@ -26,20 +26,21 @@ public class TrackScene implements Scene {
     private TrackTicker tickObject = new TrackTicker();
 
     private PauseMenu pauseMenu = new PauseMenu();
-
-    private boolean isPaused;
     private AudioPlayer audioPlayer;
-    private Statistics statistics = new Statistics();
+    private Statistics statistics;
 
     private Beatmap beatmap;
-    private List<Note> notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
+    private List<Note> notes;
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
-    public TrackScene(Beatmap beatmap) {
+    public TrackScene initScene(Beatmap beatmap) {
+        this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
+        this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
         this.beatmap = beatmap;
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
+        return this;
     }
 
     public List<Note> getNotes() {
