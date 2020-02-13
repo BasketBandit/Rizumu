@@ -66,6 +66,9 @@ public class AudioPlayer {
     }
 
     public void stop() {
+        if(status.equals("stopped")) {
+            return;
+        }
         status = "stopped";
         currentFrame = 0L;
         clip.stop();

@@ -99,13 +99,14 @@ public class TrackScene implements Scene {
         public void tick() {
             // if the secondary render object is NOT null (implies pause menu is open)
             if(!Rizumu.secondaryRenderObjectIsNull()) {
-                audioPlayer.pause();
                 return;
             }
 
             if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
                 Rizumu.setSecondaryScene(pauseMenu);
+                audioPlayer.pause();
                 ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
+                return;
             }
 
             audioPlayer.resume();
@@ -187,17 +188,21 @@ public class TrackScene implements Scene {
         private class PauseMenuTicker implements TickObject {
             @Override
             public void tick() {
-                // if left-click is pushed and the cursor is in the bounds of the 'resume' button, close the pause menu
-                if(MouseInput.isPressed(MouseEvent.BUTTON1) && resumeButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                    Rizumu.setSecondaryScene(null);
-                    ScheduleHandler.resumeExecution();
-                }
+                if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
+                    // if left-click is pushed and the cursor is in the bounds of the 'resume' button, close the pause menu
+                    if(resumeButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                        Rizumu.setSecondaryScene(null);
+                        ScheduleHandler.resumeExecution();
+                        return;
+                    }
 
-                // if left-click is pushed and the cursor is in the bounds of the 'quit' button, got back to the main menu
-                if(MouseInput.isPressed(MouseEvent.BUTTON1) && quitButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                    audioPlayer.stop();
-                    Rizumu.setSecondaryScene(null);
-                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
+                    // if left-click is pushed and the cursor is in the bounds of the 'quit' button, got back to the main menu
+                    if(quitButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                        audioPlayer.stop();
+                        ScheduleHandler.cancelExecution();
+                        Rizumu.setSecondaryScene(null);
+                        Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
+                    }
                 }
             }
         }

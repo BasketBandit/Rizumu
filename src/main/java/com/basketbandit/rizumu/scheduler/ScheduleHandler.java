@@ -3,19 +3,14 @@ package com.basketbandit.rizumu.scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class ScheduleHandler {
     private static final Logger log = LoggerFactory.getLogger(ScheduleHandler.class);
 
     private static final ScheduledExecutorService schedulerService = Executors.newSingleThreadScheduledExecutor();
-    private static final HashMap<Job, ScheduledFuture<?>> tasks = new HashMap<>();
-    private static final ArrayList<Job> pausedTasks = new ArrayList<>();
+    private static final ConcurrentHashMap<Job, ScheduledFuture<?>> tasks = new ConcurrentHashMap<>();
+    private static final CopyOnWriteArrayList<Job> pausedTasks = new CopyOnWriteArrayList<>();
 
     /**
      * Registers a job that will be repeatedly executed at a fixed rate.
@@ -58,4 +53,12 @@ public class ScheduleHandler {
         pausedTasks.clear();
     }
 
+    /**
+     * Cancels execution of the ScheduledExecutorService
+     */
+    public static void cancelExecution() {
+        tasks.values().forEach(scheduledFuture -> scheduledFuture.cancel(true));
+        tasks.clear();
+        pausedTasks.clear();
+    }
 }
