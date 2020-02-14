@@ -55,6 +55,22 @@ public class Note extends Rectangle {
                 this.x = 175;
                 this.key = KeyEvent.VK_R;
                 this.color = Color.BLUE;
+                break;
+            case 4:
+                this.x = 225;
+                this.key = KeyEvent.VK_T;
+                this.color = Color.ORANGE;
+                break;
+            case 5:
+                this.x = 275;
+                this.key = KeyEvent.VK_Y;
+                this.color = Color.PINK;
+                break;
+            case 6:
+                this.x = 325;
+                this.key = KeyEvent.VK_U;
+                this.color = Color.MAGENTA;
+                break;
         }
         if(noteType.equals("single_long")) {
             // The calculation of note length is based on time (not sure if that's correct!) (will need to be modified for half second long notes!)

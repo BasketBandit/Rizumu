@@ -40,7 +40,7 @@ public class TrackScene implements Scene {
         this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-        this.beatmap = Rizumu.getBeatmapParser().parseMap(beatmapFilename + ".yaml").getBeatmaps().get(0);
+        this.beatmap = Rizumu.getBeatmapParser().parseMap(beatmapFilename + ".yaml").getBeatmaps().get(3);
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
         return this;
     }
