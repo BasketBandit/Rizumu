@@ -30,20 +30,18 @@ public class TrackScene implements Scene {
     private AudioPlayer audioPlayer;
     private Statistics statistics;
 
-    protected String trackBeatmap;
     protected Track track;
     protected Beatmap beatmap;
     private List<Note> notes;
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
-    public TrackScene initScene(String trackBeatmap) {
-        this.trackBeatmap = trackBeatmap;
+    public TrackScene initScene(Track track, Beatmap beatmap) {
         this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-        this.track = Rizumu.getBeatmapParser().parseMap(trackBeatmap + ".yaml");
-        this.beatmap = track.getBeatmaps().get(2);
+        this.track = track;
+        this.beatmap = beatmap;
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
         return this;
     }
@@ -217,7 +215,7 @@ public class TrackScene implements Scene {
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                        Rizumu.setPrimaryScene(trackScene.initScene(trackBeatmap));
+                        Rizumu.setPrimaryScene(trackScene.initScene(track, beatmap)); // rework this to fit the Track/Beatmap constructor
                         return;
                     }
 

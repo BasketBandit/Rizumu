@@ -4,6 +4,7 @@ import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
+import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseInput;
@@ -67,7 +68,8 @@ public class MenuScene implements Scene {
                 if(button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                     audioPlayer.pause();
                     TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                    Rizumu.setPrimaryScene(trackScene.initScene("ChillyGonzalesKenaston"));
+                    Track track = Rizumu.getBeatmapParser().parseTrack("ChillyGonzalesKenaston" + ".yaml");
+                    Rizumu.setPrimaryScene(trackScene.initScene(track, track.getBeatmaps().get(2)));
                     return;
                 }
 

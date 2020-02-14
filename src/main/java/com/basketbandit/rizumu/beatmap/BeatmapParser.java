@@ -31,7 +31,7 @@ public class BeatmapParser {
         log.info(beatmapFiles.size() + " beatmap file(s) located");
     }
 
-    public Track parseMap(String name) {
+    public Track parseTrack(String name) {
         try {
             return new ObjectMapper(new YAMLFactory()).readValue(new FileReader(beatmapFiles.get(name)), Track.class);
         } catch(Exception ex) {
