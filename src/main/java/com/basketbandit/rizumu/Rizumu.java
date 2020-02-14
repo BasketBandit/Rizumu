@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.audio.AudioPlayerController;
-import com.basketbandit.rizumu.beatmap.BeatmapParser;
+import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.scene.*;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ public class Rizumu {
     private static boolean debug;
     public static Engine engine = new Engine();
     private static HashMap<Scenes, Scene> staticScenes = new HashMap<>();
-    private static BeatmapParser beatmapParser;
+    private static TrackParser trackParser;
 
     public static void main(String[] args) {
         debug =  Boolean.parseBoolean(args[0]);
@@ -22,7 +22,7 @@ public class Rizumu {
         new SystemConfiguration();
 
         // loads and parses beatmaps
-        beatmapParser = new BeatmapParser(SystemConfiguration.getBeatmapResourcePath());
+        trackParser = new TrackParser(SystemConfiguration.getBeatmapResourcePath());
 
         // initialises AudioPlayerController
         new AudioPlayerController();
@@ -41,10 +41,10 @@ public class Rizumu {
     }
 
     /**
-     * @return {@link BeatmapParser}
+     * @return {@link TrackParser}
      */
-    public static BeatmapParser getBeatmapParser() {
-        return beatmapParser;
+    public static TrackParser getTrackParser() {
+        return trackParser;
     }
 
     /**

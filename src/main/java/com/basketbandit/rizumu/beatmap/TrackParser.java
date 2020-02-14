@@ -15,25 +15,25 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class BeatmapParser {
-    private static final Logger log = LoggerFactory.getLogger(BeatmapParser.class);
+public class TrackParser {
+    private static final Logger log = LoggerFactory.getLogger(TrackParser.class);
 
-    private HashMap<String, File> beatmapFiles = new HashMap<>();
+    private HashMap<String, File> trackFiles = new HashMap<>();
 
-    public BeatmapParser(String path) {
+    public TrackParser(String path) {
         // Checks all the files in the directory of the given path for files ending in .yaml, then tries to parse them as beatmaps.
         try(Stream<Path> walk = Files.walk(Paths.get(path))) {
-            walk.filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> beatmapFiles.put(s.getFileName().toString(), s.toFile()));
+            walk.filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> trackFiles.put(s.getFileName().toString(), s.toFile()));
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
 
-        log.info(beatmapFiles.size() + " beatmap file(s) located");
+        log.info(trackFiles.size() + " track file(s) located");
     }
 
     public Track parseTrack(String name) {
         try {
-            return new ObjectMapper(new YAMLFactory()).readValue(new FileReader(beatmapFiles.get(name)), Track.class);
+            return new ObjectMapper(new YAMLFactory()).readValue(new FileReader(trackFiles.get(name)), Track.class);
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
             return null;
@@ -41,6 +41,6 @@ public class BeatmapParser {
     }
 
     public Set<String> getBeatmaps() {
-        return beatmapFiles.keySet();
+        return trackFiles.keySet();
     }
 }
