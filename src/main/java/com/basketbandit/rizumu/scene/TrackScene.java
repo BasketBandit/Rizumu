@@ -4,8 +4,9 @@ import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
-import com.basketbandit.rizumu.beatmap.Beatmap;
-import com.basketbandit.rizumu.beatmap.Note;
+import com.basketbandit.rizumu.beatmap.core.Beatmap;
+import com.basketbandit.rizumu.beatmap.core.Note;
+import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.Registrar;
@@ -29,18 +30,20 @@ public class TrackScene implements Scene {
     private AudioPlayer audioPlayer;
     private Statistics statistics;
 
-    protected String beatmapFilename;
+    protected String trackBeatmap;
+    protected Track track;
     protected Beatmap beatmap;
     private List<Note> notes;
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
-    public TrackScene initScene(String beatmapFilename) {
-        this.beatmapFilename = beatmapFilename;
+    public TrackScene initScene(String trackBeatmap) {
+        this.trackBeatmap = trackBeatmap;
         this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-        this.beatmap = Rizumu.getBeatmapParser().parseMap(beatmapFilename + ".yaml").getBeatmaps().get(3);
+        this.track = Rizumu.getBeatmapParser().parseMap(trackBeatmap + ".yaml");
+        this.beatmap = track.getBeatmaps().get(2);
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
         return this;
     }
@@ -55,6 +58,10 @@ public class TrackScene implements Scene {
 
     public AudioPlayer getAudioPlayer() {
         return audioPlayer;
+    }
+
+    public Track getTrack() {
+        return track;
     }
 
     public Beatmap getBeatmap() {
@@ -210,7 +217,7 @@ public class TrackScene implements Scene {
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                        Rizumu.setPrimaryScene(trackScene.initScene(beatmapFilename));
+                        Rizumu.setPrimaryScene(trackScene.initScene(trackBeatmap));
                         return;
                     }
 

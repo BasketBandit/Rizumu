@@ -1,13 +1,14 @@
 ---
-beatmap:
-  - name: 'Kenaston 4K'
-    artist: 'Chilly Gonzales'
-    audio_filename: 'ChillyGonzalesKenaston'
-    start_delay: 0
+name: 'Kenaston'
+artist: 'Chilly Gonzales'
+audio_filename: 'ChillyGonzalesKenaston'
+start_delay: 0
+beatmaps:
+  - name: '4K NM'
+    keys: 4
     segments:
       - name: 'Intro'
         length: 3200
-        keys: 4
         notes:
           - time: 0000
             key_num: 0
@@ -57,14 +58,11 @@ beatmap:
           - time: 3200
             key_num: 3
             note_type: 'single'
-  - name: 'Kenaston 5K'
-    artist: 'Chilly Gonzales'
-    audio_filename: 'ChillyGonzalesKenaston'
-    start_delay: 0
+  - name: '5K NM'
+    keys: 5
     segments:
       - name: 'Intro'
         length: 3200
-        keys: 5
         notes:
           - time: 0000
             key_num: 0
@@ -114,14 +112,11 @@ beatmap:
           - time: 3200
             key_num: 0
             note_type: 'single'
-  - name: 'Kenaston 6K'
-    artist: 'Chilly Gonzales'
-    audio_filename: 'ChillyGonzalesKenaston'
-    start_delay: 0
+  - name: '6K NM'
+    keys: 6
     segments:
       - name: 'Intro'
         length: 3200
-        keys: 6
         notes:
           - time: 0000
             key_num: 0
@@ -171,14 +166,11 @@ beatmap:
           - time: 3200
             key_num: 3
             note_type: 'single'
-  - name: 'Kenaston 7K'
-    artist: 'Chilly Gonzales'
-    audio_filename: 'ChillyGonzalesKenaston'
-    start_delay: 0
+  - name: '7K NM'
+    keys: 7
     segments:
       - name: 'Intro'
         length: 3200
-        keys: 7
         notes:
           - time: 0000
             key_num: 0

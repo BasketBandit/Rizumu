@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.beatmap;
+package com.basketbandit.rizumu.beatmap.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,37 +9,29 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "name",
-        "length",
         "keys",
-        "notes"
+        "segments"
 })
-public class Segment {
+public class Beatmap {
     @JsonProperty("name")
     private String name;
-    @JsonProperty("length")
-    private int length;
     @JsonProperty("keys")
-    private int keys;
-    @JsonProperty("notes")
-    private List<Note> notes = null;
+    private Integer keys;
+    @JsonProperty("segments")
+    private List<Segment> segments = null;
 
     @JsonProperty("name")
     public String getName() {
         return name;
     }
 
-    @JsonProperty("length")
-    public int getLength() {
-        return length;
-    }
-
     @JsonProperty("keys")
-    public int getKeys() {
+    public Integer getKeys() {
         return keys;
     }
 
-    @JsonProperty("notes")
-    public List<Note> getNotes() {
-        return notes;
+    @JsonProperty("segments")
+    public List<Segment> getSegments() {
+        return segments;
     }
 }

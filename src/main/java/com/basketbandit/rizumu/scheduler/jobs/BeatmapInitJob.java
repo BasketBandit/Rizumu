@@ -10,7 +10,7 @@ public class BeatmapInitJob extends Job {
     private final BeatmapInitTask beatmapInitTask;
 
     public BeatmapInitJob(TrackScene scene) {
-        super(scene.getBeatmap().getStartDelay(), 0, TimeUnit.MILLISECONDS);
+        super(scene.getTrack().getStartDelay(), 0, TimeUnit.MILLISECONDS);
         this.beatmapInitTask = new BeatmapInitTask(scene);
     }
 

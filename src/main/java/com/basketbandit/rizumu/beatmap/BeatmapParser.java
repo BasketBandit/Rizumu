@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu.beatmap;
 
+import com.basketbandit.rizumu.beatmap.core.Track;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.slf4j.Logger;
@@ -30,9 +31,9 @@ public class BeatmapParser {
         log.info(beatmapFiles.size() + " beatmap file(s) located");
     }
 
-    public BeatmapContainer parseMap(String name) {
+    public Track parseMap(String name) {
         try {
-            return new ObjectMapper(new YAMLFactory()).readValue(new FileReader(beatmapFiles.get(name)), BeatmapContainer.class);
+            return new ObjectMapper(new YAMLFactory()).readValue(new FileReader(beatmapFiles.get(name)), Track.class);
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
             return null;

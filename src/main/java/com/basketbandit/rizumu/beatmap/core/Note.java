@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.beatmap;
+package com.basketbandit.rizumu.beatmap.core;
 
 import com.basketbandit.rizumu.SystemConfiguration;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -34,7 +34,7 @@ public class Note extends Rectangle {
         super(0, -26, 50, 25);
     }
 
-    void initNote(int keyNum) {
+    public void initNote(int keyNum) {
         switch(keyNum) {
             case 0:
                 this.x = 25;

@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.beatmap;
+package com.basketbandit.rizumu.beatmap.core;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,39 +10,44 @@ import java.util.List;
 @JsonPropertyOrder({
         "name",
         "artist",
-        "start_delay",
         "audio_filename",
-        "segments"
+        "start_delay",
+        "beatmaps"
 })
-public class Beatmap {
+public class Track {
     @JsonProperty("name")
     private String name;
     @JsonProperty("artist")
     private String artist;
-    @JsonProperty("start_delay")
-    private int startDelay;
-    @JsonProperty("segments")
-    private List<Segment> segments = null;
     @JsonProperty("audio_filename")
     private String audioFilename;
+    @JsonProperty("start_delay")
+    private Integer startDelay;
+    @JsonProperty("beatmaps")
+    private List<Beatmap> beatmaps = null;
 
     @JsonProperty("name")
     public String getName() {
         return name;
     }
 
-    @JsonProperty("start_delay")
-    public int getStartDelay() {
-        return startDelay;
-    }
-
-    @JsonProperty("segments")
-    public List<Segment> getSegments() {
-        return segments;
+    @JsonProperty("artist")
+    public String getArtist() {
+        return artist;
     }
 
     @JsonProperty("audio_filename")
     public String getAudioFilename() {
         return audioFilename;
+    }
+
+    @JsonProperty("start_delay")
+    public Integer getStartDelay() {
+        return startDelay;
+    }
+
+    @JsonProperty("beatmaps")
+    public List<Beatmap> getBeatmaps() {
+        return beatmaps;
     }
 }
