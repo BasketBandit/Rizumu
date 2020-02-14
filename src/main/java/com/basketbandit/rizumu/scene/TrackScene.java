@@ -29,18 +29,24 @@ public class TrackScene implements Scene {
     private AudioPlayer audioPlayer;
     private Statistics statistics;
 
-    private Beatmap beatmap;
+    protected String beatmapFilename;
+    protected Beatmap beatmap;
     private List<Note> notes;
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
-    public TrackScene initScene(Beatmap beatmap) {
+    public TrackScene initScene(String beatmapFilename) {
+        this.beatmapFilename = beatmapFilename;
         this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
         this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-        this.beatmap = beatmap;
+        this.beatmap = Rizumu.getBeatmapParser().parseMap(beatmapFilename + ".yaml").getBeatmaps().get(0);
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
         return this;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
     }
 
     public List<Note> getNotes() {
@@ -71,8 +77,7 @@ public class TrackScene implements Scene {
             // Draw framerate and tickrate.
             g.setFont(fonts[368].deriveFont(Font.PLAIN,12));
             g.setColor(Color.GRAY);
-            g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getHitRate(), 10, 40);
-
+            g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getAccuracy(), 10, 40);
             g.setColor(extendedRegistrar.getColor());
             g.fill(extendedRegistrar);
 
@@ -155,8 +160,9 @@ public class TrackScene implements Scene {
 
         private Color transGray = new Color(50,50,50, 235);
 
-        private com.basketbandit.rizumu.drawable.Button resumeButton = new com.basketbandit.rizumu.drawable.Button(80, 80, 100, 50);
-        private com.basketbandit.rizumu.drawable.Button quitButton = new Button(80, 140, 100, 50);
+        private Button resumeButton = new Button((SystemConfiguration.getWidth()/2) - 200, (SystemConfiguration.getHeight()/3) - 25, 400, 75);
+        private Button restartButton = new Button((SystemConfiguration.getWidth()/2) - 200, (SystemConfiguration.getHeight()/3) + 60, 400, 75);
+        private Button quitButton = new Button((SystemConfiguration.getWidth()/2) - 200, (SystemConfiguration.getHeight()/3) + 145, 400, 75);
 
         @Override
         public RenderObject getRenderObject() {
@@ -176,12 +182,14 @@ public class TrackScene implements Scene {
 
                 g.setColor(resumeButton.getColor());
                 g.fill(resumeButton);
+                g.fill(restartButton);
                 g.fill(quitButton);
 
                 g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
                 g.setColor(Color.WHITE);
-                g.drawString("Resume!", (int)resumeButton.getMinX(), (int)resumeButton.getCenterY());
-                g.drawString("Quit!", (int)quitButton.getMinX(), (int)quitButton.getCenterY());
+                g.drawString("Resume", (int)resumeButton.getMinX(), (int)resumeButton.getCenterY());
+                g.drawString("Restart", (int)restartButton.getMinX(), (int)restartButton.getCenterY());
+                g.drawString("Quit", (int)quitButton.getMinX(), (int)quitButton.getCenterY());
             }
         }
 
@@ -193,6 +201,16 @@ public class TrackScene implements Scene {
                     if(resumeButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.resumeExecution();
+                        return;
+                    }
+
+                    // if left-click is pushed and the cursor is in the bounds of the 'restart' button, restart the beatmap
+                    if(restartButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                        Rizumu.setSecondaryScene(null);
+                        audioPlayer.stop();
+                        ScheduleHandler.cancelExecution();
+                        TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
+                        Rizumu.setPrimaryScene(trackScene.initScene(beatmapFilename));
                         return;
                     }
 

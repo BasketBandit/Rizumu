@@ -67,7 +67,7 @@ public class MenuScene implements Scene {
                 if(button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                     audioPlayer.pause();
                     TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                    Rizumu.setPrimaryScene(trackScene.initScene(Rizumu.getBeatmapParser().parseMap("ChillyGonzalesKenaston.yaml").getBeatmaps().get(0)));
+                    Rizumu.setPrimaryScene(trackScene.initScene("ChillyGonzalesKenaston"));
                     return;
                 }
 
