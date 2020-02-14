@@ -31,7 +31,7 @@ public class Note extends Rectangle {
     private Color color;
 
     public Note() {
-        super(0, -25, 50, 25);
+        super(0, -26, 50, 25);
     }
 
     void initNote(int keyNum) {
@@ -59,8 +59,8 @@ public class Note extends Rectangle {
         if(noteType.equals("single_long")) {
             // The calculation of note length is based on time (not sure if that's correct!) (will need to be modified for half second long notes!)
             // note length / 1000 to get number of seconds, times that by the speed multiplier to get the total number of note lengths are needed (-1 to account for a single note size)
-            this.y = -23*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
-            this.height = 23*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
+            this.y = -25*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
+            this.height = 25*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
         }
     }
 

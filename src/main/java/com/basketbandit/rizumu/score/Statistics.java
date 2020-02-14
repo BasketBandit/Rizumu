@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.score;
 
 public class Statistics {
-    private double hitNotes, missedNotes = 0.0;
+    private int hitNotes, missedNotes;
 
     public Statistics() {
     }
@@ -14,15 +14,19 @@ public class Statistics {
         missedNotes++;
     }
 
-    public double getHitNotes() {
+    public int getHitNotes() {
         return hitNotes;
     }
 
-    public double getMissedNotes() {
+    public int getMissedNotes() {
         return missedNotes;
     }
 
-    public double getHitRate() {
-        return (hitNotes/(hitNotes+missedNotes))*100;
+    public double getAccuracy() {
+        return ((double)hitNotes/((double)hitNotes+(double)missedNotes))*100;
+    }
+
+    public String getAccuracyString() {
+        return "Accuracy: " + getAccuracy() + "% (" + hitNotes + "/" + (hitNotes+missedNotes) + ")";
     }
 }

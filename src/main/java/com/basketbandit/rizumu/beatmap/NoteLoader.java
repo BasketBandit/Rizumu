@@ -2,6 +2,7 @@ package com.basketbandit.rizumu.beatmap;
 
 import com.basketbandit.rizumu.scene.TrackScene;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
+import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
 import com.basketbandit.rizumu.scheduler.jobs.NoteLoadJob;
 
 import java.util.List;
@@ -29,6 +30,8 @@ public class NoteLoader{
             }
             loadOffset += segment.getLength();
         }
+
+        ScheduleHandler.registerUniqueJob(new BeatmapEndJob(scene, loadOffset));
     }
 }
 
