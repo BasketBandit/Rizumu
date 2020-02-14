@@ -34,44 +34,47 @@ public class Note extends Rectangle {
         super(0, -26, 50, 25);
     }
 
-    public void initNote(int keyNum) {
+    public void initNote(int keyNum, int keyCount) {
+        int notePosition = (((SystemConfiguration.getWidth()/2)-50)-(keyCount/2)*50);
+
         switch(keyNum) {
             case 0:
-                this.x = 25;
+                this.x = notePosition;
                 this.key = KeyEvent.VK_Q;
                 this.color = Color.GREEN;
                 break;
             case 1:
-                this.x = 75;
+                this.x = notePosition+50;
                 this.key = KeyEvent.VK_W;
                 this.color = Color.RED;
                 break;
             case 2:
-                this.x = 125;
+                this.x = notePosition+100;
                 this.key = KeyEvent.VK_E;
                 this.color = Color.YELLOW;
                 break;
             case 3:
-                this.x = 175;
+                this.x = notePosition+150;
                 this.key = KeyEvent.VK_R;
                 this.color = Color.BLUE;
                 break;
             case 4:
-                this.x = 225;
+                this.x = notePosition+200;
                 this.key = KeyEvent.VK_T;
                 this.color = Color.ORANGE;
                 break;
             case 5:
-                this.x = 275;
+                this.x = notePosition+250;
                 this.key = KeyEvent.VK_Y;
                 this.color = Color.PINK;
                 break;
             case 6:
-                this.x = 325;
+                this.x = notePosition+300;
                 this.key = KeyEvent.VK_U;
                 this.color = Color.MAGENTA;
                 break;
         }
+
         if(noteType.equals("single_long")) {
             // The calculation of note length is based on time (not sure if that's correct!) (will need to be modified for half second long notes!)
             // note length / 1000 to get number of seconds, times that by the speed multiplier to get the total number of note lengths are needed (-1 to account for a single note size)

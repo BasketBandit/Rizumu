@@ -28,7 +28,7 @@ public class NoteLoader{
             List<Note> notes = segment.getNotes();
             for(Note note: notes) {
                 note.setTime(loadOffset + note.getTime()); // Set the relative segment note time to absolute beatmap time
-                note.initNote(note.getKeyNum()); // Set things such as x position, size, colour and hit_key of the note
+                note.initNote(note.getKeyNum(), beatmap.getKeys()); // Set things such as x position, size, colour and hit_key of the note
                 ScheduleHandler.registerUniqueJob(new NoteLoadJob(note, scene));
             }
             loadOffset += segment.getLength();

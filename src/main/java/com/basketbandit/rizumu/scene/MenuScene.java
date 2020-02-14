@@ -62,6 +62,7 @@ public class MenuScene implements Scene {
             g.drawString("Volume+ 5db", (int)volumeUpButton.getMinX(), (int)volumeUpButton.getCenterY());
             g.drawString("Volume- 5db", (int)volumeDownButton.getMinX(), (int)volumeDownButton.getCenterY());
 
+            // dynamic beatmap track buttons
             for(TrackButton trackButton: trackButtons) {
                 g.setColor(trackButton.getColor());
                 g.fill(trackButton);
@@ -81,6 +82,7 @@ public class MenuScene implements Scene {
             }
 
             if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
+                // ArrayList of beatmap buttons
                 for(TrackButton trackButton: trackButtons) {
                     if(trackButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                         audioPlayer.pause();
