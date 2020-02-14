@@ -15,6 +15,7 @@ import java.util.List;
         "beatmaps"
 })
 public class Track {
+    private String fileName;
     @JsonProperty("name")
     private String name;
     @JsonProperty("artist")
@@ -25,6 +26,14 @@ public class Track {
     private Integer startDelay;
     @JsonProperty("beatmaps")
     private List<Beatmap> beatmaps = null;
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     @JsonProperty("name")
     public String getName() {

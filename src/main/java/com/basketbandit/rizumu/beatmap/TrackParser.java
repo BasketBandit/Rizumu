@@ -12,18 +12,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.stream.Stream;
 
 public class TrackParser {
     private static final Logger log = LoggerFactory.getLogger(TrackParser.class);
 
     private HashMap<String, File> trackFiles = new HashMap<>();
+    private HashMap<String, Track> trackObjects = new HashMap<>();
 
     public TrackParser(String path) {
         // Checks all the files in the directory of the given path for files ending in .yaml, then tries to parse them as beatmaps.
         try(Stream<Path> walk = Files.walk(Paths.get(path))) {
-            walk.filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> trackFiles.put(s.getFileName().toString(), s.toFile()));
+            walk.filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> {
+                String name = s.getFileName().toString();
+                File file = s.toFile();
+                trackFiles.put(name, file);
+                trackObjects.put(name, parseTrack(file));
+            });
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
@@ -33,14 +38,27 @@ public class TrackParser {
 
     public Track parseTrack(String name) {
         try {
-            return new ObjectMapper(new YAMLFactory()).readValue(new FileReader(trackFiles.get(name)), Track.class);
+            Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(trackFiles.get(name)), Track.class);
+            track.setFileName(name);
+            return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
             return null;
         }
     }
 
-    public Set<String> getBeatmaps() {
-        return trackFiles.keySet();
+    public Track parseTrack(File file) {
+        try {
+            Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(file), Track.class);
+            track.setFileName(file.getName());
+            return track;
+        } catch(Exception ex) {
+            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
+            return null;
+        }
+    }
+
+    public HashMap<String, Track> getTrackObjects() {
+        return trackObjects;
     }
 }

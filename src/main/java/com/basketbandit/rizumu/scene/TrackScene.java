@@ -215,7 +215,13 @@ public class TrackScene implements Scene {
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                        Rizumu.setPrimaryScene(trackScene.initScene(track, beatmap)); // rework this to fit the Track/Beatmap constructor
+                        Track trakc = Rizumu.getTrackParser().parseTrack(track.getFileName()); // forgive me for the horrible variable naming...
+                        for(Beatmap baetmap: trakc.getBeatmaps()) {
+                            if(baetmap.getName().equals(beatmap.getName())) {
+                                Rizumu.setPrimaryScene(trackScene.initScene(trakc, baetmap));
+                                return;
+                            }
+                        }
                         return;
                     }
 
