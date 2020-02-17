@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu;
 
-import com.basketbandit.rizumu.scene.TickObject;
+import com.basketbandit.rizumu.stage.object.TickObject;
 
 public class Ticker {
     private TickObject backgroundTickObject;

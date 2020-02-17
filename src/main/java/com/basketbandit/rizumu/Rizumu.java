@@ -2,7 +2,9 @@ package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.TrackParser;
-import com.basketbandit.rizumu.scene.*;
+import com.basketbandit.rizumu.stage.*;
+import com.basketbandit.rizumu.stage.object.RenderObject;
+import com.basketbandit.rizumu.stage.scene.*;
 
 import java.util.HashMap;
 

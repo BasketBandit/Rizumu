@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu;
 
-import com.basketbandit.rizumu.scene.RenderObject;
-import com.basketbandit.rizumu.scene.Scene;
+import com.basketbandit.rizumu.stage.object.RenderObject;
+import com.basketbandit.rizumu.stage.scene.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

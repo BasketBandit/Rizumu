@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.scene;
+package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.Configuration;
@@ -10,6 +10,9 @@ import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseInput;
+import com.basketbandit.rizumu.stage.object.RenderObject;
+import com.basketbandit.rizumu.stage.Scenes;
+import com.basketbandit.rizumu.stage.object.TickObject;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

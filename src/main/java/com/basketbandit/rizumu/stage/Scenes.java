@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.scene;
+package com.basketbandit.rizumu.stage;
 
 public enum Scenes {
     SPLASH("splash"),

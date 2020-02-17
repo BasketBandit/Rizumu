@@ -3,7 +3,7 @@ package com.basketbandit.rizumu.beatmap;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Segment;
-import com.basketbandit.rizumu.scene.TrackScene;
+import com.basketbandit.rizumu.stage.scene.TrackScene;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
 import com.basketbandit.rizumu.scheduler.jobs.NoteLoadJob;

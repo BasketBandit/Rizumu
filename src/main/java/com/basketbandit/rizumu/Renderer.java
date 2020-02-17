@@ -2,8 +2,8 @@ package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseInput;
-import com.basketbandit.rizumu.scene.DefaultBackgroundRenderObject;
-import com.basketbandit.rizumu.scene.RenderObject;
+import com.basketbandit.rizumu.stage.object.DefaultBackgroundRenderObject;
+import com.basketbandit.rizumu.stage.object.RenderObject;
 
 import javax.swing.*;
 import java.awt.*;

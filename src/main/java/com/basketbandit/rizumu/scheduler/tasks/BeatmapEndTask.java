@@ -1,9 +1,9 @@
 package com.basketbandit.rizumu.scheduler.tasks;
 
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.scene.ResultsScene;
-import com.basketbandit.rizumu.scene.Scenes;
-import com.basketbandit.rizumu.scene.TrackScene;
+import com.basketbandit.rizumu.stage.scene.ResultsScene;
+import com.basketbandit.rizumu.stage.Scenes;
+import com.basketbandit.rizumu.stage.scene.TrackScene;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.Task;
 

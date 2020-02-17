@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.scene;
+package com.basketbandit.rizumu.stage.object;
 
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.Configuration;

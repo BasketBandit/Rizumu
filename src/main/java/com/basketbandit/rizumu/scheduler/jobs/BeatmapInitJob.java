@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.scheduler.jobs;
 
-import com.basketbandit.rizumu.scene.TrackScene;
+import com.basketbandit.rizumu.stage.scene.TrackScene;
 import com.basketbandit.rizumu.scheduler.Job;
 import com.basketbandit.rizumu.scheduler.tasks.BeatmapInitTask;
 
