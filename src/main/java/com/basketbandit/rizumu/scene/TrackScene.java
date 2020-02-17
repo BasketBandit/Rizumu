@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
@@ -35,6 +35,8 @@ public class TrackScene implements Scene {
     private List<Note> notes;
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
+
+    private Color lightGrey = new Color(25,25,25, 100);
 
     public TrackScene initScene(Track track, Beatmap beatmap) {
         this.statistics = new Statistics();
@@ -79,21 +81,22 @@ public class TrackScene implements Scene {
     private class TrackRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
-            // Draw framerate and tickrate.
-            g.setFont(fonts[368].deriveFont(Font.PLAIN,12));
-            g.setColor(Color.GRAY);
-            g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getAccuracy(), 10, 40);
+            // Important note: things that are drawn later will be draw on top of old stuff!
+
+            // background
+            g.setColor(lightGrey);
+            g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5, 0, (beatmap.getKeys()*50)+10, Configuration.getContentHeight());
+
             g.setColor(extendedRegistrar.getColor());
             g.fill(extendedRegistrar);
 
             g.setColor(registrar.getColor());
             g.fill(registrar);
 
+            // mid-ground
             for(Note note: notes) {
                 g.setColor(note.getColor());
                 g.fill(note);
-
-                // creates a boarder around notes and make single_long's hit/release radius easy to see
                 g.setColor(Color.BLACK);
                 g.drawRect(note.x, note.y, note.width, note.height);
                 if(note.getNoteType().equals("single_long")) {
@@ -101,6 +104,14 @@ public class TrackScene implements Scene {
                     g.drawRect(note.x, note.y + (note.height - 23), note.width, 23);
                 }
             }
+
+            // foreground
+            g.setColor(Color.lightGray);
+            g.fillRect(0, 0, Configuration.getContentWidth(), 50);
+
+            g.setFont(fonts[368].deriveFont(Font.PLAIN,12));
+            g.setColor(Color.GRAY);
+            g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getAccuracy(), 10, 40);
         }
     }
 
@@ -122,7 +133,7 @@ public class TrackScene implements Scene {
             audioPlayer.resume();
 
             for(Note note: notes) {
-                note.translate(0, SystemConfiguration.getNoteSpeedScale()); // translate each note in positive y
+                note.translate(0, Configuration.getNoteSpeedScale()); // translate each note in positive y
 
                 if(!note.hit() && note.getNoteType().equals("single") && registrar.intersects(note) && KeyInput.isDown(note.getKey())) {
                     note.setHit();
@@ -165,9 +176,9 @@ public class TrackScene implements Scene {
 
         private Color transGray = new Color(50,50,50, 235);
 
-        private Button resumeButton = new Button((SystemConfiguration.getWidth()/2) - 200, (SystemConfiguration.getHeight()/3) - 25, 400, 75);
-        private Button restartButton = new Button((SystemConfiguration.getWidth()/2) - 200, (SystemConfiguration.getHeight()/3) + 60, 400, 75);
-        private Button quitButton = new Button((SystemConfiguration.getWidth()/2) - 200, (SystemConfiguration.getHeight()/3) + 145, 400, 75);
+        private Button resumeButton = new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75);
+        private Button restartButton = new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75);
+        private Button quitButton = new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75);
 
         @Override
         public RenderObject getRenderObject() {
@@ -183,7 +194,7 @@ public class TrackScene implements Scene {
             @Override
             public void render(Graphics2D g) {
                 g.setColor(transGray);
-                g.fillRect(0, 0, SystemConfiguration.getWidth(), SystemConfiguration.getHeight());
+                g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
 
                 g.setColor(resumeButton.getColor());
                 g.fill(resumeButton);

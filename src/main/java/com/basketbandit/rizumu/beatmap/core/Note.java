@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.beatmap.core;
 
-import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.Configuration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -35,7 +35,7 @@ public class Note extends Rectangle {
     }
 
     public void initNote(int keyNum, int keyCount) {
-        int notePosition = (((SystemConfiguration.getWidth()/2)-50)-(keyCount/2)*50);
+        int notePosition = (Configuration.getContentWidth()/2) - (50*keyCount/2);
 
         switch(keyNum) {
             case 0:
@@ -78,8 +78,8 @@ public class Note extends Rectangle {
         if(noteType.equals("single_long")) {
             // The calculation of note length is based on time (not sure if that's correct!) (will need to be modified for half second long notes!)
             // note length / 1000 to get number of seconds, times that by the speed multiplier to get the total number of note lengths are needed (-1 to account for a single note size)
-            this.y = -25*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
-            this.height = 25*((noteLength/1000)*SystemConfiguration.getSpeedMultiplier()-1);
+            this.y = -25*((noteLength/1000)* Configuration.getSpeedMultiplier()-1);
+            this.height = 25*((noteLength/1000)* Configuration.getSpeedMultiplier()-1);
         }
     }
 

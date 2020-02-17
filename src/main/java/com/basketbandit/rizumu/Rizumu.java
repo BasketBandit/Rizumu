@@ -19,10 +19,10 @@ public class Rizumu {
         //System.setProperty("sun.java2d.3d3", args[1]); // DirectX
 
         // initialises system configs
-        new SystemConfiguration();
+        new Configuration();
 
         // loads and parses beatmaps
-        trackParser = new TrackParser(SystemConfiguration.getBeatmapResourcePath());
+        trackParser = new TrackParser(Configuration.getBeatmapResourcePath());
 
         // initialises AudioPlayerController
         new AudioPlayerController();

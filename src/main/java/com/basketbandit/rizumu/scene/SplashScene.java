@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.input.MouseInput;
@@ -45,11 +45,11 @@ public class SplashScene implements Scene {
     private class SplashRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
-            g.drawImage(logo, (SystemConfiguration.getWidth()/2)-(logo.getWidth()/4)-(x/4), (SystemConfiguration.getHeight()/2)-(logo.getHeight()/4)-50-(x/2), (logo.getWidth()/2)+(x/2), (logo.getHeight()/2)+(x/2), null); // logo with pulsing (remove the additions relating to `x` to stop that)
+            g.drawImage(logo, (Configuration.getContentWidth()/2)-(logo.getWidth()/4)-(x/4), (Configuration.getContentHeight()/2)-(logo.getHeight()/4)-50-(x/2), (logo.getWidth()/2)+(x/2), (logo.getHeight()/2)+(x/2), null); // logo with pulsing (remove the additions relating to `x` to stop that)
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
             g.setColor(Color.BLACK);
-            g.drawString("Click to start!", SystemConfiguration.getWidth()/2-50, SystemConfiguration.getHeight()/2+50);
+            g.drawString("Click to start!", Configuration.getContentWidth()/2-50, Configuration.getContentHeight()/2+50);
         }
     }
 

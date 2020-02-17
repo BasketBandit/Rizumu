@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.scheduler.tasks;
 
-import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.scene.TrackScene;
@@ -19,7 +19,7 @@ public class BeatmapAudioDelayTask implements Task {
 
     @Override
     public void run() {
-        audioPlayer.changeTrack(SystemConfiguration.getBeatmapResourcePath() + track.getAudioFilename() + ".wav");
+        audioPlayer.changeTrack(Configuration.getBeatmapResourcePath() + track.getAudioFilename() + ".wav");
         audioPlayer.loop(0);
         audioPlayer.play();
     }

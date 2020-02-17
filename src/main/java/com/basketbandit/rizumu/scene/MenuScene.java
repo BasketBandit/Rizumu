@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
@@ -98,7 +98,7 @@ public class MenuScene implements Scene {
                 }
 
                 if(frameRateButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                    SystemConfiguration.toggleUnlockedFramerate();
+                    Configuration.toggleUnlockedFramerate();
                     return;
                 }
 

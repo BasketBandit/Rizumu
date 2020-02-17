@@ -32,6 +32,8 @@ public class Renderer extends Canvas {
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         this.frame.requestFocus();
+
+        Configuration.setContentBounds(this.frame.getContentPane().getWidth(), this.frame.getContentPane().getHeight());
     }
 
     /**

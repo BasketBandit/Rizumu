@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.scene;
 
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.SystemConfiguration;
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.MouseInput;
 import com.basketbandit.rizumu.score.Statistics;
@@ -15,7 +15,7 @@ public class ResultsScene implements Scene {
 
     private Statistics statistics;
 
-    private Button menuButton = new Button(SystemConfiguration.getWidth() - 200, SystemConfiguration.getHeight() - 150, 100, 50);
+    private Button menuButton = new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50);
 
     public ResultsScene initScene(Statistics statistics) {
         this.statistics = statistics;

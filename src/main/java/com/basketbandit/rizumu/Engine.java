@@ -30,7 +30,7 @@ public class Engine extends Thread {
 
         while(isRunning) {
             long now = System.nanoTime();
-            unprocessed += (now - lastTime) / SystemConfiguration.getTickRate();
+            unprocessed += (now - lastTime) / Configuration.getTickRate();
             lastTime = now;
 
             if(unprocessed >= 1.0) {
@@ -39,7 +39,7 @@ public class Engine extends Thread {
                 unprocessed--;
                 canRender = true;
             } else {
-                canRender = SystemConfiguration.isUnlockedFramerate(); // setting to true unlocked framerate but adds possibility for concurrent modification exceptions - need to fix this urgently
+                canRender = Configuration.isUnlockedFramerate(); // setting to true unlocked framerate but adds possibility for concurrent modification exceptions - need to fix this urgently
             }
 
             if(canRender) {
