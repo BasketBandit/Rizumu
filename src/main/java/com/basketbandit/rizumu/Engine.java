@@ -5,6 +5,8 @@ import com.basketbandit.rizumu.stage.scene.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+
 public class Engine extends Thread {
     private static final Logger log = LoggerFactory.getLogger(Engine.class);
 
@@ -63,6 +65,10 @@ public class Engine extends Thread {
 
     public int getTps() {
         return ticks;
+    }
+
+    JFrame getFrame() {
+        return renderer.getFrame();
     }
 
     void setPrimaryScene(Scene scene) {

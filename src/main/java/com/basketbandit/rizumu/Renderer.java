@@ -63,6 +63,10 @@ public class Renderer extends Canvas {
         return secondaryRenderObject == null;
     }
 
+    JFrame getFrame() {
+        return frame;
+    }
+
     void render() {
         BufferStrategy bs = getBufferStrategy();
 

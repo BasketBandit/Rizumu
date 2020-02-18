@@ -23,7 +23,7 @@ public class Note extends Rectangle {
     @JsonProperty("key_num")
     private int keyNum;
     @JsonProperty("note_type") // single, single_long
-    private String noteType;
+    private String noteType = "";
     @JsonProperty("note_length")
     private int noteLength;
 
@@ -86,28 +86,6 @@ public class Note extends Rectangle {
         }
     }
 
-    public Color getColor() {
-        return color;
-    }
-
-    public void setHit() {
-        this.hit = true;
-    }
-
-    public boolean hit() { return hit; }
-
-    public void setHeld() {
-        this.held = true;
-    }
-
-    public boolean wasHeld() {
-        return held;
-    }
-
-    public int getKey() {
-        return key;
-    }
-
     @JsonProperty("time")
     public int getTime() {
         return time;
@@ -131,5 +109,31 @@ public class Note extends Rectangle {
     @JsonProperty("note_length")
     public int getNoteLength() {
         return noteLength;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public void setHit() {
+        this.hit = true;
+    }
+
+    public boolean hit() { return hit; }
+
+    public void setHeld() {
+        this.held = true;
+    }
+
+    public boolean wasHeld() {
+        return held;
+    }
+
+    public int getKey() {
+        return key;
     }
 }

@@ -1,13 +1,14 @@
 package com.basketbandit.rizumu.stage.scene;
 
-import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.Configuration;
+import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.drawable.CursorContainer;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyInput;
@@ -15,13 +16,14 @@ import com.basketbandit.rizumu.input.MouseInput;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
-import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.Scenes;
+import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -178,9 +180,13 @@ public class TrackScene implements Scene {
 
         private Color transGray = new Color(50,50,50, 235);
 
-        private Button resumeButton = new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75);
-        private Button restartButton = new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75);
-        private Button quitButton = new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75);
+        private HashMap<String, Button> buttons = new HashMap<>();
+
+        PauseMenu() {
+            buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
+            buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
+            buttons.put("quitButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
+        }
 
         @Override
         public RenderObject getRenderObject() {
@@ -198,32 +204,40 @@ public class TrackScene implements Scene {
                 g.setColor(transGray);
                 g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
 
-                g.setColor(resumeButton.getColor());
-                g.fill(resumeButton);
-                g.fill(restartButton);
-                g.fill(quitButton);
+                g.setColor(Color.DARK_GRAY);
+                buttons.values().forEach(g::fill);
+
+                g.setColor(Color.black);
+                buttons.values().forEach(g::draw);
 
                 g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
                 g.setColor(Color.WHITE);
-                g.drawString("Resume", (int)resumeButton.getMinX(), (int)resumeButton.getCenterY());
-                g.drawString("Restart", (int)restartButton.getMinX(), (int)restartButton.getCenterY());
-                g.drawString("Quit", (int)quitButton.getMinX(), (int)quitButton.getCenterY());
+                g.drawString("Resume", (int)buttons.get("resumeButton").getCenterX(), (int)buttons.get("resumeButton").getCenterY());
+                g.drawString("Restart", (int)buttons.get("restartButton").getCenterX(), (int)buttons.get("restartButton").getCenterY());
+                g.drawString("Quit", (int)buttons.get("quitButton").getCenterX(), (int)buttons.get("quitButton").getCenterY());
             }
         }
 
         private class PauseMenuTicker implements TickObject {
             @Override
             public void tick() {
+                for(Button button: buttons.values()) {
+                    if(button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                        Rizumu.getFrame().setCursor(CursorContainer.HAND_CURSOR);
+                        break;
+                    }
+                }
+
                 if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
-                    // if left-click is pushed and the cursor is in the bounds of the 'resume' button, close the pause menu
-                    if(resumeButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    // 'resume' button, close the pause menu
+                    if(buttons.get("resumeButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.resumeExecution();
                         return;
                     }
 
-                    // if left-click is pushed and the cursor is in the bounds of the 'restart' button, restart the beatmap
-                    if(restartButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    // 'restart' button, restart the beatmap
+                    if(buttons.get("restartButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                         Rizumu.setSecondaryScene(null);
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
@@ -238,8 +252,8 @@ public class TrackScene implements Scene {
                         return;
                     }
 
-                    // if left-click is pushed and the cursor is in the bounds of the 'quit' button, got back to the main menu
-                    if(quitButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    // 'quit' button, go back to the main menu
+                    if(buttons.get("quitButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         Rizumu.setSecondaryScene(null);

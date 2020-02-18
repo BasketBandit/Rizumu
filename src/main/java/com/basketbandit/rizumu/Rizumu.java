@@ -2,10 +2,11 @@ package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.TrackParser;
-import com.basketbandit.rizumu.stage.*;
+import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
 
+import javax.swing.*;
 import java.util.HashMap;
 
 public class Rizumu {
@@ -47,6 +48,10 @@ public class Rizumu {
      */
     public static TrackParser getTrackParser() {
         return trackParser;
+    }
+
+    public static JFrame getFrame() {
+        return engine.getFrame();
     }
 
     /**

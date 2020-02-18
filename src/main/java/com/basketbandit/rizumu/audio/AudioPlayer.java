@@ -17,7 +17,7 @@ public class AudioPlayer {
     private String status = "stopped";
     private String path;
     private FloatControl gainControl;
-    private float gain = -10.0f;
+    private float gain = -30.0f;
 
     public AudioPlayer() {
     }

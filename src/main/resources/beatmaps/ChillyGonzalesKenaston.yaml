@@ -17,11 +17,11 @@ beatmaps:
           - time: 0000
             key_num: 1
             note_type: 'single_long'
-            note_length: 600
+            note_length: 700
           - time: 0000
             key_num: 2
             note_type: 'single_long'
-            note_length: 600
+            note_length: 800
           - time: 0800
             key_num: 0
             note_type: 'single_long'
@@ -79,24 +79,24 @@ beatmaps:
           - time: 0000
             key_num: 0
             note_type: 'single_long'
-            note_length: 600
+            note_length: 200
           - time: 0000
             key_num: 1
             note_type: 'single_long'
-            note_length: 600
+            note_length: 400
           - time: 0000
             key_num: 2
             note_type: 'single_long'
             note_length: 600
-          - time: 0800
+          - time: 0000
             key_num: 3
             note_type: 'single_long'
-            note_length: 600
-          - time: 0800
+            note_length: 800
+          - time: 0000
             key_num: 4
             note_type: 'single_long'
-            note_length: 600
-          - time: 0800
+            note_length: 1600
+          - time: 1600
             key_num: 0
             note_type: 'single_long'
             note_length: 600
