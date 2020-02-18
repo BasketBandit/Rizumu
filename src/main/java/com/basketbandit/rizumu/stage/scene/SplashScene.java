@@ -1,17 +1,19 @@
 package com.basketbandit.rizumu.stage.scene;
 
-import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.Configuration;
+import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.input.MouseInput;
-import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.Scenes;
+import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -20,11 +22,16 @@ public class SplashScene implements Scene {
     private SplashTicker tickObject = new SplashTicker();
 
     private BufferedImage logo;
-    private int x = 0;
+    private float x = 0;
 
     public SplashScene() {
         try {
-            logo = ImageIO.read(new File("src/main/resources/assets/logo.png"));
+            // loads the master logo, uses AffineTransform to scale the image down for usage on float translations (smooth movement)
+            BufferedImage masterLogo = ImageIO.read(new File("src/main/resources/assets/logo.png"));
+            logo = new BufferedImage(masterLogo.getWidth()/2, masterLogo.getHeight()/2, BufferedImage.TYPE_INT_ARGB);
+            AffineTransform scaleHalf = new AffineTransform();
+            scaleHalf.scale(.5, .5);
+            logo = new AffineTransformOp(scaleHalf, AffineTransformOp.TYPE_BILINEAR).filter(masterLogo, logo);
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
@@ -48,18 +55,14 @@ public class SplashScene implements Scene {
     private class SplashRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
-            g.drawImage(logo, (Configuration.getContentWidth()/2)-(logo.getWidth()/4)-(x/4), (Configuration.getContentHeight()/2)-(logo.getHeight()/4)-50-(x/2), (logo.getWidth()/2)+(x/2), (logo.getHeight()/2)+(x/2), null); // logo with pulsing (remove the additions relating to `x` to stop that)
-
-            g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
-            g.setColor(Color.BLACK);
-            g.drawString("Click to start!", Configuration.getContentWidth()/2-50, Configuration.getContentHeight()/2+50);
+            g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getContentWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getContentHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
         }
     }
 
     private class SplashTicker implements TickObject {
         @Override
         public void tick() {
-            x = (x < 41) ? x+1 : 0; // logo pulse effect counter
+            x = x + 0.1f; // sine wave animation
             if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
             }

@@ -24,6 +24,7 @@ public class Renderer extends Canvas {
 
     private void initFrame() {
         this.frame = new JFrame("Rizumu");
+        this.frame.getContentPane().setPreferredSize(new Dimension(1280, 720));
         this.frame.setSize(1280, 720);
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);
@@ -32,6 +33,7 @@ public class Renderer extends Canvas {
         this.frame.setLocationRelativeTo(null);
         this.frame.setVisible(true);
         this.frame.requestFocus();
+        this.frame.pack();
 
         Configuration.setContentBounds(this.frame.getContentPane().getWidth(), this.frame.getContentPane().getHeight());
     }
