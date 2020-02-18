@@ -1,9 +1,10 @@
 package com.basketbandit.rizumu;
 
+import com.basketbandit.rizumu.stage.object.DefaultBackgroundTickObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 
 public class Ticker {
-    private TickObject backgroundTickObject;
+    private TickObject backgroundTickObject = new DefaultBackgroundTickObject();
     private TickObject primaryTickObject;
     private TickObject secondaryTickObject;
 
