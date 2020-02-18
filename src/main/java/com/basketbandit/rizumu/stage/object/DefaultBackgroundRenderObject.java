@@ -23,7 +23,7 @@ public class DefaultBackgroundRenderObject implements RenderObject {
             g.setColor(Color.RED);
             g.drawString("DEBUG MODE / " +
                     "RESOURCE PATH \"" + Configuration.getBeatmapResourcePath() + "\" / " +
-                    "TICKRATE " + Configuration.getTickRate() + " / " +
+                    "TICKRATE " + Configuration.getTickRateNs() + " / " +
                     "WIDTH " + Configuration.getWidth() + " / " +
                     "HEIGHT " + Configuration.getHeight() + " / " +
                     "CONTENT WIDTH " + Configuration.getContentWidth() + " / " +

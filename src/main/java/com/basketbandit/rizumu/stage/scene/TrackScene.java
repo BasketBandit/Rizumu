@@ -103,8 +103,7 @@ public class TrackScene implements Scene {
                 g.setColor(Color.BLACK);
                 g.drawRect(note.x, note.y, note.width, note.height);
                 if(note.getNoteType().equals("single_long")) {
-                    g.drawRect(note.x, note.y, note.width, 23);
-                    g.drawRect(note.x, note.y + (note.height - 23), note.width, 23);
+                    g.drawRect(note.x, note.y + (note.height - 25), note.width, 25);
                 }
             }
 

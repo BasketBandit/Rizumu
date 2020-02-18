@@ -30,7 +30,7 @@ public class Engine extends Thread {
 
         while(isRunning) {
             long now = System.nanoTime();
-            unprocessed += (now - lastTime) / Configuration.getTickRate();
+            unprocessed += (now - lastTime) / Configuration.getTickRateNs();
             lastTime = now;
 
             if(unprocessed >= 1.0) {

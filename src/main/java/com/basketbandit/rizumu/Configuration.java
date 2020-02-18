@@ -7,7 +7,8 @@ public class Configuration {
     private static final int height = 720;
     private static int contentWidth = 0;
     private static int contentHeight = 0;
-    private static double tickRate = 1000000000.0 / (60 + 0.0);
+    private static double tickRateNs = 1000000000.0 / 60.0;
+    private static double tickRateMs = tickRateNs / 1000000.0;
     private static boolean unlockedFramerate = true;
     private static String beatmapResourcePath = "src/main/resources/beatmaps/";
     private static float globalGain = -10.0f;
@@ -42,8 +43,12 @@ public class Configuration {
         return contentHeight;
     }
 
-    public static double getTickRate() {
-        return tickRate;
+    public static double getTickRateNs() {
+        return tickRateNs;
+    }
+
+    public static double getTickRateMs() {
+        return tickRateMs;
     }
 
     public static int getNoteSpeedScale() {

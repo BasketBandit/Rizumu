@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -31,7 +33,7 @@ public class Note extends Rectangle {
     private Color color;
 
     public Note() {
-        super(0, -26, 50, 25);
+        super(0, -25, 50, 25);
     }
 
     public void initNote(int keyNum, int keyCount) {
@@ -76,10 +78,11 @@ public class Note extends Rectangle {
         }
 
         if(noteType.equals("single_long")) {
-            // The calculation of note length is based on time (not sure if that's correct!) (will need to be modified for half second long notes!)
-            // note length / 1000 to get number of seconds, times that by the speed multiplier to get the total number of note lengths are needed (-1 to account for a single note size)
-            this.y = -25*((noteLength/1000)* Configuration.getSpeedMultiplier()-1);
-            this.height = 25*((noteLength/1000)* Configuration.getSpeedMultiplier()-1);
+            // notes travel at 180 pixels/second (3 pixels/tick) - 180/1000 -> 18/100 -> 1.8/10 -> 16.6666666667ms/tick
+            // note_length(ms) / tickrate(ms) * scale  -> 800ms / 16.666666667ms * 3
+            int noteHeight = new BigDecimal((noteLength/Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue();
+            this.y = -noteHeight;
+            this.height = noteHeight;
         }
     }
 
