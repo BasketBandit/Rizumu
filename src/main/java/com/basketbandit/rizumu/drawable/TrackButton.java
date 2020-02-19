@@ -1,20 +1,23 @@
 package com.basketbandit.rizumu.drawable;
 
-public class TrackButton extends Button {
-    private String track;
-    private String beatmap;
+import com.basketbandit.rizumu.beatmap.core.Beatmap;
+import com.basketbandit.rizumu.beatmap.core.Track;
 
-    public TrackButton(int x, int y, int width, int height, String track, String beatmap) {
+public class TrackButton extends Button {
+    private Track track;
+    private Beatmap beatmap;
+
+    public TrackButton(int x, int y, int width, int height, Track track, Beatmap beatmap) {
         super(x, y, width, height);
         this.track = track;
         this.beatmap = beatmap;
     }
 
-    public String getTrack() {
+    public Track getTrack() {
         return track;
     }
 
-    public String getBeatmap() {
+    public Beatmap getBeatmap() {
         return beatmap;
     }
 }

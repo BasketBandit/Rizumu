@@ -24,10 +24,12 @@ public class TrackParser {
         // Checks all the files in the directory of the given path for files ending in .yaml, then tries to parse them as beatmaps.
         try(Stream<Path> walk = Files.walk(Paths.get(path))) {
             walk.filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> {
-                String name = s.getFileName().toString();
                 File file = s.toFile();
+                Track track = parseTrack(file);
+                String name = track.getArtist()+track.getName();
+                track.setFileInfo(name, file);
                 trackFiles.put(name, file);
-                trackObjects.put(name, parseTrack(file));
+                trackObjects.put(name, track);
             });
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
@@ -39,7 +41,7 @@ public class TrackParser {
     public Track parseTrack(String name) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(trackFiles.get(name)), Track.class);
-            track.setFileName(name);
+            track.setFileInfo(name, trackFiles.get(name));
             return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
@@ -50,7 +52,7 @@ public class TrackParser {
     public Track parseTrack(File file) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(file), Track.class);
-            track.setFileName(file.getName());
+            track.setFileInfo(file.getName(), file);
             return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);

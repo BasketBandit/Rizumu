@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Button extends Rectangle {
     private String buttonText;
-    private Color color = new Color(50, 50,50, 95);
+    private Color color = new Color(50, 50,50, 100);
 
     public Button(int x, int y, int width, int height) {
         super(x, y, width, height);
