@@ -7,6 +7,7 @@ import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.CursorContainer;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyInput;
@@ -28,7 +29,8 @@ public class MenuScene implements Scene {
     private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("menu");
 
     private static HashMap<String, Button> buttons = new HashMap<>();
-    private static HashMap<String, TrackButton> trackButtons = new HashMap<>();
+    private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
+    private Container container;
 
     public MenuScene() {
         buttons.put("frameRateButton", new Button(Configuration.getContentWidth()-120, 20, 100, 50));
@@ -37,12 +39,14 @@ public class MenuScene implements Scene {
 
         AtomicInteger i = new AtomicInteger();
         Rizumu.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
-            TrackButton trackButton = new TrackButton(40,40+(60*i.get()), 250, 50, track.getFileName(), beatmap.getName());
+            TrackButton trackButton = new TrackButton(20,20+(60*i.get()), 460, 50, track.getFileName(), beatmap.getName());
             trackButton.setButtonText(track.getArtist() + " - " + track.getName() + " > " + beatmap.getName());
             buttons.put(track.getName() + " > " + beatmap.getName(), trackButton);
-            trackButtons.put(track.getName() + " > " + beatmap.getName(), trackButton);
+            trackButtons.put(i.get(), trackButton);
             i.getAndIncrement();
         }));
+
+        container = new Container(0, 0, 500, Configuration.getContentHeight());
     }
 
     @Override
@@ -62,6 +66,7 @@ public class MenuScene implements Scene {
             g.fill(buttons.get("frameRateButton"));
             g.fill(buttons.get("volumeUpButton"));
             g.fill(buttons.get("volumeDownButton"));
+            g.fill(container);
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
             g.setColor(Color.WHITE);
@@ -86,8 +91,10 @@ public class MenuScene implements Scene {
 
             if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH));
+                return;
             }
 
+            // dynamic cursor
             for(Button button: buttons.values()) {
                 if(button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                     Rizumu.getFrame().setCursor(CursorContainer.HAND_CURSOR);
@@ -95,22 +102,24 @@ public class MenuScene implements Scene {
                 }
             }
 
-            if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
-                // ArrayList of beatmap buttons
-                for(TrackButton trackButton: trackButtons.values()) {
-                    if(trackButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                        audioPlayer.pause();
-                        TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                        Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack());
-                        for(Beatmap beatmap : track.getBeatmaps()) {
-                            if(beatmap.getName().equals(trackButton.getBeatmap())) {
-                                Rizumu.setPrimaryScene(trackScene.initScene(track, beatmap));
-                                return;
-                            }
+            // track list scrolling functionality
+            if(container.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                if(MouseInput.getMouseWheelRotation() > 0) {
+                    for(int i = trackButtons.size()-1; i > -1; i--) { // this specific loop needs to run in reverse to avoid a weird button creep bug?
+                        if(trackButtons.get(0).getMinY() < 19) {
+                            trackButtons.get(i).y += MouseInput.getMouseWheelScrollUnits();
+                        }
+                    }
+                } else if(MouseInput.getMouseWheelRotation() < 0) {
+                    for(int i = 0; i < trackButtons.size(); i++) {
+                        if(trackButtons.get(trackButtons.size()-1).getMinY() > 19) {
+                            trackButtons.get(i).y += MouseInput.getMouseWheelScrollUnits();
                         }
                     }
                 }
+            }
 
+            if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
                 if(buttons.get("frameRateButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                     Configuration.toggleUnlockedFramerate();
                     return;
@@ -126,6 +135,24 @@ public class MenuScene implements Scene {
                 if(buttons.get("volumeDownButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
+                    }
+                    return;
+                }
+            }
+
+            if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
+                // ArrayList of beatmap buttons
+                for(TrackButton trackButton : trackButtons.values()) {
+                    if(trackButton.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                        audioPlayer.pause();
+                        TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
+                        Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack());
+                        for(Beatmap beatmap : track.getBeatmaps()) {
+                            if(beatmap.getName().equals(trackButton.getBeatmap())) {
+                                Rizumu.setPrimaryScene(trackScene.initScene(track, beatmap));
+                                return;
+                            }
+                        }
                     }
                 }
             }

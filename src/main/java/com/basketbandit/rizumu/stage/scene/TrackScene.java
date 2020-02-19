@@ -86,8 +86,6 @@ public class TrackScene implements Scene {
     private class TrackRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
-            // Important note: things that are drawn later will be draw on top of old stuff!
-
             // background
             g.setColor(lightGrey);
             g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5, 0, (beatmap.getKeys()*50)+10, Configuration.getContentHeight());
@@ -206,7 +204,6 @@ public class TrackScene implements Scene {
 
                 g.setColor(Color.DARK_GRAY);
                 buttons.values().forEach(g::fill);
-
                 g.setColor(Color.black);
                 buttons.values().forEach(g::draw);
 
