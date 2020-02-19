@@ -3,6 +3,7 @@ package com.basketbandit.rizumu;
 import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseInput;
 import com.basketbandit.rizumu.stage.object.DefaultBackgroundRenderObject;
+import com.basketbandit.rizumu.stage.object.DefaultSystemRenderObject;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 
 import javax.swing.*;
@@ -14,9 +15,13 @@ public class Renderer extends Canvas {
     private RenderObject backgroundRenderObject = new DefaultBackgroundRenderObject();
     private RenderObject primaryRenderObject;
     private RenderObject secondaryRenderObject;
+    private RenderObject systemRenderObject = new DefaultSystemRenderObject(); // used to render things such as framerate
 
     Renderer() {
-        addMouseListener(new MouseInput());
+        MouseInput mouseInput = new MouseInput();
+        addMouseListener(mouseInput);
+        addMouseWheelListener(mouseInput);
+        addMouseMotionListener(mouseInput);
         addKeyListener(new KeyInput());
         initFrame();
         this.frame.add(this);
@@ -59,6 +64,13 @@ public class Renderer extends Canvas {
         this.secondaryRenderObject = renderObject;
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
+    void setSystemRenderObject(RenderObject renderObject) {
+        this.systemRenderObject = renderObject;
+    }
+
     boolean secondaryRenderObjectIsNull() {
         return secondaryRenderObject == null;
     }
@@ -87,6 +99,10 @@ public class Renderer extends Canvas {
 
         if(secondaryRenderObject != null) {
             secondaryRenderObject.render(g);
+        }
+
+        if(systemRenderObject != null) {
+            systemRenderObject.render(g);
         }
 
         g.dispose();

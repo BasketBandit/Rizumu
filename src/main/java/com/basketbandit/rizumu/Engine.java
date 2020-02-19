@@ -90,16 +90,32 @@ public class Engine extends Thread {
         log.info("secondary render/tick objects removed");
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
     void setBackgroundRenderObject(RenderObject renderObject) {
         this.renderer.setBackgroundRenderObject(renderObject);
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
     void setPrimaryRenderObject(RenderObject renderObject) {
         this.renderer.setPrimaryRenderObject(renderObject);
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
     void setSecondaryRenderObject(RenderObject renderObject) {
         this.renderer.setSecondaryRenderObject(renderObject);
+    }
+
+    /**
+     * @param renderObject {@link RenderObject}
+     */
+    void setSystemRenderObject(RenderObject renderObject) {
+        this.renderer.setSystemRenderObject(renderObject);
     }
 
     boolean secondaryRenderObjectIsNull() {

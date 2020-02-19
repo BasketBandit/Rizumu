@@ -97,6 +97,13 @@ public class Rizumu {
         engine.setSecondaryRenderObject(renderObject);
     }
 
+    /**
+     * @param renderObject {@link RenderObject}
+     */
+    public static void setSystemRenderObject(RenderObject renderObject) {
+        engine.setSystemRenderObject(renderObject);
+    }
+
     public static boolean secondaryRenderObjectIsNull() {
         return engine.secondaryRenderObjectIsNull();
     }
