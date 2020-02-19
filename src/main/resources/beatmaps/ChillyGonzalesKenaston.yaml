@@ -1,7 +1,8 @@
 ---
 name: 'Kenaston'
 artist: 'Chilly Gonzales'
-audio_filename: 'ChillyGonzalesKenaston'
+image_filename: 'ChillyGonzalesKenaston.jpg'
+audio_filename: 'ChillyGonzalesKenaston.wav'
 start_delay: 0
 beatmaps:
   - name: '4K NM'
