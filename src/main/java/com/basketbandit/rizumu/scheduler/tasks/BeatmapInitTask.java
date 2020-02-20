@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.scheduler.tasks;
 
-import com.basketbandit.rizumu.beatmap.NoteLoader;
+import com.basketbandit.rizumu.beatmap.NoteParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.stage.scene.TrackScene;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
@@ -18,7 +18,7 @@ public class BeatmapInitTask implements Task {
 
     @Override
     public void run() {
-        new NoteLoader(scene, beatmap);
+        new NoteParser(scene, beatmap);
         ScheduleHandler.registerUniqueJob(new BeatmapAudioDelayJob(scene));
     }
 }

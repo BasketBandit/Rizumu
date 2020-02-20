@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
-public class NoteLoader{
+public class NoteParser {
     private TrackScene scene;
     private Beatmap beatmap;
 
-    public NoteLoader(TrackScene scene, Beatmap beatmap) {
+    public NoteParser(TrackScene scene, Beatmap beatmap) {
         this.scene = scene;
         this.beatmap = beatmap;
         parseNotes();
