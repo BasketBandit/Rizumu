@@ -26,6 +26,7 @@ public class NoteParser {
 
     private void parseNotes() {
         List<Segment> segments = beatmap.getSegments();
+        int noteGap = Configuration.getNoteGap();
         int loadOffset = 0; // Counter for overall segment length, used to help time the next segment
 
         for(Segment segment: segments) {
@@ -33,7 +34,7 @@ public class NoteParser {
             for(Note note: notes) {
                 note.setTime(loadOffset + note.getTime()); // set the relative segment note time to absolute beatmap time
 
-                int noteXPosition = (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2);
+                int noteXPosition = (int) (((Configuration.getContentWidth()/2) - ((note.width+noteGap)*(beatmap.getKeys()/2.0))) + (noteGap*0.66)+1); // formula w/o noteGap - (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2)
                 int noteYPosition = new BigDecimal((note.getTime() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue(); // calculate the position of the note
                 int noteHeight = new BigDecimal((note.getNoteLength() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue(); // calculate the height of the note
 
@@ -44,32 +45,32 @@ public class NoteParser {
                         note.setColor(Color.GREEN);
                         break;
                     case 1:
-                        note.x = noteXPosition+50;
+                        note.x = noteXPosition + ((note.width+noteGap));
                         note.setKey(KeyEvent.VK_W);
                         note.setColor(Color.RED);
                         break;
                     case 2:
-                        note.x = noteXPosition+100;
+                        note.x = noteXPosition + ((note.width+noteGap)*2);
                         note.setKey(KeyEvent.VK_E);
                         note.setColor(Color.YELLOW);
                         break;
                     case 3:
-                        note.x = noteXPosition+150;
+                        note.x = noteXPosition + ((note.width+noteGap)*3);
                         note.setKey(KeyEvent.VK_R);
                         note.setColor(Color.BLUE);
                         break;
                     case 4:
-                        note.x = noteXPosition+200;
+                        note.x = noteXPosition + ((note.width+noteGap)*4);
                         note.setKey(KeyEvent.VK_T);
                         note.setColor(Color.ORANGE);
                         break;
                     case 5:
-                        note.x = noteXPosition+250;
+                        note.x = noteXPosition + ((note.width+noteGap)*5);
                         note.setKey(KeyEvent.VK_Y);
                         note.setColor(Color.PINK);
                         break;
                     case 6:
-                        note.x = noteXPosition+300;
+                        note.x = noteXPosition + ((note.width+noteGap)*6);
                         note.setKey(KeyEvent.VK_U);
                         note.setColor(Color.MAGENTA);
                         break;

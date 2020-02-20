@@ -11,8 +11,8 @@ import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyInput;
-import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.input.MouseListeners;
+import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
@@ -26,6 +26,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -43,6 +45,7 @@ public class TrackScene implements Scene {
     private List<Note> notes;
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
+    private BufferedImage backgroundImage;
 
     public TrackScene initScene(Track track, Beatmap beatmap) {
         this.statistics = new Statistics();
@@ -50,7 +53,10 @@ public class TrackScene implements Scene {
         this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
         this.track = track;
         this.beatmap = beatmap;
-        ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
+        this.backgroundImage = track.getImage();
+        this.extendedRegistrar.x = this.registrar.x = (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5 - (Configuration.getNoteGap()*(beatmap.getKeys()-1)); // center the extended(registrar) based on key count
+        this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + 10 + (Configuration.getNoteGap()*(beatmap.getKeys()-1)*2); // resize the extended(registrar) based on key count
+        ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
         return this;
     }
 
@@ -96,8 +102,14 @@ public class TrackScene implements Scene {
         @Override
         public void render(Graphics2D g) {
             // background
+            if(backgroundImage != null) {
+                g.drawRenderedImage(backgroundImage, AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight()+.0)));
+                g.setColor(Colours.DARK_GREY_75);
+                g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
+            }
+
             g.setColor(Colours.DARK_GREY_100);
-            g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5, 0, (beatmap.getKeys()*50)+10, Configuration.getContentHeight());
+            g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5 - (Configuration.getNoteGap()*(beatmap.getKeys()-1)), 0, (beatmap.getKeys()*50) + 10 + (Configuration.getNoteGap()*(beatmap.getKeys()-1)*2), Configuration.getContentHeight());
 
             g.setColor(extendedRegistrar.getColor());
             g.fill(extendedRegistrar);
@@ -107,21 +119,29 @@ public class TrackScene implements Scene {
 
             // mid-ground
             for(Note note: notes) {
-                g.setColor(note.getColor());
-                g.fill(note);
-                g.setColor(Color.BLACK);
-                g.drawRect(note.x, note.y, note.width, note.height);
                 if(note.getNoteType().equals("single_long")) {
+                    g.setColor(note.getColor());
+                    g.fillRect(note.x+3, note.y, note.width-6, note.height);
+                    g.setColor(Color.BLACK);
+                    g.drawRect(note.x+3, note.y, note.width-6, note.height);
+                    g.setColor(note.getColor());
+                    g.fillRect(note.x, note.y + (note.height - 25), note.width, 25);
+                    g.setColor(Color.BLACK);
                     g.drawRect(note.x, note.y + (note.height - 25), note.width, 25);
+                } else {
+                    g.setColor(note.getColor());
+                    g.fill(note);
+                    g.setColor(Color.BLACK);
+                    g.drawRect(note.x, note.y, note.width, note.height);
                 }
             }
 
             // foreground
-            g.setColor(Color.lightGray);
+            g.setColor(Colours.DARK_GREY_75);
             g.fillRect(0, 0, Configuration.getContentWidth(), 50);
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN,12));
-            g.setColor(Color.GRAY);
+            g.setColor(Colours.MEDIUM_GREY_100);
             g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getAccuracy(), 10, 40);
         }
     }

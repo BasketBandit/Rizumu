@@ -13,6 +13,7 @@ public class Configuration {
     private static String beatmapResourcePath = "src/main/resources/beatmaps/";
     private static float globalGain = -10.0f;
     private static int noteSpeedScale = 3;
+    private static int noteGap = 3;
     private static Map<Integer, Integer> speedAdjustment = Map.of(2, 1, 3, 10, 4, 20, 5, 30, 6, 40, 7, 50, 8, 58, 9, 68, 10, 77);
 
     public Configuration() {
@@ -53,6 +54,10 @@ public class Configuration {
 
     public static int getNoteSpeedScale() {
         return noteSpeedScale;
+    }
+
+    public static int getNoteGap() {
+        return noteGap;
     }
 
     public static void toggleUnlockedFramerate() {
