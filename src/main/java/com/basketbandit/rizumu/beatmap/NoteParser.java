@@ -38,6 +38,11 @@ public class NoteParser {
                 int noteYPosition = new BigDecimal((note.getTime() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue(); // calculate the position of the note
                 int noteHeight = new BigDecimal((note.getNoteLength() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue(); // calculate the height of the note
 
+                // deal with Osu transferred keyNums -- floor(x * columnCount / 512)
+                if(note.getKeyNum() > 9) {
+                    note.setKeyNum((int) Math.floor(note.getKeyNum() * beatmap.getKeys() / 512.0));
+                }
+
                 switch(note.getKeyNum()) {
                     case 0:
                         note.x = noteXPosition;

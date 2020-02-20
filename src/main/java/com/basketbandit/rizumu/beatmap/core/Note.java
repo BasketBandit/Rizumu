@@ -46,6 +46,10 @@ public class Note extends Rectangle {
         return keyNum;
     }
 
+    public void setKeyNum(int keyNum) {
+        this.keyNum = keyNum;
+    }
+
     @JsonProperty("note_type")
     public String getNoteType() {
         return noteType;
