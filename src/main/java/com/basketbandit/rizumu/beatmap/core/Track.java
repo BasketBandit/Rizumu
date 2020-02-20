@@ -1,6 +1,5 @@
 package com.basketbandit.rizumu.beatmap.core;
 
-import com.basketbandit.rizumu.Configuration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -20,6 +19,7 @@ import java.util.List;
         "beatmaps"
 })
 public class Track {
+    private String filePath;
     private String fileName;
     private File file;
     @JsonProperty("name")
@@ -36,9 +36,14 @@ public class Track {
     @JsonProperty("beatmaps")
     private List<Beatmap> beatmaps = null;
 
-    public void setFileInfo(String fileName, File file) {
+    public void setFileInfo(String filePath, String fileName, File file) {
+        this.filePath = filePath + "/"; // file.getParent() leaves out trailing slash
         this.fileName = fileName;
         this.file = file;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
     public String getFileName() {
@@ -72,7 +77,7 @@ public class Track {
             if(image != null) {
                 return image;
             }
-            return image = ImageIO.read(new File(Configuration.getBeatmapResourcePath() + imageFilename));
+            return image = ImageIO.read(new File(filePath + imageFilename));
         } catch(Exception ex) {
             return null;
         }

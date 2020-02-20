@@ -1,0 +1,283 @@
+---
+name: 'Kenaston'
+artist: 'Chilly Gonzales'
+image_filename: 'Chilly Gonzales - Kenaston.jpg'
+audio_filename: 'Chilly Gonzales - Kenaston.wav'
+start_delay: 0
+beatmaps:
+  - name: '4K NM'
+    keys: 4
+    segments:
+      - name: 'Intro'
+        length: 3200
+        notes:
+          - time: 0000
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0000
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 700
+          - time: 0000
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 800
+          - time: 0800
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 0
+            note_type: 'single'
+          - time: 3200
+            key_num: 1
+            note_type: 'single'
+          - time: 3200
+            key_num: 2
+            note_type: 'single'
+          - time: 3200
+            key_num: 3
+            note_type: 'single'
+  - name: '5K NM'
+    keys: 5
+    segments:
+      - name: 'Intro'
+        length: 3200
+        notes:
+          - time: 0000
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 200
+          - time: 0000
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 400
+          - time: 0000
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0000
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 800
+          - time: 0000
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 1600
+          - time: 1600
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+  - name: '6K NM'
+    keys: 6
+    segments:
+      - name: 'Intro'
+        length: 3200
+        notes:
+          - time: 0000
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0000
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0000
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 5
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 5
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+  - name: '7K NM'
+    keys: 7
+    segments:
+      - name: 'Intro'
+        length: 3200
+        notes:
+          - time: 0000
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0000
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0000
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 600
+          - time: 0800
+            key_num: 5
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 6
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 1600
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 2
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 3
+            note_type: 'single_long'
+            note_length: 600
+          - time: 2400
+            key_num: 4
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 5
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 6
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 0
+            note_type: 'single_long'
+            note_length: 600
+          - time: 3200
+            key_num: 1
+            note_type: 'single_long'
+            note_length: 600

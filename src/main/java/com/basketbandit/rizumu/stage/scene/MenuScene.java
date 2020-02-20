@@ -10,8 +10,8 @@ import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyInput;
-import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.input.MouseListeners;
+import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
@@ -82,7 +82,7 @@ public class MenuScene implements Scene {
         @Override
         public void render(Graphics2D g) {
             if(menuBackgroundImage != null) {
-                g.drawRenderedImage(menuBackgroundImage, AffineTransform.getTranslateInstance(0, 0));
+                g.drawRenderedImage(menuBackgroundImage, AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(menuBackgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(menuBackgroundImage.getHeight()+.0)));
             }
 
             g.setColor(Color.DARK_GRAY);
@@ -146,7 +146,7 @@ public class MenuScene implements Scene {
                                 }
                             }
                         } else {
-                            audioPlayer.hotChangeTrack(Configuration.getBeatmapResourcePath() + buttonTrack.getAudioFilename());
+                            audioPlayer.hotChangeTrack(buttonTrack.getFilePath() + buttonTrack.getAudioFilename());
                             menuBackgroundImage = buttonTrack.getImage();
                             selectedButton = trackButton;
                             selectedBeatmap = trackName;

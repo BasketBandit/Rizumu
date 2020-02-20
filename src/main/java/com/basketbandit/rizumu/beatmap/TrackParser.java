@@ -27,7 +27,7 @@ public class TrackParser {
                 File file = s.toFile();
                 Track track = parseTrack(file);
                 String name = track.getArtist()+track.getName();
-                track.setFileInfo(name, file);
+                track.setFileInfo(file.getParent(), name, file);
                 trackFiles.put(name, file);
                 trackObjects.put(name, track);
             });
@@ -41,7 +41,7 @@ public class TrackParser {
     public Track parseTrack(String name) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(trackFiles.get(name)), Track.class);
-            track.setFileInfo(name, trackFiles.get(name));
+            track.setFileInfo(trackFiles.get(name).getParent(), name, trackFiles.get(name));
             return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
@@ -52,7 +52,7 @@ public class TrackParser {
     public Track parseTrack(File file) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(file), Track.class);
-            track.setFileInfo(file.getName(), file);
+            track.setFileInfo(file.getParent(), file.getName(), file);
             return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
