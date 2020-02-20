@@ -10,4 +10,5 @@ public interface Scene {
 
     RenderObject getRenderObject();
     TickObject getTickObject();
+    Scene init();
 }

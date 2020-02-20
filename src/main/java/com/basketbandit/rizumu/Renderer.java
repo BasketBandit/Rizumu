@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.input.KeyInput;
-import com.basketbandit.rizumu.input.MouseInput;
+import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.stage.object.DefaultBackgroundRenderObject;
 import com.basketbandit.rizumu.stage.object.DefaultSystemRenderObject;
 import com.basketbandit.rizumu.stage.object.RenderObject;
@@ -18,10 +18,7 @@ public class Renderer extends Canvas {
     private RenderObject systemRenderObject = new DefaultSystemRenderObject(); // used to render things such as framerate
 
     Renderer() {
-        MouseInput mouseInput = new MouseInput();
-        addMouseListener(mouseInput);
-        addMouseWheelListener(mouseInput);
-        addMouseMotionListener(mouseInput);
+        addMouseMotionListener(new MouseMovementListener());
         addKeyListener(new KeyInput());
         initFrame();
         this.frame.add(this);

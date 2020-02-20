@@ -4,13 +4,14 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
-import com.basketbandit.rizumu.input.MouseInput;
+import com.basketbandit.rizumu.input.MouseListeners;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -20,6 +21,8 @@ import java.io.File;
 public class SplashScene implements Scene {
     private SplashRenderer renderObject = new SplashRenderer();
     private SplashTicker tickObject = new SplashTicker();
+
+    private SplashMouseListener splashMouseListener = new SplashMouseListener();
 
     private BufferedImage logo;
     private float x = 0;
@@ -43,6 +46,12 @@ public class SplashScene implements Scene {
     }
 
     @Override
+    public SplashScene init() {
+        MouseListeners.setMouseListener("splash", splashMouseListener);
+        return this;
+    }
+
+    @Override
     public RenderObject getRenderObject() {
         return renderObject;
     }
@@ -63,10 +72,15 @@ public class SplashScene implements Scene {
         @Override
         public void tick() {
             x = x + 0.1f; // sine wave animation
-            if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
-                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
-            }
         }
     }
 
+    private class SplashMouseListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getButton() == MouseEvent.BUTTON1) {
+                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+            }
+        }
+    }
 }

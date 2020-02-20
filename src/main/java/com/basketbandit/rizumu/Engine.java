@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelListener;
 
 public class Engine extends Thread {
     private static final Logger log = LoggerFactory.getLogger(Engine.class);
@@ -69,6 +71,22 @@ public class Engine extends Thread {
 
     JFrame getFrame() {
         return renderer.getFrame();
+    }
+
+    void addMouseListener(MouseListener listener) {
+        renderer.addMouseListener(listener);
+    }
+
+    void addMouseWheelListener(MouseWheelListener listener) {
+        renderer.addMouseWheelListener(listener);
+    }
+
+    void removeMouseListener(MouseListener listener) {
+        renderer.removeMouseListener(listener);
+    }
+
+    void removeMouseWheelListener(MouseWheelListener listener) {
+        renderer.removeMouseWheelListener(listener);
     }
 
     void setPrimaryScene(Scene scene) {

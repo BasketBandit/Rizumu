@@ -7,6 +7,8 @@ import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
 
 import javax.swing.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelListener;
 import java.util.HashMap;
 
 public class Rizumu {
@@ -35,7 +37,7 @@ public class Rizumu {
         staticScenes.put(Scenes.TRACK, new TrackScene());
         staticScenes.put(Scenes.RESULTS, new ResultsScene());
 
-        engine.setPrimaryScene(getStaticScene(Scenes.SPLASH));
+        engine.setPrimaryScene(getStaticScene(Scenes.SPLASH).init());
         engine.start();
     }
 
@@ -43,15 +45,24 @@ public class Rizumu {
         return debug;
     }
 
-    /**
-     * @return {@link TrackParser}
-     */
-    public static TrackParser getTrackParser() {
-        return trackParser;
-    }
-
     public static JFrame getFrame() {
         return engine.getFrame();
+    }
+
+    public static void addMouseListener(MouseListener listener) {
+        engine.addMouseListener(listener);
+    }
+
+    public static void addMouseWheelListener(MouseWheelListener listener) {
+        engine.addMouseWheelListener(listener);
+    }
+
+    public static void removeMouseListener(MouseListener listener) {
+        engine.removeMouseListener(listener);
+    }
+
+    public static void removeMouseWheelListener(MouseWheelListener listener) {
+        engine.removeMouseWheelListener(listener);
     }
 
     /**
@@ -106,5 +117,12 @@ public class Rizumu {
 
     public static boolean secondaryRenderObjectIsNull() {
         return engine.secondaryRenderObjectIsNull();
+    }
+
+    /**
+     * @return {@link TrackParser}
+     */
+    public static TrackParser getTrackParser() {
+        return trackParser;
     }
 }

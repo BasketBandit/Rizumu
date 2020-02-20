@@ -8,20 +8,23 @@ import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
-import com.basketbandit.rizumu.drawable.CursorContainer;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyInput;
-import com.basketbandit.rizumu.input.MouseInput;
+import com.basketbandit.rizumu.input.MouseMovementListener;
+import com.basketbandit.rizumu.input.MouseListeners;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.utility.Colours;
+import com.basketbandit.rizumu.utility.Cursors;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
@@ -41,8 +44,6 @@ public class TrackScene implements Scene {
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
-    private Color lightGrey = new Color(25,25,25, 100);
-
     public TrackScene initScene(Track track, Beatmap beatmap) {
         this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
@@ -50,6 +51,12 @@ public class TrackScene implements Scene {
         this.track = track;
         this.beatmap = beatmap;
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // Will load beatmap notes, start audio, etc.
+        return this;
+    }
+
+    @Override
+    public Scene init() {
+        MouseListeners.setMouseListener("track", null);
         return this;
     }
 
@@ -83,11 +90,13 @@ public class TrackScene implements Scene {
         return tickObject;
     }
 
+
+
     private class TrackRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
             // background
-            g.setColor(lightGrey);
+            g.setColor(Colours.DARK_GREY_100);
             g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5, 0, (beatmap.getKeys()*50)+10, Configuration.getContentHeight());
 
             g.setColor(extendedRegistrar.getColor());
@@ -126,7 +135,7 @@ public class TrackScene implements Scene {
             }
 
             if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
-                Rizumu.setSecondaryScene(pauseMenu);
+                Rizumu.setSecondaryScene(pauseMenu.init());
                 audioPlayer.pause();
                 ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
                 return;
@@ -176,7 +185,7 @@ public class TrackScene implements Scene {
         private PauseMenuRenderer renderObject = new PauseMenuRenderer();
         private PauseMenuTicker tickObject = new PauseMenuTicker();
 
-        private Color transGray = new Color(50,50,50, 235);
+        private PauseMenuMouseListener pauseMenuMouseListener = new PauseMenuMouseListener();
 
         private HashMap<String, Button> buttons = new HashMap<>();
 
@@ -184,6 +193,12 @@ public class TrackScene implements Scene {
             buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
             buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
             buttons.put("quitButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
+        }
+
+        @Override
+        public PauseMenu init() {
+            MouseListeners.setMouseListener("pause", pauseMenuMouseListener);
+            return this;
         }
 
         @Override
@@ -199,12 +214,12 @@ public class TrackScene implements Scene {
         private class PauseMenuRenderer implements RenderObject {
             @Override
             public void render(Graphics2D g) {
-                g.setColor(transGray);
+                g.setColor(Colours.DARK_GREY_90);
                 g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
 
                 g.setColor(Color.DARK_GRAY);
                 buttons.values().forEach(g::fill);
-                g.setColor(Color.black);
+                g.setColor(Color.BLACK);
                 buttons.values().forEach(g::draw);
 
                 g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
@@ -219,30 +234,36 @@ public class TrackScene implements Scene {
             @Override
             public void tick() {
                 for(Button button: buttons.values()) {
-                    if(button.getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
-                        Rizumu.getFrame().setCursor(CursorContainer.HAND_CURSOR);
+                    if(button.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                        Rizumu.getFrame().setCursor(Cursors.HAND_CURSOR);
                         break;
                     }
                 }
+            }
+        }
 
-                if(MouseInput.isPressed(MouseEvent.BUTTON1)) {
+        private class PauseMenuMouseListener extends MouseAdapter {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getButton() == MouseEvent.BUTTON1) {
                     // 'resume' button, close the pause menu
-                    if(buttons.get("resumeButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    if(buttons.get("resumeButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                        TrackScene.this.init();
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.resumeExecution();
                         return;
                     }
 
                     // 'restart' button, restart the beatmap
-                    if(buttons.get("restartButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    if(buttons.get("restartButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
                         Rizumu.setSecondaryScene(null);
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
-                        TrackScene trackScene = (TrackScene) Rizumu.getStaticScene(Scenes.TRACK);
-                        Track trakc = Rizumu.getTrackParser().parseTrack(track.getFileName()); // forgive me for the horrible variable naming...
+
+                        Track trakc = Rizumu.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
                         for(Beatmap baetmap: trakc.getBeatmaps()) {
                             if(baetmap.getName().equals(beatmap.getName())) {
-                                Rizumu.setPrimaryScene(trackScene.initScene(trakc, baetmap));
+                                Rizumu.setPrimaryScene(((TrackScene) Rizumu.getStaticScene(Scenes.TRACK)).initScene(trakc, baetmap).init());
                                 return;
                             }
                         }
@@ -250,14 +271,16 @@ public class TrackScene implements Scene {
                     }
 
                     // 'quit' button, go back to the main menu
-                    if(buttons.get("quitButton").getBounds().contains(MouseInput.getX(), MouseInput.getY())) {
+                    if(buttons.get("quitButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         Rizumu.setSecondaryScene(null);
-                        Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU));
+                        Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
                     }
                 }
             }
         }
     }
+
+
 }
