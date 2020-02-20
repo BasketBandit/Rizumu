@@ -141,20 +141,20 @@ beatmaps:
             note_length: 0
           - time: 6706
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 827
           - time: 7533
             key_num: 475
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 7533
             key_num: 329
             note_type: 'single'
             note_length: 0
           - time: 7946
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 7946
             key_num: 256
             note_type: 'single'
@@ -189,8 +189,8 @@ beatmaps:
             note_length: 0
           - time: 10014
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 10427
             key_num: 36
             note_type: 'single'
@@ -213,8 +213,8 @@ beatmaps:
             note_length: 0
           - time: 11668
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 12081
             key_num: 36
             note_type: 'single'
@@ -233,24 +233,24 @@ beatmaps:
             note_length: 0
           - time: 12908
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 13322
             key_num: 475
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 13735
             key_num: 36
             note_type: 'single'
             note_length: 0
           - time: 13735
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 14149
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 1654
           - time: 14562
             key_num: 36
             note_type: 'single'
@@ -293,8 +293,8 @@ beatmaps:
             note_length: 0
           - time: 19111
             key_num: 256
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 19938
             key_num: 475
             note_type: 'single'
@@ -453,8 +453,8 @@ beatmaps:
             note_length: 0
           - time: 32343
             key_num: 256
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 33170
             key_num: 475
             note_type: 'single'
@@ -665,8 +665,8 @@ beatmaps:
             note_length: 0
           - time: 48056
             key_num: 256
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 48883
             key_num: 329
             note_type: 'single'
@@ -717,16 +717,16 @@ beatmaps:
             note_length: 0
           - time: 52191
             key_num: 36
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 621
           - time: 52812
             key_num: 329
             note_type: 'single'
             note_length: 0
           - time: 53019
             key_num: 475
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 53432
             key_num: 182
             note_type: 'single'
@@ -753,16 +753,16 @@ beatmaps:
             note_length: 0
           - time: 55500
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 56327
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 57154
             key_num: 256
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 1654
           - time: 57154
             key_num: 36
             note_type: 'single'
@@ -773,16 +773,16 @@ beatmaps:
             note_length: 0
           - time: 58808
             key_num: 36
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 58808
             key_num: 402
             note_type: 'single'
             note_length: 0
           - time: 59221
             key_num: 109
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 59221
             key_num: 475
             note_type: 'single'
@@ -817,8 +817,8 @@ beatmaps:
             note_length: 0
           - time: 61289
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 61702
             key_num: 475
             note_type: 'single'
@@ -841,8 +841,8 @@ beatmaps:
             note_length: 0
           - time: 62943
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 63356
             key_num: 475
             note_type: 'single'
@@ -857,28 +857,28 @@ beatmaps:
             note_length: 0
           - time: 64183
             key_num: 109
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 64183
             key_num: 475
             note_type: 'single'
             note_length: 0
           - time: 64597
             key_num: 36
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 65010
             key_num: 475
             note_type: 'single'
             note_length: 0
           - time: 65010
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 65424
             key_num: 109
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 1654
           - time: 65837
             key_num: 475
             note_type: 'single'
@@ -905,8 +905,8 @@ beatmaps:
             note_length: 0
           - time: 67905
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 68318
             key_num: 36
             note_type: 'single'
@@ -929,8 +929,8 @@ beatmaps:
             note_length: 0
           - time: 69559
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 620
           - time: 69972
             key_num: 36
             note_type: 'single'
@@ -949,24 +949,24 @@ beatmaps:
             note_length: 0
           - time: 70799
             key_num: 256
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 71213
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 71626
             key_num: 36
             note_type: 'single'
             note_length: 0
           - time: 71626
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 72040
             key_num: 475
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 1654
           - time: 72453
             key_num: 36
             note_type: 'single'
@@ -993,8 +993,8 @@ beatmaps:
             note_length: 0
           - time: 74521
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 74934
             key_num: 36
             note_type: 'single'
@@ -1017,8 +1017,8 @@ beatmaps:
             note_length: 0
           - time: 76175
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 76588
             key_num: 36
             note_type: 'single'
@@ -1081,8 +1081,8 @@ beatmaps:
             note_length: 0
           - time: 79897
             key_num: 329
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 2067
           - time: 80724
             key_num: 36
             note_type: 'single'
@@ -1093,20 +1093,20 @@ beatmaps:
             note_length: 0
           - time: 81964
             key_num: 182
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 82378
             key_num: 36
             note_type: 'single'
             note_length: 0
           - time: 82378
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 413
           - time: 82791
             key_num: 109
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 414
           - time: 83618
             key_num: 109
             note_type: 'single'
@@ -1141,12 +1141,12 @@ beatmaps:
             note_length: 0
           - time: 85892
             key_num: 109
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 2895
           - time: 86926
             key_num: 402
-            note_type: 'single'
-            note_length: 0
+            note_type: 'single_long'
+            note_length: 1861
           - time: 86926
             key_num: 256
             note_type: 'single'
