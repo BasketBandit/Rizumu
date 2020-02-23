@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu.beatmap.core;
 
+import com.basketbandit.rizumu.Configuration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -28,7 +29,7 @@ public class Note extends Rectangle {
     private Color color;
 
     public Note() {
-        super(0, -20, 50, 20);
+        super(0, -Configuration.getDefaultNoteHeight(), Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight());
     }
 
     @JsonProperty("time")
