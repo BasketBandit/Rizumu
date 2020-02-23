@@ -81,7 +81,7 @@ public class NoteParser {
                         break;
                 }
 
-                note.y += note.getNoteType().equals("single_long") ? -noteYPosition-noteHeight : -noteYPosition-25;
+                note.y += note.getNoteType().equals("single_long") ? -noteYPosition-noteHeight : -noteYPosition-20;
                 note.height = note.getNoteType().equals("single_long") ? noteHeight : note.height;
 
                 scene.getNotes().add(note);

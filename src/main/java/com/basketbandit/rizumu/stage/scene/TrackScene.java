@@ -118,23 +118,23 @@ public class TrackScene implements Scene {
             g.fill(registrar);
 
             // mid-ground
-            for(Note note: notes) {
+            notes.stream().filter(note -> note.getMaxX() > 0).forEach(note -> {
                 if(note.getNoteType().equals("single_long")) {
                     g.setColor(note.getColor());
-                    g.fillRect(note.x+3, note.y, note.width-6, note.height);
+                    g.fillRect(note.x + 3, note.y, note.width - 6, note.height);
                     g.setColor(Color.BLACK);
-                    g.drawRect(note.x+3, note.y, note.width-6, note.height);
+                    g.drawRect(note.x + 3, note.y, note.width - 6, note.height);
                     g.setColor(note.getColor());
-                    g.fillRect(note.x, note.y + (note.height - 25), note.width, 25);
+                    g.fillRect(note.x, note.y + (note.height - 20), note.width, 20);
                     g.setColor(Color.BLACK);
-                    g.drawRect(note.x, note.y + (note.height - 25), note.width, 25);
+                    g.drawRect(note.x, note.y + (note.height - 20), note.width, 20);
                 } else {
                     g.setColor(note.getColor());
                     g.fill(note);
                     g.setColor(Color.BLACK);
                     g.drawRect(note.x, note.y, note.width, note.height);
                 }
-            }
+            });
 
             // foreground
             g.setColor(Colours.DARK_GREY_75);
@@ -163,9 +163,9 @@ public class TrackScene implements Scene {
 
             audioPlayer.resume();
 
-            for(Note note: notes) {
-                note.translate(0, Configuration.getNoteSpeedScale()); // translate each note in positive y
+            notes.forEach(note -> note.translate(0, Configuration.getNoteSpeedScale())); // translate each note in positive y
 
+            for(Note note: notes) {
                 if(!note.hit() && note.getNoteType().equals("single") && registrar.intersects(note) && KeyInput.isDown(note.getKey())) {
                     note.setHit();
                     statistics.incrementHit();

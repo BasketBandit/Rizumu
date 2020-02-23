@@ -10,7 +10,7 @@ public class BeatmapAudioDelayJob extends Job {
     private final BeatmapAudioDelayTask beatMapAudioDelayTask;
 
     public BeatmapAudioDelayJob(TrackScene scene) {
-        super(3000, 0, TimeUnit.MILLISECONDS);
+        super(3400 + scene.getTrack().getStartDelay(), 0, TimeUnit.MILLISECONDS);
         this.beatMapAudioDelayTask = new BeatmapAudioDelayTask(scene);
     }
 

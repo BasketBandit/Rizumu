@@ -28,7 +28,7 @@ public class Note extends Rectangle {
     private Color color;
 
     public Note() {
-        super(0, -25, 50, 25);
+        super(0, -20, 50, 20);
     }
 
     @JsonProperty("time")
