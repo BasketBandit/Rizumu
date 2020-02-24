@@ -47,6 +47,9 @@ public class TrackScene implements Scene {
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
     private BufferedImage backgroundImage;
 
+    private boolean menuCooldownWarning = false;
+    private long menuCooldown;
+
     public TrackScene initScene(Track track, Beatmap beatmap) {
         this.statistics = new Statistics();
         this.audioPlayer = AudioPlayerController.getAudioPlayer("beatmap");
@@ -56,6 +59,7 @@ public class TrackScene implements Scene {
         this.backgroundImage = track.getImage();
         this.extendedRegistrar.x = this.registrar.x = (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5 - (Configuration.getNoteGap()*(beatmap.getKeys()-1)); // center the extended(registrar) based on key count
         this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + 10 + (Configuration.getNoteGap()*(beatmap.getKeys()-1)*2); // resize the extended(registrar) based on key count
+        this.menuCooldown = System.currentTimeMillis();
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
         return this;
     }
@@ -149,6 +153,10 @@ public class TrackScene implements Scene {
             g.setFont(fonts[368].deriveFont(Font.PLAIN,12));
             g.setColor(Colours.MEDIUM_GREY_100);
             g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getAccuracy(), 10, 40);
+
+            if(menuCooldownWarning) {
+                g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);
+            }
         }
     }
 
@@ -160,11 +168,17 @@ public class TrackScene implements Scene {
                 return;
             }
 
-            if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
-                Rizumu.setSecondaryScene(pauseMenu.init());
-                audioPlayer.pause();
-                ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
-                return;
+            if((System.currentTimeMillis() - menuCooldown) > 1000) {
+                menuCooldownWarning = false;
+                if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
+                    menuCooldown = System.currentTimeMillis();
+                    Rizumu.setSecondaryScene(pauseMenu.init());
+                    audioPlayer.pause();
+                    ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
+                    return;
+                }
+            } else {
+                menuCooldownWarning = true;
             }
 
             audioPlayer.resume();
@@ -277,6 +291,7 @@ public class TrackScene implements Scene {
                         TrackScene.this.init();
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.resumeExecution();
+                        menuCooldown = System.currentTimeMillis();
                         return;
                     }
 
