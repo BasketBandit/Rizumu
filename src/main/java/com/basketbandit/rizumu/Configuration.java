@@ -11,7 +11,7 @@ public class Configuration {
     private static double tickRateNs = 1000000000.0 / 60.0; // nanoseconds
     private static double tickRateMs = tickRateNs / 1000000.0; // milliseconds
     private static boolean unlockedFramerate = true;
-    private static String beatmapResourcePath = "src/main/resources/beatmaps/";
+    private static String beatmapResourcePath = "D:/Program Files (x86)/Rizumu/songs";
     private static float globalGain = -10.0f; // decibels
 
     private static int defaultNoteWidth = 50; // pixels
@@ -97,5 +97,9 @@ public class Configuration {
 
     public static String getBeatmapResourcePath() {
         return beatmapResourcePath;
+    }
+
+    public static void setBeatmapResourcePath(String beatmapResourcePath) {
+        Configuration.beatmapResourcePath = beatmapResourcePath;
     }
 }
