@@ -71,7 +71,7 @@ public class ResultsScene implements Scene {
 
     private class ResultsMouseListener extends MouseAdapter {
         @Override
-        public void mouseClicked(MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(menuButton.getBounds().contains(e.getX(), e.getY())) {
                     Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());

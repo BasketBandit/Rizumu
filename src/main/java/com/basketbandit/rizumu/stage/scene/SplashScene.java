@@ -77,7 +77,7 @@ public class SplashScene implements Scene {
 
     private class SplashMouseListener extends MouseAdapter {
         @Override
-        public void mouseClicked(MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
             }

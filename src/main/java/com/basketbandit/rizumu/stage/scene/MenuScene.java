@@ -129,7 +129,7 @@ public class MenuScene implements Scene {
 
     public class MenuMouseListener extends MouseAdapter {
         @Override
-        public void mouseClicked(MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 for(TrackButton trackButton : trackButtons.values()) {
                     if(trackButton.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {

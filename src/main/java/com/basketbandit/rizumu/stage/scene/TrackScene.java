@@ -108,7 +108,8 @@ public class TrackScene implements Scene {
                 g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
             }
 
-            g.setColor(Colours.DARK_GREY_100);
+            // beatmap track background
+            g.setColor(Colours.DARK_GREY_75);
             g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5 - (Configuration.getNoteGap()*(beatmap.getKeys()-1)), 0, (beatmap.getKeys()*50) + 10 + (Configuration.getNoteGap()*(beatmap.getKeys()-1)*2), Configuration.getContentHeight());
 
             g.setColor(extendedRegistrar.getColor());
@@ -119,6 +120,11 @@ public class TrackScene implements Scene {
 
             // mid-ground
             notes.stream().filter(note -> note.getMaxX() > 0).forEach(note -> {
+                // note bar lines
+                g.setColor(Colours.DARK_GREY_75);
+                g.fillRect((int) note.getMinX()-1, 0, 2, (int) registrar.getMinY());
+                g.fillRect((int) note.getMaxX()+1, 0, 2, (int) registrar.getMinY());
+
                 if(note.getNoteType().equals("single_long")) {
                     g.setColor(note.getColor());
                     g.fillRect(note.x + 3, note.y, note.width - 6, note.height);
@@ -264,7 +270,7 @@ public class TrackScene implements Scene {
 
         private class PauseMenuMouseListener extends MouseAdapter {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     // 'resume' button, close the pause menu
                     if(buttons.get("resumeButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
