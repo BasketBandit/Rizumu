@@ -46,6 +46,7 @@ public class AudioPlayer {
     }
 
     public void play() {
+        clip.setMicrosecondPosition(0); // allows track to be played repeatedly
         clip.start();
         status = "playing";
         log.info("playing track: " + path + ", level: " + clip.getLevel() + ", length: " + clip.getMicrosecondLength()/1000000 + " seconds");

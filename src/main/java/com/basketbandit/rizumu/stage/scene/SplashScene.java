@@ -22,6 +22,7 @@ public class SplashScene implements Scene {
     private SplashRenderer renderObject = new SplashRenderer();
     private SplashTicker tickObject = new SplashTicker();
 
+    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effects");
     private SplashMouseListener splashMouseListener = new SplashMouseListener();
 
     private BufferedImage logo;
@@ -47,6 +48,7 @@ public class SplashScene implements Scene {
 
     @Override
     public SplashScene init() {
+        effectPlayer.changeTrack("src/main/resources/assets/click.wav");
         MouseListeners.setMouseListener("splash", splashMouseListener);
         return this;
     }
@@ -79,6 +81,7 @@ public class SplashScene implements Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
+                effectPlayer.play();
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
             }
         }

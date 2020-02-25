@@ -35,6 +35,7 @@ public class MenuScene implements Scene {
     private MenuMouseListener menuMouseListener = new MenuMouseListener();
 
     private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("menu");
+    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effects");
 
     private static HashMap<String, Button> buttons = new HashMap<>();
     private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
@@ -64,6 +65,7 @@ public class MenuScene implements Scene {
     @Override
     public MenuScene init() {
         audioPlayer.resume();
+        effectPlayer.changeTrack("src/main/resources/assets/click.wav");
         MouseListeners.setMouseListener("menu", menuMouseListener);
         return this;
     }
@@ -137,6 +139,7 @@ public class MenuScene implements Scene {
                         Beatmap buttonBeatmap = trackButton.getBeatmap();
                         String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
                         if(selectedBeatmap.equals(trackName)) {
+                            effectPlayer.play();
                             audioPlayer.pause();
                             Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
@@ -146,6 +149,7 @@ public class MenuScene implements Scene {
                                 }
                             }
                         } else {
+                            effectPlayer.play();
                             audioPlayer.hotChangeTrack(buttonTrack.getFilePath() + buttonTrack.getAudioFilename());
                             menuBackgroundImage = buttonTrack.getImage();
                             selectedButton = trackButton;
@@ -156,11 +160,13 @@ public class MenuScene implements Scene {
                 }
 
                 if(buttons.get("frameRateButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    effectPlayer.play();
                     Configuration.toggleUnlockedFramerate();
                     return;
                 }
 
                 if(buttons.get("volumeUpButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    effectPlayer.play();
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
                     }
@@ -168,6 +174,7 @@ public class MenuScene implements Scene {
                 }
 
                 if(buttons.get("volumeDownButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    effectPlayer.play();
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
                     }
