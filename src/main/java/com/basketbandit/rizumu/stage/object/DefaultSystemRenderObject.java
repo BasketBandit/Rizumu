@@ -16,6 +16,7 @@ public class DefaultSystemRenderObject implements RenderObject {
         if(Rizumu.isDebug()) {
             g.fillRect(Configuration.getContentWidth()/2, 0, 2, Configuration.getContentHeight());
             g.fillRect(0, Configuration.getContentHeight()/2, Configuration.getContentWidth(), 2);
+            g.fillRect(250, 0, 1, Configuration.getContentHeight());
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
             g.setColor(Color.RED);

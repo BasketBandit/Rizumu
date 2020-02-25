@@ -59,12 +59,12 @@ public class TrackScene implements Scene {
         this.beatmap = beatmap;
 
         this.backgroundImage = track.getImage();
-        this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition() - (Configuration.getNoteGap()*beatmap.getKeys()); // center the extended(registrar) based on key count
-        this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*(beatmap.getKeys())*2); // resize the extended(registrar) based on key count
+        this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition(); // center the extended(registrar) based on key count
+        this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*beatmap.getKeys()-1) + (Configuration.getNoteGap()*4); // resize the extended(registrar) based on key count
 
         // do render object calculations on init rather that on the fly (this saves those precious cycles, right?)
-        renderObject.beatmapContainerXPosition = Configuration.getDefaultBeatmapXPosition() - (Configuration.getNoteGap()*(beatmap.getKeys())); // beatmap background container horizontal position
-        renderObject.beatmapContainerWidth = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*(beatmap.getKeys())*2); // beatmap background container width
+        renderObject.beatmapContainerXPosition = Configuration.getDefaultBeatmapXPosition(); // beatmap background container horizontal position
+        renderObject.beatmapContainerWidth = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*beatmap.getKeys()-1) + (Configuration.getNoteGap()*4); // beatmap background container width
         renderObject.backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight()+.0));
 
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
@@ -127,7 +127,7 @@ public class TrackScene implements Scene {
 
             g.setColor(Colours.MEDIUM_GREY_100);
             for(int i = 0; i <= beatmap.getKeys(); i++) {
-                g.fillRect((int) (Configuration.getDefaultBeatmapXPosition() - (Configuration.getNoteGap()*beatmap.getKeys()/2.0) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i)), 0, 1, registrar.y);
+                g.fillRect(beatmapContainerXPosition + (Configuration.getNoteGap()*(beatmap.getKeys())/2) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i), 0, 1, registrar.y);
             }
 
             g.setColor(extendedRegistrar.getColor());
@@ -137,27 +137,15 @@ public class TrackScene implements Scene {
             g.fill(registrar);
 
             // mid-ground
-            notes.stream().filter(note -> note.getMaxX() > 0).forEach(note -> {
+            notes.stream().filter(note -> note.getMaxY() > 0).forEach(note -> {
                 if(note.getNoteType().equals("single_long")) {
                     // note body
-                    g.setColor(note.getColor().darker());
-                    g.fillRect(note.x + 3, note.y, note.width - 6, note.height);
-                    // note head
-                    g.setColor(note.getColor());
-                    g.fillRect(note.x, note.y + (note.height - Configuration.getDefaultNoteHeight()), note.width, Configuration.getDefaultNoteHeight());
-                    g.setColor(Color.BLACK);
-                    g.drawRect(note.x, note.y + (note.height - Configuration.getDefaultNoteHeight()), note.width, Configuration.getDefaultNoteHeight());
+                    g.drawImage(note.getBody(), AffineTransform.getTranslateInstance(note.x + 3, note.y), null);
                     // note tail
-                    g.setColor(note.getColor());
-                    g.fillRect(note.x, note.y, note.width, Configuration.getDefaultNoteHeight());
-                    g.setColor(Color.BLACK);
-                    g.drawRect(note.x, note.y, note.width, Configuration.getDefaultNoteHeight());
-                } else {
-                    g.setColor(note.getColor());
-                    g.fill(note);
-                    g.setColor(Color.BLACK);
-                    g.drawRect(note.x, note.y, note.width, note.height);
+                    g.drawImage(note.getHead(), AffineTransform.getTranslateInstance(note.x, note.y + (note.height - Configuration.getDefaultNoteHeight())), null);
                 }
+                // note head
+                g.drawImage(note.getHead(), AffineTransform.getTranslateInstance(note.x, note.y), null);
             });
 
             // foreground
@@ -207,19 +195,20 @@ public class TrackScene implements Scene {
 
                 // TODO: make missing single_long increase miss counter
                 if(note.getNoteType().equals("single_long") && registrar.intersects(note)) {
-                    if(KeyInput.isDown(note.getKey()) && ((note.getMaxY() <= registrar.getMaxY()+23) && !note.wasHeld())) {
+                    if(KeyInput.isDown(note.getKey()) && ((note.getMaxY() <= registrar.getMaxY()+23) && !note.isHeld())) {
                         note.setHeld();
                     }
-                    if(!KeyInput.isDown(note.getKey()) && note.wasHeld()) {
+                    if(!KeyInput.isDown(note.getKey()) && note.isHeld()) {
                         note.setHit();
                     }
-                    if(KeyInput.isDown(note.getKey()) && note.wasHeld()) {
+                    if(KeyInput.isDown(note.getKey()) && note.isHeld()) {
                         statistics.incrementHit();
                     }
+                    continue;
                 }
 
                 // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
-                if((note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && !registrar.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit() || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.wasHeld())) {
+                if((note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && !registrar.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit() || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
                     statistics.incrementMissed();
                 }
             }
@@ -228,7 +217,7 @@ public class TrackScene implements Scene {
             // single has passed the registrar (hit too late or not at all)
             // single hasn't passed the registrar but intersects the extendedRegistrar with the key down (hit to early)
             // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
-            notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.wasHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.wasHeld()));
+            notes.removeIf(note -> note.hit() || note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld()));
         }
     }
 
