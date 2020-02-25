@@ -26,6 +26,7 @@ public class Note extends Rectangle {
     private boolean hit;
     private boolean held;
     private int key;
+    private Image[] noteImage;
     private Color color;
 
     public Note() {
@@ -79,7 +80,7 @@ public class Note extends Rectangle {
         this.held = true;
     }
 
-    public boolean wasHeld() {
+    public boolean isHeld() {
         return held;
     }
 
@@ -89,5 +90,21 @@ public class Note extends Rectangle {
 
     public void setKey(int key) {
         this.key = key;
+    }
+
+    public void initImages(Image... image) {
+        noteImage = new Image[noteType.equals("single_long") ? 2 : 1];
+        noteImage[0] = image[0];
+        if(noteType.equals("single_long")) {
+            noteImage[1] = image[1].getScaledInstance(width - 6, height, 0);
+        }
+    }
+
+    public Image getHead() {
+        return noteImage[0];
+    }
+
+    public Image getBody() {
+        return noteImage.length > 1 ? noteImage[1] : noteImage[0];
     }
 }
