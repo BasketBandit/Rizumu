@@ -14,6 +14,7 @@ public class Configuration {
     private static String beatmapResourcePath = "D:/Program Files (x86)/Rizumu/songs";
     private static float globalGain = -10.0f; // decibels
 
+    private static int defaultBeatmapXPosition = 250; // pixels
     private static int defaultNoteWidth = 50; // pixels
     private static int defaultNoteHeight = 20; // pixels
     private static int defaultRegistrarYPosition = 600; // pixels
@@ -59,6 +60,10 @@ public class Configuration {
 
     public static int getNoteSpeedScale() {
         return noteSpeedScale;
+    }
+
+    public static int getDefaultBeatmapXPosition() {
+        return defaultBeatmapXPosition;
     }
 
     public static int getNoteGap() {

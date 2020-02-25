@@ -34,9 +34,9 @@ public class NoteParser {
             for(Note note: notes) {
                 note.setTime(loadOffset + note.getTime()); // set the relative segment note time to absolute beatmap time
 
-                int noteXPosition = (int) (((Configuration.getContentWidth()/2) - ((note.width+noteGap)*(beatmap.getKeys()/2.0))) + (noteGap*0.66)+1); // formula w/o noteGap - (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2)
-                int noteYPosition = new BigDecimal((note.getTime() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue(); // calculate the position of the note
-                int noteHeight = new BigDecimal((note.getNoteLength() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.HALF_UP).intValue(); // calculate the height of the note
+                int noteXPosition = new BigDecimal(Configuration.getDefaultBeatmapXPosition() - (beatmap.getKeys()/2.0) - noteGap).setScale(0, RoundingMode.DOWN).intValue(); // formula w/o noteGap - (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2)
+                int noteYPosition = new BigDecimal((note.getTime() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.DOWN).intValue(); // calculate the position of the note
+                int noteHeight = new BigDecimal((note.getNoteLength() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.DOWN).intValue(); // calculate the height of the note
 
                 // deal with Osu transferred keyNums -- floor(x * columnCount / 512)
                 if(note.getKeyNum() > 9) {
@@ -81,7 +81,7 @@ public class NoteParser {
                         break;
                 }
 
-                note.y += note.getNoteType().equals("single_long") ? -noteYPosition-noteHeight : -noteYPosition-20;
+                note.y += note.getNoteType().equals("single_long") ? -noteYPosition-noteHeight : -noteYPosition-Configuration.getDefaultNoteHeight();
                 note.height = note.getNoteType().equals("single_long") ? noteHeight : note.height;
 
                 scene.getNotes().add(note);

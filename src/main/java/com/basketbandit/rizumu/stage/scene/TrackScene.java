@@ -43,12 +43,13 @@ public class TrackScene implements Scene {
     protected Track track;
     protected Beatmap beatmap;
     private List<Note> notes;
+
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
     private BufferedImage backgroundImage;
 
     private boolean menuCooldownWarning = false;
-    private long menuCooldown;
+    private long menuCooldown = System.currentTimeMillis();
 
     public TrackScene initScene(Track track, Beatmap beatmap) {
         this.statistics = new Statistics();
@@ -56,10 +57,16 @@ public class TrackScene implements Scene {
         this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
         this.track = track;
         this.beatmap = beatmap;
+
         this.backgroundImage = track.getImage();
-        this.extendedRegistrar.x = this.registrar.x = (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5 - (Configuration.getNoteGap()*(beatmap.getKeys()-1)); // center the extended(registrar) based on key count
-        this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + 10 + (Configuration.getNoteGap()*(beatmap.getKeys()-1)*2); // resize the extended(registrar) based on key count
-        this.menuCooldown = System.currentTimeMillis();
+        this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition() - (Configuration.getNoteGap()*beatmap.getKeys()); // center the extended(registrar) based on key count
+        this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*(beatmap.getKeys())*2); // resize the extended(registrar) based on key count
+
+        // do render object calculations on init rather that on the fly (this saves those precious cycles, right?)
+        renderObject.beatmapContainerXPosition = Configuration.getDefaultBeatmapXPosition() - (Configuration.getNoteGap()*(beatmap.getKeys())); // beatmap background container horizontal position
+        renderObject.beatmapContainerWidth = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*(beatmap.getKeys())*2); // beatmap background container width
+        renderObject.backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight()+.0));
+
         ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
         return this;
     }
@@ -100,21 +107,28 @@ public class TrackScene implements Scene {
         return tickObject;
     }
 
-
-
     private class TrackRenderer implements RenderObject {
+        private int beatmapContainerXPosition;
+        private int beatmapContainerWidth;
+        private AffineTransform backgroundImageTransform;
+
         @Override
         public void render(Graphics2D g) {
             // background
             if(backgroundImage != null) {
-                g.drawRenderedImage(backgroundImage, AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight()+.0)));
+                g.drawRenderedImage(backgroundImage, backgroundImageTransform);
                 g.setColor(Colours.DARK_GREY_75);
                 g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
             }
 
             // beatmap track background
             g.setColor(Colours.DARK_GREY_75);
-            g.fillRect((Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2) - 5 - (Configuration.getNoteGap()*(beatmap.getKeys()-1)), 0, (beatmap.getKeys()*50) + 10 + (Configuration.getNoteGap()*(beatmap.getKeys()-1)*2), Configuration.getContentHeight());
+            g.fillRect(beatmapContainerXPosition, 0, beatmapContainerWidth, Configuration.getContentHeight());
+
+            g.setColor(Colours.MEDIUM_GREY_100);
+            for(int i = 0; i <= beatmap.getKeys(); i++) {
+                g.fillRect((int) (Configuration.getDefaultBeatmapXPosition() - (Configuration.getNoteGap()*beatmap.getKeys()/2.0) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i)), 0, 1, registrar.y);
+            }
 
             g.setColor(extendedRegistrar.getColor());
             g.fill(extendedRegistrar);
@@ -124,20 +138,20 @@ public class TrackScene implements Scene {
 
             // mid-ground
             notes.stream().filter(note -> note.getMaxX() > 0).forEach(note -> {
-                // note bar lines
-                g.setColor(Colours.DARK_GREY_75);
-                g.fillRect((int) note.getMinX()-1, 0, 2, (int) registrar.getMinY());
-                g.fillRect((int) note.getMaxX()+1, 0, 2, (int) registrar.getMinY());
-
                 if(note.getNoteType().equals("single_long")) {
-                    g.setColor(note.getColor());
+                    // note body
+                    g.setColor(note.getColor().darker());
                     g.fillRect(note.x + 3, note.y, note.width - 6, note.height);
-                    g.setColor(Color.BLACK);
-                    g.drawRect(note.x + 3, note.y, note.width - 6, note.height);
+                    // note head
                     g.setColor(note.getColor());
-                    g.fillRect(note.x, note.y + (note.height - 20), note.width, 20);
+                    g.fillRect(note.x, note.y + (note.height - Configuration.getDefaultNoteHeight()), note.width, Configuration.getDefaultNoteHeight());
                     g.setColor(Color.BLACK);
-                    g.drawRect(note.x, note.y + (note.height - 20), note.width, 20);
+                    g.drawRect(note.x, note.y + (note.height - Configuration.getDefaultNoteHeight()), note.width, Configuration.getDefaultNoteHeight());
+                    // note tail
+                    g.setColor(note.getColor());
+                    g.fillRect(note.x, note.y, note.width, Configuration.getDefaultNoteHeight());
+                    g.setColor(Color.BLACK);
+                    g.drawRect(note.x, note.y, note.width, Configuration.getDefaultNoteHeight());
                 } else {
                     g.setColor(note.getColor());
                     g.fill(note);
@@ -155,7 +169,7 @@ public class TrackScene implements Scene {
             g.drawString("Hit: " + statistics.getHitNotes() + " | Missed: " + statistics.getMissedNotes() + " | %: " + statistics.getAccuracy(), 10, 40);
 
             if(menuCooldownWarning) {
-                g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);
+                g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);  // truncates timer to 3dp
             }
         }
     }
@@ -168,27 +182,27 @@ public class TrackScene implements Scene {
                 return;
             }
 
+            audioPlayer.resume();
+
             if((System.currentTimeMillis() - menuCooldown) > 1000) {
                 menuCooldownWarning = false;
                 if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
+                    menuCooldownWarning = true;
                     menuCooldown = System.currentTimeMillis();
                     Rizumu.setSecondaryScene(pauseMenu.init());
                     audioPlayer.pause();
                     ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
                     return;
                 }
-            } else {
-                menuCooldownWarning = true;
             }
-
-            audioPlayer.resume();
 
             notes.forEach(note -> note.translate(0, Configuration.getNoteSpeedScale())); // translate each note in positive y
 
             for(Note note: notes) {
-                if(!note.hit() && note.getNoteType().equals("single") && registrar.intersects(note) && KeyInput.isDown(note.getKey())) {
+                if(registrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.hit() && note.getNoteType().equals("single")) {
                     note.setHit();
                     statistics.incrementHit();
+                    continue;
                 }
 
                 // TODO: make missing single_long increase miss counter
