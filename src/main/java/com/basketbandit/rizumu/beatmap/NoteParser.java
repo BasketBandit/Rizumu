@@ -7,6 +7,8 @@ import com.basketbandit.rizumu.beatmap.core.Segment;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
 import com.basketbandit.rizumu.stage.scene.TrackScene;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -18,6 +20,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 public class NoteParser {
+    private static final Logger log = LoggerFactory.getLogger(NoteParser.class);
     private TrackScene scene;
     private Beatmap beatmap;
 
@@ -38,7 +41,7 @@ public class NoteParser {
             noteImage = ImageIO.read(new File("src/main/resources/assets/note.png")).getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
             notebImage = ImageIO.read(new File("src/main/resources/assets/noteb.png")).getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
         } catch(IOException ex) {
-            ex.printStackTrace();
+            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
 
         for(Segment segment: segments) {

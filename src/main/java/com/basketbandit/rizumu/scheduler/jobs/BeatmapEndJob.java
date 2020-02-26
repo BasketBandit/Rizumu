@@ -10,7 +10,7 @@ public class BeatmapEndJob extends Job {
     private final BeatmapEndTask beatmapEndTask;
 
     public BeatmapEndJob(TrackScene scene, long delay) {
-        super(delay + 8000, 0, TimeUnit.MILLISECONDS);
+        super(delay + 3000, 0, TimeUnit.MILLISECONDS);
         this.beatmapEndTask = new BeatmapEndTask(scene);
     }
 

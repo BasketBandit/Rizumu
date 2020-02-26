@@ -9,7 +9,7 @@ beatmaps:
     keys: 4
     segments:
       - name: 'Full'
-        length: 86926
+        length: 88787
         notes:
           - time: 90
             key_num: 36
