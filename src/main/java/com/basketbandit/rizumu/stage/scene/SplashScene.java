@@ -22,7 +22,7 @@ public class SplashScene implements Scene {
     private SplashRenderer renderObject = new SplashRenderer();
     private SplashTicker tickObject = new SplashTicker();
 
-    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effects");
+    AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("track");
     private SplashMouseListener splashMouseListener = new SplashMouseListener();
 
     private BufferedImage logo;
@@ -39,16 +39,13 @@ public class SplashScene implements Scene {
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
-
-        AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("menu");
-        audioPlayer.changeTrack("src/main/resources/assets/menu.wav");
-        audioPlayer.loop(-1);
-        audioPlayer.play();
     }
 
     @Override
     public SplashScene init() {
-        effectPlayer.changeTrack("src/main/resources/assets/click.wav");
+        audioPlayer.changeTrack("src/main/resources/assets/ffxiiimenu.wav");
+        audioPlayer.loop(-1);
+        audioPlayer.play();
         MouseListeners.setMouseListener("splash", splashMouseListener);
         return this;
     }
@@ -81,7 +78,8 @@ public class SplashScene implements Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                effectPlayer.play();
+                audioPlayer.play("menu-click");
+                audioPlayer.stop();
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
             }
         }
