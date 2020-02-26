@@ -8,10 +8,12 @@ import com.basketbandit.rizumu.score.Statistics;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.utility.Colours;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 
 public class ResultsScene implements Scene {
     private ResultsRenderer renderObject = new ResultsRenderer();
@@ -21,6 +23,7 @@ public class ResultsScene implements Scene {
 
     private Statistics statistics;
 
+    private Image backgroundImage;
     private Button menuButton = new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50);
 
     public ResultsScene() {
@@ -33,8 +36,10 @@ public class ResultsScene implements Scene {
         return this;
     }
 
-    public ResultsScene setStatistics(Statistics statistics) {
+    public ResultsScene initScene(Statistics statistics) {
         this.statistics = statistics;
+        this.backgroundImage = statistics.getImage();
+        renderObject.backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth(null)+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight(null)+.0));
         return this;
     }
 
@@ -49,8 +54,17 @@ public class ResultsScene implements Scene {
     }
 
     private class ResultsRenderer implements RenderObject {
+        AffineTransform backgroundImageTransform;
+
         @Override
         public void render(Graphics2D g) {
+            // background
+            if(backgroundImage != null) {
+                g.drawImage(backgroundImage, backgroundImageTransform, null);
+                g.setColor(Colours.DARK_GREY_75);
+                g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
+            }
+
             g.setColor(Color.DARK_GRAY);
             g.fill(menuButton);
 
@@ -58,8 +72,9 @@ public class ResultsScene implements Scene {
             g.setColor(Color.WHITE);
             g.drawString("Exit!", (int)menuButton.getMinX(), (int)menuButton.getCenterY());
 
-            g.setColor(Color.DARK_GRAY);
+            g.setColor(Color.WHITE);
             g.drawString(statistics.getAccuracyString(), 80, 80);
+            g.drawString("Highest Combo: " + statistics.getHighestCombo() + "!", 80, 100);
         }
     }
 
