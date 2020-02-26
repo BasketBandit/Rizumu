@@ -4,17 +4,14 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Segment;
+import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
 import com.basketbandit.rizumu.stage.scene.TrackScene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -34,15 +31,8 @@ public class NoteParser {
         List<Segment> segments = beatmap.getSegments();
         int noteGap = Configuration.getNoteGap();
         int loadOffset = 0; // Counter for overall segment length, used to help time the next segment
-        Image noteImage = null;
-        Image notebImage = null;
-
-        try {
-            noteImage = ImageIO.read(new File("src/main/resources/assets/note.png")).getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
-            notebImage = ImageIO.read(new File("src/main/resources/assets/noteb.png")).getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
-        } catch(IOException ex) {
-            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
-        }
+        java.awt.Image noteImage = Image.getBufferedImage("note").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
+        java.awt.Image notebImage =  Image.getBufferedImage("noteb").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
 
         for(Segment segment: segments) {
             List<Note> notes = segment.getNotes();

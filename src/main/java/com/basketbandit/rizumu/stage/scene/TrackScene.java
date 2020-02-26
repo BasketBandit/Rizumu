@@ -37,9 +37,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TrackScene implements Scene {
     private TrackRenderer renderObject = new TrackRenderer();
     private TrackTicker tickObject = new TrackTicker();
-
     private PauseMenu pauseMenu = new PauseMenu();
-    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("track");
+
+    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
+    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
+
     private Statistics statistics;
 
     protected Track track;
@@ -125,17 +127,17 @@ public class TrackScene implements Scene {
             g.setColor(Colours.DARK_GREY_75);
             g.fillRect(beatmapContainerXPosition, 0, beatmapContainerWidth, Configuration.getContentHeight());
 
-            // note channels
-            g.setColor(Colours.MEDIUM_GREY_10);
-            for(int i = 0; i <= beatmap.getKeys(); i++) {
-                g.fillRect((int) (beatmapContainerXPosition + Configuration.getNoteGap()*1.75 + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i)), 0, 2, registrar.y); // *1.75 with width 2 seems to be the sweet spot for channel positions
-            }
-
             g.setColor(extendedRegistrar.getColor());
             g.fill(extendedRegistrar);
 
             g.setColor(registrar.getColor());
             g.fill(registrar);
+
+            // note channels
+            g.setColor(Colours.MEDIUM_GREY_10);
+            for(int i = 0; i <= beatmap.getKeys(); i++) {
+                g.fillRect((int) (beatmapContainerXPosition + Configuration.getNoteGap()*1.75 + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i)), 0, 2, registrar.y); // *1.75 with width 2 seems to be the sweet spot for channel positions
+            }
 
             // mid-ground
             notes.stream().filter(note -> note.getMaxY() > 0).forEach(note -> {
@@ -184,7 +186,7 @@ public class TrackScene implements Scene {
                 menuCooldownWarning = false;
                 if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
                     audioPlayer.pause();
-                    audioPlayer.play("menu-click");
+                    effectPlayer.play("menu-click");
                     menuCooldownWarning = true;
                     menuCooldown = System.currentTimeMillis();
                     Rizumu.setSecondaryScene(pauseMenu.init());
@@ -197,7 +199,7 @@ public class TrackScene implements Scene {
 
             for(Note note: notes) {
                 if(registrar.intersects(note) && KeyInput.isDown(note.getKey()) && !note.hit() && note.getNoteType().equals("single")) {
-                    audioPlayer.play("track-hit");
+                    effectPlayer.play("track-hit");
                     note.setHit();
                     statistics.incrementHit();
                     continue;
@@ -212,7 +214,7 @@ public class TrackScene implements Scene {
                         note.setHit();
                     }
                     if(KeyInput.isDown(note.getKey()) && note.isHeld()) {
-                        audioPlayer.play("track-hit");
+                        effectPlayer.play("track-hit");
                         statistics.incrementHit();
                     }
                     continue;
@@ -221,7 +223,7 @@ public class TrackScene implements Scene {
                 // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
                 if((note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && !registrar.intersects(note) && KeyInput.isDown(note.getKey()))) && !note.hit() || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
                     if(statistics.getCombo() >= 50) {
-                        audioPlayer.play("track-combobreak");
+                        effectPlayer.play("track-combobreak");
                     }
                     statistics.incrementMissed();
                 }
@@ -304,7 +306,7 @@ public class TrackScene implements Scene {
                     // 'resume' button, close the pause menu
                     if(buttons.get("resumeButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
                         audioPlayer.resume();
-                        //audioPlayer.play("menu-click");
+                        effectPlayer.play("menu-click");
                         TrackScene.this.init();
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.resumeExecution();
@@ -314,7 +316,7 @@ public class TrackScene implements Scene {
 
                     // 'restart' button, restart the beatmap
                     if(buttons.get("restartButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
-                        audioPlayer.play("menu-click");
+                        effectPlayer.play("menu-click");
                         audioPlayer.stop();
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.cancelExecution();
@@ -331,7 +333,7 @@ public class TrackScene implements Scene {
 
                     // 'quit' button, go back to the main menu
                     if(buttons.get("quitButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
-                        audioPlayer.play("menu-click");
+                        effectPlayer.play("menu-click");
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         Rizumu.setSecondaryScene(null);

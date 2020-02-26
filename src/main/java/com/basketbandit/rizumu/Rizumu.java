@@ -2,6 +2,8 @@ package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.TrackParser;
+import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
@@ -18,9 +20,11 @@ public class Rizumu {
     private static TrackParser trackParser;
 
     public static void main(String[] args) {
-        debug =  Boolean.parseBoolean(args[0]);
+        if(args.length > 0) {
+            debug = Boolean.parseBoolean(args[0]);
+        }
 
-        System.setProperty("sun.java2d.opengl", args[1]); // OpenGL
+        System.setProperty("sun.java2d.opengl", "true"); // OpenGL
         //System.setProperty("sun.java2d.3d3", args[1]); // DirectX
 
         // initialises system configs
@@ -31,6 +35,12 @@ public class Rizumu {
 
         // initialises AudioPlayerController
         new AudioPlayerController();
+
+        // initialises Sound
+        new Sound();
+
+        // initialises Image
+        new Image();
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
         staticScenes.put(Scenes.MENU, new MenuScene());

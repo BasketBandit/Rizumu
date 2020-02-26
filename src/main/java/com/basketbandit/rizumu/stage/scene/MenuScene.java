@@ -35,7 +35,8 @@ public class MenuScene implements Scene {
 
     private MenuMouseListener menuMouseListener = new MenuMouseListener();
 
-    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("track");
+    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
+    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
 
     private static HashMap<String, Button> buttons = new HashMap<>();
     private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
@@ -48,9 +49,9 @@ public class MenuScene implements Scene {
     public MenuScene() {
         container = new Container(0, 0, 500, Configuration.getContentHeight());
 
-        buttons.put("frameRateButton", new Button(Configuration.getContentWidth()-120, 20, 100, 50));
-        buttons.put("volumeUpButton", new Button(Configuration.getContentWidth()-230, 20, 100, 50));
-        buttons.put("volumeDownButton", new Button(Configuration.getContentWidth()-340, 20, 100, 50));
+        buttons.put("frameRateButton", new Button(Configuration.getWidth() - 120, Configuration.getHeight() - 70, 100, 50));
+        buttons.put("volumeUpButton", new Button(Configuration.getWidth() - 230, 20, 100, 50));
+        buttons.put("volumeDownButton", new Button(Configuration.getWidth() - 340, 20, 100, 50));
 
         AtomicInteger i = new AtomicInteger();
         Rizumu.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
@@ -96,19 +97,20 @@ public class MenuScene implements Scene {
                 g.drawImage(menuBackgroundImage, AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(menuBackgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(menuBackgroundImage.getHeight()+.0)), null);
             }
 
-            g.setColor(Color.DARK_GRAY);
-            g.fill(buttons.get("frameRateButton"));
-            g.fill(buttons.get("volumeUpButton"));
-            g.fill(buttons.get("volumeDownButton"));
+            g.setColor(Colours.DARK_GREY_90);
 
-            g.setColor(Colours.TRANSPARENT);
+            g.fill(buttons.get("frameRateButton"));
+            //g.fill(buttons.get("volumeUpButton"));
+            //g.fill(buttons.get("volumeDownButton"));
+
+            g.setColor(Colours.DARK_GREY_75);
             g.fill(container);
 
             g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
             g.setColor(Color.WHITE);
-            g.drawString("Framerate Capping", (int)buttons.get("frameRateButton").getMinX(), (int)buttons.get("frameRateButton").getCenterY());
-            g.drawString("Vol +0.1db", (int)buttons.get("volumeUpButton").getMinX(), (int)buttons.get("volumeUpButton").getCenterY());
-            g.drawString("Vol -0.1db", (int)buttons.get("volumeDownButton").getMinX(), (int)buttons.get("volumeDownButton").getCenterY());
+            g.drawString("Cap Framerate", (int)buttons.get("frameRateButton").getMinX()+12, (int)buttons.get("frameRateButton").getCenterY()+2);
+            //g.drawString("Vol +0.1db", (int)buttons.get("volumeUpButton").getMinX(), (int)buttons.get("volumeUpButton").getCenterY());
+            //g.drawString("Vol -0.1db", (int)buttons.get("volumeDownButton").getMinX(), (int)buttons.get("volumeDownButton").getCenterY());
 
             // dynamic beatmap track buttons
             for(TrackButton trackButton: trackButtons.values()) {
@@ -149,7 +151,7 @@ public class MenuScene implements Scene {
                         Beatmap buttonBeatmap = trackButton.getBeatmap();
                         String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
                         if(selectedBeatmap.equals(trackName)) {
-                            audioPlayer.play("menu-select");
+                            effectPlayer.play("menu-select");
                             audioPlayer.stop();
                             Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
@@ -159,7 +161,7 @@ public class MenuScene implements Scene {
                                 }
                             }
                         } else {
-                            audioPlayer.play("menu-click");
+                            effectPlayer.play("menu-click");
                             audioPlayer.hotChangeTrack(buttonTrack.getFilePath() + buttonTrack.getAudioFilename());
                             menuBackgroundImage = buttonTrack.getImage();
                             selectedButton = trackButton;
@@ -170,13 +172,13 @@ public class MenuScene implements Scene {
                 }
 
                 if(buttons.get("frameRateButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
-                    audioPlayer.play("menu-click");
+                    effectPlayer.play("menu-click");
                     Configuration.toggleUnlockedFramerate();
                     return;
                 }
 
                 if(buttons.get("volumeUpButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
-                    audioPlayer.play("menu-click");
+                    effectPlayer.play("menu-click");
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
                     }
@@ -184,7 +186,7 @@ public class MenuScene implements Scene {
                 }
 
                 if(buttons.get("volumeDownButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
-                    audioPlayer.play("menu-click");
+                    effectPlayer.play("menu-click");
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
                     }

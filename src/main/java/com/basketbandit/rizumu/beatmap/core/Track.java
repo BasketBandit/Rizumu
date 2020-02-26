@@ -71,7 +71,7 @@ public class Track {
 
     public BufferedImage getImage() {
         try {
-            if(imageFilename.isBlank() || imageFilename.isEmpty())  {
+            if(imageFilename.isEmpty())  {
                 return null;
             }
             if(image != null) {

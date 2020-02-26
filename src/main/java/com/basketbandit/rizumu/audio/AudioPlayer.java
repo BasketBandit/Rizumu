@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu.audio;
 
+import com.basketbandit.rizumu.resource.Sound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,9 +14,13 @@ public class AudioPlayer {
     private long currentFrame;
     private String status = "stopped";
     private FloatControl gainControl;
-    private float gain = -10.0f;
+    private float gain = 0.0f;
 
     public AudioPlayer() {
+    }
+
+    public AudioPlayer(float gain) {
+        this.gain = gain;
     }
 
     public void hotChangeTrack(String inPath) {
@@ -45,14 +50,15 @@ public class AudioPlayer {
 
     public void play(String identifier) {
         try {
-            Clip audioClip = AudioSystem.getClip();
-            audioClip.open(AudioClips.getInputStream(identifier));
+            Clip audioClip = AudioSystem.getClip(); // get clip
+            audioClip.open(Sound.getAudioInputStream(identifier)); // open clip
+            ((FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(gain); // set gain
             audioClip.addLineListener(event -> {
                 if(event.getType().equals(LineEvent.Type.STOP)) {
-                    event.getLine().close();
+                    event.getLine().close(); // close clip on end
                 }
             });
-            audioClip.start();
+            audioClip.start(); // start clip
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }

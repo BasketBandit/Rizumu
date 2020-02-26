@@ -3,11 +3,17 @@ plugins {
     id 'application'
 }
 
+apply plugin: 'java'
+apply plugin: 'idea'
+
 group 'basketbandit'
 version '0.1.0'
-
-mainClassName = 'Rizumu'
+mainClassName = 'com.basketbandit.rizumu.Rizumu'
 sourceCompatibility = 1.9
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
 
 repositories {
     mavenCentral()
@@ -27,6 +33,7 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jacksonAnnotations
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonDatabind
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: jacksonDataFormatYAML
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
 
     testCompile group: 'junit', name: 'junit', version: jUnit
 }
