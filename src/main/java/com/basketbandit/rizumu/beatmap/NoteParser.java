@@ -51,31 +51,31 @@ public class NoteParser {
                 switch(note.getKeyNum()) {
                     case 0:
                         note.x = noteXPosition;
-                        note.setKey(KeyEvent.VK_Q);
+                        note.setKey(getKey(0));
                         break;
                     case 1:
                         note.x = noteXPosition + ((note.width+noteGap));
-                        note.setKey(KeyEvent.VK_W);
+                        note.setKey(getKey(1));
                         break;
                     case 2:
                         note.x = noteXPosition + ((note.width+noteGap)*2);
-                        note.setKey(KeyEvent.VK_E);
+                        note.setKey(getKey(2));
                         break;
                     case 3:
                         note.x = noteXPosition + ((note.width+noteGap)*3);
-                        note.setKey(KeyEvent.VK_R);
+                        note.setKey(getKey(3));
                         break;
                     case 4:
                         note.x = noteXPosition + ((note.width+noteGap)*4);
-                        note.setKey(KeyEvent.VK_T);
+                        note.setKey(getKey(4));
                         break;
                     case 5:
                         note.x = noteXPosition + ((note.width+noteGap)*5);
-                        note.setKey(KeyEvent.VK_Y);
+                        note.setKey(getKey(5));
                         break;
                     case 6:
                         note.x = noteXPosition + ((note.width+noteGap)*6);
-                        note.setKey(KeyEvent.VK_U);
+                        note.setKey(getKey(6));
                         break;
                 }
 
@@ -95,6 +95,27 @@ public class NoteParser {
         }
 
         ScheduleHandler.registerUniqueJob(new BeatmapEndJob(scene, loadOffset));
+    }
+
+    public static int getKey(int num) {
+        switch(num) {
+            case 0:
+                return KeyEvent.VK_Q;
+            case 1:
+                return KeyEvent.VK_W;
+            case 2:
+                return KeyEvent.VK_E;
+            case 3:
+                return KeyEvent.VK_R;
+            case 4:
+                return KeyEvent.VK_T;
+            case 5:
+                return KeyEvent.VK_Y;
+            case 6:
+                return KeyEvent.VK_U;
+            default:
+                return KeyEvent.VK_UNDEFINED;
+        }
     }
 }
 
