@@ -1,10 +1,14 @@
 package com.basketbandit.rizumu.resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
 public class Image {
+    private static final Logger log = LoggerFactory.getLogger(Image.class);
     private static HashMap<String, BufferedImage> images = new HashMap<>();
 
     public Image() {
@@ -12,8 +16,9 @@ public class Image {
             images.put("logo", ImageIO.read(getClass().getResourceAsStream("/assets/image/logo.png")));
             images.put("note", ImageIO.read(getClass().getResourceAsStream("/assets/image/note.png")));
             images.put("noteb", ImageIO.read(getClass().getResourceAsStream("/assets/image/noteb.png")));
+            images.put("hitflash-body", ImageIO.read(getClass().getResourceAsStream("/assets/image/hitflash-body.png")));
         } catch(Exception ex) {
-            //
+            log.error("An error occurred while running the {} class, message: {}", Image.class.getSimpleName(), ex.getMessage(), ex);
         }
     }
 
