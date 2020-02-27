@@ -3,6 +3,7 @@ package com.basketbandit.rizumu.stage.scene;
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.input.KeyListeners;
 import com.basketbandit.rizumu.input.MouseListeners;
 import com.basketbandit.rizumu.score.Statistics;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -33,6 +34,7 @@ public class ResultsScene implements Scene {
     @Override
     public ResultsScene init() {
         MouseListeners.setMouseListener("results", resultsMouseListener);
+        KeyListeners.setKeyListener("results", null);
         return this;
     }
 

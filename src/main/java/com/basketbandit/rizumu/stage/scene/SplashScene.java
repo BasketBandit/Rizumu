@@ -4,6 +4,7 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
+import com.basketbandit.rizumu.input.KeyListeners;
 import com.basketbandit.rizumu.input.MouseListeners;
 import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.resource.Sound;
@@ -48,6 +49,7 @@ public class SplashScene implements Scene {
         audioPlayer.loop(-1);
         audioPlayer.play();
         MouseListeners.setMouseListener("splash", splashMouseListener);
+        KeyListeners.setKeyListener("splash", null);
         return this;
     }
 

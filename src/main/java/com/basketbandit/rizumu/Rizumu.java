@@ -9,6 +9,7 @@ import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
 import java.util.HashMap;
@@ -67,12 +68,20 @@ public class Rizumu {
         engine.addMouseWheelListener(listener);
     }
 
+    public static void addKeyListener(KeyAdapter listener) {
+        engine.addKeyListener(listener);
+    }
+
     public static void removeMouseListener(MouseListener listener) {
         engine.removeMouseListener(listener);
     }
 
     public static void removeMouseWheelListener(MouseWheelListener listener) {
         engine.removeMouseWheelListener(listener);
+    }
+
+    public static void removeKeyListener(KeyAdapter listener) {
+        engine.removeKeyListener(listener);
     }
 
     /**

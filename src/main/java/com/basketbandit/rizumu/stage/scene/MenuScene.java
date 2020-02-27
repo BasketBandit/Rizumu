@@ -9,7 +9,7 @@ import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
-import com.basketbandit.rizumu.input.KeyInput;
+import com.basketbandit.rizumu.input.KeyListeners;
 import com.basketbandit.rizumu.input.MouseListeners;
 import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -19,10 +19,7 @@ import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Cursors;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -34,6 +31,7 @@ public class MenuScene implements Scene {
     private MenuTicker tickObject = new MenuTicker();
 
     private MenuMouseListener menuMouseListener = new MenuMouseListener();
+    private MenuKeyListener menuKeyListener = new MenuKeyListener();
 
     private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
     private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
@@ -66,6 +64,7 @@ public class MenuScene implements Scene {
     @Override
     public MenuScene init() {
         MouseListeners.setMouseListener("menu", menuMouseListener);
+        KeyListeners.setKeyListener("menu", menuKeyListener);
 
         // select random beatmap
         int rand = new Random().nextInt(trackButtons.size());
@@ -125,12 +124,6 @@ public class MenuScene implements Scene {
     private class MenuTicker implements TickObject {
         @Override
         public void tick() {
-            if(KeyInput.wasPressed(KeyEvent.VK_ESCAPE)) {
-                audioPlayer.stop();
-                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH).init());
-                return;
-            }
-
             // dynamic cursor
             for(Button button: buttons.values()) {
                 if(button.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
@@ -211,6 +204,16 @@ public class MenuScene implements Scene {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public class MenuKeyListener extends KeyAdapter {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                audioPlayer.stop();
+                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH).init());
             }
         }
     }

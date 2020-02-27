@@ -1,6 +1,5 @@
 package com.basketbandit.rizumu;
 
-import com.basketbandit.rizumu.input.KeyInput;
 import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.stage.object.DefaultBackgroundRenderObject;
 import com.basketbandit.rizumu.stage.object.DefaultSystemRenderObject;
@@ -19,7 +18,6 @@ public class Renderer extends Canvas {
 
     Renderer() {
         addMouseMotionListener(new MouseMovementListener());
-        addKeyListener(new KeyInput());
         initFrame();
         this.frame.add(this);
     }

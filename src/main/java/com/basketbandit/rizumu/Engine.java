@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelListener;
 
@@ -81,12 +82,20 @@ public class Engine extends Thread {
         renderer.addMouseWheelListener(listener);
     }
 
+    void addKeyListener(KeyAdapter listener) {
+        renderer.addKeyListener(listener);
+    }
+
     void removeMouseListener(MouseListener listener) {
         renderer.removeMouseListener(listener);
     }
 
     void removeMouseWheelListener(MouseWheelListener listener) {
         renderer.removeMouseWheelListener(listener);
+    }
+
+    void removeKeyListener(KeyAdapter listener) {
+        renderer.removeKeyListener(listener);
     }
 
     void setPrimaryScene(Scene scene) {
