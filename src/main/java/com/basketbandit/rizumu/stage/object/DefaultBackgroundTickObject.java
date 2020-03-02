@@ -2,7 +2,7 @@ package com.basketbandit.rizumu.stage.object;
 
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.drawable.Button;
-import com.basketbandit.rizumu.input.MouseMovementListener;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.utility.Cursors;
 
 public class DefaultBackgroundTickObject implements TickObject {
@@ -17,7 +17,7 @@ public class DefaultBackgroundTickObject implements TickObject {
         }
 
         for(Button button: (Rizumu.getSecondaryScene() == null) ? Rizumu.getPrimaryScene().getButtons().values() : Rizumu.getSecondaryScene().getButtons().values()) {
-            if(button.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+            if(button.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                 Rizumu.getFrame().setCursor(Cursors.HAND_CURSOR);
                 break;
             }

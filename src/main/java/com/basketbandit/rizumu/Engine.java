@@ -76,22 +76,22 @@ public class Engine extends Thread {
         return renderer.getFrame();
     }
 
-    void addMouseListener(MouseAdapter listener) {
-        renderer.addMouseListener(listener);
-        renderer.addMouseWheelListener(listener);
+    void addMouseAdapter(MouseAdapter adapter) {
+        renderer.addMouseListener(adapter);
+        renderer.addMouseWheelListener(adapter);
     }
 
-    void removeMouseListener(MouseAdapter listener) {
-        renderer.removeMouseListener(listener);
-        renderer.removeMouseListener(listener);
+    void removeMouseAdapter(MouseAdapter adapter) {
+        renderer.removeMouseListener(adapter);
+        renderer.removeMouseListener(adapter);
     }
 
-    void addKeyListener(KeyAdapter listener) {
-        renderer.addKeyListener(listener);
+    void addKeyAdapter(KeyAdapter adapter) {
+        renderer.addKeyListener(adapter);
     }
 
-    void removeKeyListener(KeyAdapter listener) {
-        renderer.removeKeyListener(listener);
+    void removeKeyAdapter(KeyAdapter adapter) {
+        renderer.removeKeyListener(adapter);
     }
 
     void setPrimaryScene(Scene scene) {

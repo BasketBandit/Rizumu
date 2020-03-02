@@ -3,7 +3,7 @@ package com.basketbandit.rizumu.input;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class MouseMovementListener extends MouseAdapter {
+public class MouseMovementAdapter extends MouseAdapter {
     private static int x;
     private static int y;
 

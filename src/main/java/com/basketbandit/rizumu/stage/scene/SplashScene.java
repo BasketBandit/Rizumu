@@ -2,8 +2,8 @@ package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.input.KeyListeners;
-import com.basketbandit.rizumu.input.MouseListeners;
+import com.basketbandit.rizumu.input.KeyAdapters;
+import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -24,7 +24,7 @@ public class SplashScene extends Scene {
     public SplashScene() {
         renderObject = new SplashRenderer();
         tickObject = new SplashTicker();
-        mouseAdapter = new SplashMouseListener();
+        mouseAdapter = new SplashMouseAdapter();
 
         try {
             // loads the master logo, uses AffineTransform to scale the image down for usage on float translations (smooth movement)
@@ -40,23 +40,13 @@ public class SplashScene extends Scene {
 
     @Override
     public SplashScene init(Object... objects) {
-        MouseListeners.setMouseListener("splash", mouseAdapter);
-        KeyListeners.setKeyListener("splash", null);
+        MouseAdapters.setMouseAdapter("splash", mouseAdapter);
+        KeyAdapters.setKeyAdapter("splash", null);
 
         audioPlayer.changeTrack(Sound.getAudioFile("menu-music").getAbsolutePath());
         audioPlayer.loop(-1);
         audioPlayer.play();
         return this;
-    }
-
-    @Override
-    public RenderObject getRenderObject() {
-        return renderObject;
-    }
-
-    @Override
-    public TickObject getTickObject() {
-        return tickObject;
     }
 
     private class SplashRenderer implements RenderObject {
@@ -73,7 +63,7 @@ public class SplashScene extends Scene {
         }
     }
 
-    private class SplashMouseListener extends MouseAdapter {
+    private class SplashMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {

@@ -11,9 +11,9 @@ import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
 import com.basketbandit.rizumu.drawable.KeyFlash;
 import com.basketbandit.rizumu.drawable.Registrar;
-import com.basketbandit.rizumu.input.KeyListeners;
-import com.basketbandit.rizumu.input.MouseListeners;
-import com.basketbandit.rizumu.input.MouseMovementListener;
+import com.basketbandit.rizumu.input.KeyAdapters;
+import com.basketbandit.rizumu.input.MouseAdapters;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
@@ -57,13 +57,13 @@ public class TrackScene extends Scene {
     public TrackScene() {
         renderObject = new TrackRenderer();
         tickObject = new TrackTicker();
-        keyAdapter = new TrackKeyListener();
+        keyAdapter = new TrackKeyAdapter();
     }
 
     @Override
     public Scene init(Object... object) {
-        MouseListeners.setMouseListener("track", null);
-        KeyListeners.setKeyListener("track", keyAdapter);
+        MouseAdapters.setMouseAdapter("track", null);
+        KeyAdapters.setKeyAdapter("track", keyAdapter);
 
         if(object.length > 0) {
             this.track = (Track) object[0];
@@ -196,7 +196,7 @@ public class TrackScene extends Scene {
             audioPlayer.resume();
 
             hitKeyFlashes.forEach(keyFlash -> {
-                if(!((TrackKeyListener) keyAdapter).isDown(keyFlash.getKey())) {
+                if(!((TrackKeyAdapter) keyAdapter).isDown(keyFlash.getKey())) {
                     keyFlash.decrementOpacity();
                 }
             });
@@ -206,7 +206,7 @@ public class TrackScene extends Scene {
             // single was hit (hit on time)
             notes.removeIf(Note::hit);
             notes.stream().filter(note -> !note.hit()).forEach(note -> {
-                if(note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && ((TrackKeyListener) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
+                if(note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
                     if(statistics.getCombo() >= 50) {
                         effectPlayer.play("track-combobreak");
                     }
@@ -214,12 +214,12 @@ public class TrackScene extends Scene {
                 }
             });
             notes.removeIf(note -> note.getMinY() >= registrar.getMaxY()); // single has passed the registrar (hit too late or not at all)
-            notes.removeIf(note -> extendedRegistrar.intersects(note) && ((TrackKeyListener) keyAdapter).isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
+            notes.removeIf(note -> extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
             notes.removeIf(note -> (note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld());
         }
     }
 
-    public class TrackKeyListener extends KeyAdapter {
+    public class TrackKeyAdapter extends KeyAdapter {
         private static final int numKeys = 256;
         private final boolean[] keys = new boolean[numKeys];
 
@@ -283,7 +283,7 @@ public class TrackScene extends Scene {
         PauseMenu() {
             renderObject = new PauseMenuRenderer();
             tickObject = new PauseMenuTicker();
-            mouseAdapter = new PauseMenuMouseListener();
+            mouseAdapter = new PauseMenuMouseAdapter();
 
             buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
             buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
@@ -292,7 +292,7 @@ public class TrackScene extends Scene {
 
         @Override
         public PauseMenu init(Object... objects) {
-            MouseListeners.setMouseListener("pause", mouseAdapter);
+            MouseAdapters.setMouseAdapter("pause", mouseAdapter);
             return this;
         }
 
@@ -321,12 +321,12 @@ public class TrackScene extends Scene {
             }
         }
 
-        private class PauseMenuMouseListener extends MouseAdapter {
+        private class PauseMenuMouseAdapter extends MouseAdapter {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     // 'resume' button, close the pause menu
-                    if(buttons.get("resumeButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    if(buttons.get("resumeButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                         audioPlayer.resume();
                         effectPlayer.play("menu-click2");
                         TrackScene.this.init();
@@ -337,7 +337,7 @@ public class TrackScene extends Scene {
                     }
 
                     // 'restart' button, restart the beatmap
-                    if(buttons.get("restartButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    if(buttons.get("restartButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                         effectPlayer.play("menu-click3");
                         audioPlayer.stop();
                         Rizumu.setSecondaryScene(null);
@@ -354,7 +354,7 @@ public class TrackScene extends Scene {
                     }
 
                     // 'quit' button, go back to the main menu
-                    if(buttons.get("quitButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    if(buttons.get("quitButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                         effectPlayer.play("menu-click4");
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();

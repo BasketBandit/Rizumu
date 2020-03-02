@@ -2,7 +2,7 @@ package com.basketbandit.rizumu.stage.object;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.input.MouseMovementListener;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.utility.Fonts;
 import com.basketbandit.rizumu.utility.Alignment;
 
@@ -30,7 +30,7 @@ public class DefaultSystemRenderObject implements RenderObject {
                             "HEIGHT " + Configuration.getHeight() + " / " +
                             "CONTENT WIDTH " + Configuration.getContentWidth() + " / " +
                             "CONTENT HEIGHT " + Configuration.getContentHeight() + " / " +
-                            "MOUSE-X " + MouseMovementListener.getX() + " / MOUSE-Y " + MouseMovementListener.getY(),
+                            "MOUSE-X " + MouseMovementAdapter.getX() + " / MOUSE-Y " + MouseMovementAdapter.getY(),
                     10, Configuration.getContentHeight() - 10);
         }
     }

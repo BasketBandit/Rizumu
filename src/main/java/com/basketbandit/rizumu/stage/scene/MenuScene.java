@@ -7,9 +7,9 @@ import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
-import com.basketbandit.rizumu.input.KeyListeners;
-import com.basketbandit.rizumu.input.MouseListeners;
-import com.basketbandit.rizumu.input.MouseMovementListener;
+import com.basketbandit.rizumu.input.KeyAdapters;
+import com.basketbandit.rizumu.input.MouseAdapters;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
@@ -37,8 +37,8 @@ public class MenuScene extends Scene {
     public MenuScene() {
         renderObject = new MenuRenderer();
         tickObject = new MenuTicker();
-        mouseAdapter = new MenuMouseListener();
-        keyAdapter = new MenuKeyListener();
+        mouseAdapter = new MenuMouseAdapter();
+        keyAdapter = new MenuKeyAdapter();
 
         container = new Container(0, 0, 500, Configuration.getContentHeight());
 
@@ -58,8 +58,8 @@ public class MenuScene extends Scene {
 
     @Override
     public MenuScene init(Object... object) {
-        MouseListeners.setMouseListener("menu", mouseAdapter);
-        KeyListeners.setKeyListener("menu", keyAdapter);
+        MouseAdapters.setMouseAdapter("menu", mouseAdapter);
+        KeyAdapters.setKeyAdapter("menu", keyAdapter);
 
         // select random beatmap
         int rand = new Random().nextInt(trackButtons.size());
@@ -111,7 +111,7 @@ public class MenuScene extends Scene {
         public void tick() {
             // dynamic cursor
             for(Button button: buttons.values()) {
-                if(button.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                if(button.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                     Rizumu.getFrame().setCursor(Cursors.HAND_CURSOR);
                     break;
                 }
@@ -119,12 +119,12 @@ public class MenuScene extends Scene {
         }
     }
 
-    public class MenuMouseListener extends MouseAdapter {
+    public class MenuMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 for(TrackButton trackButton : trackButtons.values()) {
-                    if(trackButton.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                    if(trackButton.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                         Track buttonTrack = trackButton.getTrack();
                         Beatmap buttonBeatmap = trackButton.getBeatmap();
                         String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
@@ -149,13 +149,13 @@ public class MenuScene extends Scene {
                     }
                 }
 
-                if(buttons.get("frameRateButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                if(buttons.get("frameRateButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                     effectPlayer.play("menu-click");
                     Configuration.toggleUnlockedFramerate();
                     return;
                 }
 
-                if(buttons.get("volumeUpButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                if(buttons.get("volumeUpButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                     effectPlayer.play("menu-click");
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
@@ -163,7 +163,7 @@ public class MenuScene extends Scene {
                     return;
                 }
 
-                if(buttons.get("volumeDownButton").getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
+                if(buttons.get("volumeDownButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                     effectPlayer.play("menu-click");
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
@@ -193,7 +193,7 @@ public class MenuScene extends Scene {
         }
     }
 
-    public class MenuKeyListener extends KeyAdapter {
+    public class MenuKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -207,7 +207,7 @@ public class MenuScene extends Scene {
         LoginMenu() {
             renderObject = new LoginMenuRenderer();
             tickObject = new LoginMenuTicker();
-            mouseAdapter = new LoginMenuMouseListener();
+            mouseAdapter = new LoginMenuMouseAdapter();
 
             buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
             buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
@@ -216,7 +216,7 @@ public class MenuScene extends Scene {
 
         @Override
         public Scene init(Object... object) {
-            MouseListeners.setMouseListener("login", mouseAdapter);
+            MouseAdapters.setMouseAdapter("login", mouseAdapter);
             return this;
         }
 
@@ -243,7 +243,7 @@ public class MenuScene extends Scene {
             }
         }
 
-        private class LoginMenuMouseListener extends MouseAdapter {
+        private class LoginMenuMouseAdapter extends MouseAdapter {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1) {

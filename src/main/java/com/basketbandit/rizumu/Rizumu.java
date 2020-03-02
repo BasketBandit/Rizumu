@@ -19,6 +19,9 @@ public class Rizumu {
     private static HashMap<Scenes, Scene> staticScenes = new HashMap<>();
     private static TrackParser trackParser;
 
+    //TODO Login menu
+    //TODO Track select auto-scroll
+
     public static void main(String[] args) {
         if(args.length > 0) {
             debug = Boolean.parseBoolean(args[0]);
@@ -59,20 +62,32 @@ public class Rizumu {
         return engine.getFrame();
     }
 
-    public static void addMouseListener(MouseAdapter listener) {
-        engine.addMouseListener(listener);
+    /**
+     * @param adapter {@link MouseAdapter}
+     */
+    public static void addMouseAdapter(MouseAdapter adapter) {
+        engine.addMouseAdapter(adapter);
     }
 
-    public static void removeMouseListener(MouseAdapter listener) {
-        engine.removeMouseListener(listener);
+    /**
+     * @param adapter {@link MouseAdapter}
+     */
+    public static void removeMouseAdapter(MouseAdapter adapter) {
+        engine.removeMouseAdapter(adapter);
     }
 
-    public static void addKeyListener(KeyAdapter listener) {
-        engine.addKeyListener(listener);
+    /**
+     * @param adapter {@link KeyAdapter}
+     */
+    public static void addKeyAdapter(KeyAdapter adapter) {
+        engine.addKeyAdapter(adapter);
     }
 
-    public static void removeKeyListener(KeyAdapter listener) {
-        engine.removeKeyListener(listener);
+    /**
+     * @param adapter {@link KeyAdapter}
+     */
+    public static void removeKeyAdapter(KeyAdapter adapter) {
+        engine.removeKeyAdapter(adapter);
     }
 
     /**

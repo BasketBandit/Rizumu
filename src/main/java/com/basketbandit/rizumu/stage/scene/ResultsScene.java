@@ -3,8 +3,8 @@ package com.basketbandit.rizumu.stage.scene;
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.drawable.Button;
-import com.basketbandit.rizumu.input.KeyListeners;
-import com.basketbandit.rizumu.input.MouseListeners;
+import com.basketbandit.rizumu.input.KeyAdapters;
+import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.score.Statistics;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
@@ -24,15 +24,15 @@ public class ResultsScene extends Scene {
     public ResultsScene() {
         renderObject = new ResultsRenderer();
         tickObject = new ResultsTicker();
-        mouseAdapter = new ResultsMouseListener();
+        mouseAdapter = new ResultsMouseAdapter();
 
         buttons.put("menu", new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50));
     }
 
     @Override
     public ResultsScene init(Object... object) {
-        MouseListeners.setMouseListener("results", mouseAdapter);
-        KeyListeners.setKeyListener("results", null);
+        MouseAdapters.setMouseAdapter("results", mouseAdapter);
+        KeyAdapters.setKeyAdapter("results", null);
 
         this.statistics = (Statistics) object[0];
         this.backgroundImage = statistics.getImage();
@@ -71,7 +71,7 @@ public class ResultsScene extends Scene {
         }
     }
 
-    private class ResultsMouseListener extends MouseAdapter {
+    private class ResultsMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
