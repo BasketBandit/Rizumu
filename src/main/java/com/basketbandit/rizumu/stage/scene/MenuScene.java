@@ -202,4 +202,53 @@ public class MenuScene extends Scene {
             }
         }
     }
+
+    public class LoginMenu extends Scene {
+        LoginMenu() {
+            renderObject = new LoginMenuRenderer();
+            tickObject = new LoginMenuTicker();
+            mouseAdapter = new LoginMenuMouseListener();
+
+            buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
+            buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
+            buttons.put("loginButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
+        }
+
+        @Override
+        public Scene init(Object... object) {
+            MouseListeners.setMouseListener("login", mouseAdapter);
+            return this;
+        }
+
+        private class LoginMenuRenderer implements RenderObject {
+            @Override
+            public void render(Graphics2D g) {
+                g.setColor(Colours.DARK_GREY_90);
+                g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
+
+                g.setColor(Color.DARK_GRAY);
+                buttons.values().forEach(g::fill);
+                g.setColor(Color.BLACK);
+                buttons.values().forEach(g::draw);
+
+                g.setFont(Fonts.default12);
+                g.setColor(Color.WHITE);
+                g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), (int)buttons.get("loginButton").getCenterY()+4);
+            }
+        }
+
+        private class LoginMenuTicker implements TickObject {
+            @Override
+            public void tick() {
+            }
+        }
+
+        private class LoginMenuMouseListener extends MouseAdapter {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(e.getButton() == MouseEvent.BUTTON1) {
+                }
+            }
+        }
+    }
 }
