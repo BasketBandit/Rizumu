@@ -13,7 +13,6 @@ import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
-import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Cursors;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -199,55 +198,6 @@ public class MenuScene extends Scene {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 audioPlayer.stop();
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH).init());
-            }
-        }
-    }
-
-    public class LoginMenu extends Scene {
-        LoginMenu() {
-            renderObject = new LoginMenuRenderer();
-            tickObject = new LoginMenuTicker();
-            mouseAdapter = new LoginMenuMouseAdapter();
-
-            buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
-            buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
-            buttons.put("loginButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
-        }
-
-        @Override
-        public Scene init(Object... object) {
-            MouseAdapters.setMouseAdapter("login", mouseAdapter);
-            return this;
-        }
-
-        private class LoginMenuRenderer implements RenderObject {
-            @Override
-            public void render(Graphics2D g) {
-                g.setColor(Colours.DARK_GREY_90);
-                g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
-
-                g.setColor(Color.DARK_GRAY);
-                buttons.values().forEach(g::fill);
-                g.setColor(Color.BLACK);
-                buttons.values().forEach(g::draw);
-
-                g.setFont(Fonts.default12);
-                g.setColor(Color.WHITE);
-                g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), (int)buttons.get("loginButton").getCenterY()+4);
-            }
-        }
-
-        private class LoginMenuTicker implements TickObject {
-            @Override
-            public void tick() {
-            }
-        }
-
-        private class LoginMenuMouseAdapter extends MouseAdapter {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if(e.getButton() == MouseEvent.BUTTON1) {
-                }
             }
         }
     }

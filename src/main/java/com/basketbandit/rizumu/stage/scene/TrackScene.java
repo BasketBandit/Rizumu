@@ -293,6 +293,7 @@ public class TrackScene extends Scene {
         @Override
         public PauseMenu init(Object... objects) {
             MouseAdapters.setMouseAdapter("pause", mouseAdapter);
+            KeyAdapters.setKeyAdapter("pause", null);
             return this;
         }
 
@@ -358,8 +359,8 @@ public class TrackScene extends Scene {
                         effectPlayer.play("menu-click4");
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
-                        Rizumu.setSecondaryScene(null);
                         Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+                        Rizumu.setSecondaryScene(null);
                     }
                 }
             }

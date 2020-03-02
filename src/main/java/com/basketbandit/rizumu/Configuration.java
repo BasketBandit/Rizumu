@@ -22,6 +22,8 @@ public class Configuration {
 
     private static int noteSpeedScale = 7; // default 3
 
+    private static String username; // can logged in user be as simple as having this username set? (should we check login information on each score upload?)
+
     public Configuration() {
     }
 
@@ -104,7 +106,15 @@ public class Configuration {
         return beatmapResourcePath;
     }
 
-    public static void setBeatmapResourcePath(String beatmapResourcePath) {
-        Configuration.beatmapResourcePath = beatmapResourcePath;
+    public static void setBeatmapResourcePath(String path) {
+        beatmapResourcePath = path;
+    }
+
+    public static void setUser(String user) {
+        username = user;
+    }
+
+    public static String getUser() {
+        return username;
     }
 }

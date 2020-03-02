@@ -2,13 +2,19 @@ package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.database.Database;
+import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.utility.Alignment;
+import com.basketbandit.rizumu.utility.Colours;
+import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -18,6 +24,7 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 public class SplashScene extends Scene {
+    private LoginMenu loginMenu = new LoginMenu();
     private BufferedImage logo;
     private float x = 0;
 
@@ -25,6 +32,9 @@ public class SplashScene extends Scene {
         renderObject = new SplashRenderer();
         tickObject = new SplashTicker();
         mouseAdapter = new SplashMouseAdapter();
+
+        buttons.put("loginButton", new Button(20, 20, 75, 30));
+        buttons.put("logoutButton", new Button(20, 20, 75, 30));
 
         try {
             // loads the master logo, uses AffineTransform to scale the image down for usage on float translations (smooth movement)
@@ -43,9 +53,11 @@ public class SplashScene extends Scene {
         MouseAdapters.setMouseAdapter("splash", mouseAdapter);
         KeyAdapters.setKeyAdapter("splash", null);
 
-        audioPlayer.changeTrack(Sound.getAudioFile("menu-music").getAbsolutePath());
-        audioPlayer.loop(-1);
-        audioPlayer.play();
+        if(Rizumu.getSecondaryScene() == null) {
+            audioPlayer.changeTrack(Sound.getAudioFile("menu-music").getAbsolutePath());
+            audioPlayer.loop(-1);
+            audioPlayer.play();
+        }
         return this;
     }
 
@@ -53,6 +65,18 @@ public class SplashScene extends Scene {
         @Override
         public void render(Graphics2D g) {
             g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getContentWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getContentHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
+
+            for(Button button: buttons.values()) {
+                g.setColor(button.getColor());
+                g.fill(button);
+            }
+
+            g.setColor(Color.WHITE);
+            if(Configuration.getUser() == null) {
+                g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), buttons.get("loginButton").y + buttons.get("loginButton").height/2 + 4);
+            } else {
+                g.drawString("Logout", Alignment.center("Logout", g.getFontMetrics(Fonts.default12), buttons.get("logoutButton")), buttons.get("logoutButton").y + buttons.get("logoutButton").height/2 + 4);
+            }
         }
     }
 
@@ -67,9 +91,74 @@ public class SplashScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
+                if(Configuration.getUser() == null && buttons.get("loginButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    Rizumu.setSecondaryScene(loginMenu.init());
+                    return;
+                }
+
+                if(Configuration.getUser() != null && buttons.get("logoutButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    Configuration.setUser(null);
+                    return;
+                }
+
                 effectPlayer.play("menu-select2");
                 audioPlayer.stop();
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+            }
+        }
+    }
+
+    public class LoginMenu extends Scene {
+        LoginMenu() {
+            renderObject = new LoginMenuRenderer();
+            tickObject = new LoginMenuTicker();
+            mouseAdapter = new LoginMenuMouseAdapter();
+
+            buttons.put("loginButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
+        }
+
+        @Override
+        public Scene init(Object... object) {
+            MouseAdapters.setMouseAdapter("login", mouseAdapter);
+            KeyAdapters.setKeyAdapter("login", null);
+            return this;
+        }
+
+        private class LoginMenuRenderer implements RenderObject {
+            @Override
+            public void render(Graphics2D g) {
+                g.setColor(Colours.DARK_GREY_90);
+                g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
+
+                g.setColor(Color.DARK_GRAY);
+                buttons.values().forEach(g::fill);
+                g.setColor(Color.BLACK);
+                buttons.values().forEach(g::draw);
+
+                g.setFont(Fonts.default12);
+                g.setColor(Color.WHITE);
+                g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), (int) buttons.get("loginButton").getCenterY() + 4);
+            }
+        }
+
+        private class LoginMenuTicker implements TickObject {
+            @Override
+            public void tick() {
+            }
+        }
+
+        private class LoginMenuMouseAdapter extends MouseAdapter {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(e.getButton() == MouseEvent.BUTTON1) {
+                    if(buttons.get("loginButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                        if(Database.login("", "")) {
+                            Configuration.setUser("");
+                        }
+                        Rizumu.getPrimaryScene().init();
+                        Rizumu.setSecondaryScene(null); // important to do this second to stop audio being interrupted
+                    }
+                }
             }
         }
     }

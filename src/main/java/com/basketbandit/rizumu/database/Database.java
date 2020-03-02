@@ -15,7 +15,7 @@ public class Database {
      * @param password {@link String}
      * @return boolean
      */
-    private static boolean login(String username, String password) {
+    public static boolean login(String username, String password) {
         try(java.sql.Connection c = Connection.getConnection();
             PreparedStatement ps = c.prepareStatement("SELECT * FROM `users` WHERE `username` = ? AND `password` = ?")) {
 
