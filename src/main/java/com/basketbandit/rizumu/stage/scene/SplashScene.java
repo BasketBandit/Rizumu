@@ -2,8 +2,6 @@ package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.audio.AudioPlayer;
-import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.input.KeyListeners;
 import com.basketbandit.rizumu.input.MouseListeners;
 import com.basketbandit.rizumu.resource.Image;
@@ -19,18 +17,15 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
-public class SplashScene implements Scene {
-    private SplashRenderer renderObject = new SplashRenderer();
-    private SplashTicker tickObject = new SplashTicker();
-    private SplashMouseListener splashMouseListener = new SplashMouseListener();
-
-    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
-    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
-
+public class SplashScene extends Scene {
     private BufferedImage logo;
     private float x = 0;
 
     public SplashScene() {
+        renderObject = new SplashRenderer();
+        tickObject = new SplashTicker();
+        mouseAdapter = new SplashMouseListener();
+
         try {
             // loads the master logo, uses AffineTransform to scale the image down for usage on float translations (smooth movement)
             BufferedImage masterLogo = Image.getBufferedImage("logo");
@@ -44,12 +39,13 @@ public class SplashScene implements Scene {
     }
 
     @Override
-    public SplashScene init() {
+    public SplashScene init(Object... objects) {
+        MouseListeners.setMouseListener("splash", mouseAdapter);
+        KeyListeners.setKeyListener("splash", null);
+
         audioPlayer.changeTrack(Sound.getAudioFile("menu-music").getAbsolutePath());
         audioPlayer.loop(-1);
         audioPlayer.play();
-        MouseListeners.setMouseListener("splash", splashMouseListener);
-        KeyListeners.setKeyListener("splash", null);
         return this;
     }
 

@@ -7,14 +7,16 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseAdapter;
 
 public class Engine extends Thread {
     private static final Logger log = LoggerFactory.getLogger(Engine.class);
 
     private Renderer renderer;
     private Ticker ticker;
+
+    private Scene primaryScene;
+    private Scene secondaryScene;
 
     private boolean isRunning = true;
 
@@ -74,24 +76,18 @@ public class Engine extends Thread {
         return renderer.getFrame();
     }
 
-    void addMouseListener(MouseListener listener) {
+    void addMouseListener(MouseAdapter listener) {
         renderer.addMouseListener(listener);
+        renderer.addMouseWheelListener(listener);
     }
 
-    void addMouseWheelListener(MouseWheelListener listener) {
-        renderer.addMouseWheelListener(listener);
+    void removeMouseListener(MouseAdapter listener) {
+        renderer.removeMouseListener(listener);
+        renderer.removeMouseListener(listener);
     }
 
     void addKeyListener(KeyAdapter listener) {
         renderer.addKeyListener(listener);
-    }
-
-    void removeMouseListener(MouseListener listener) {
-        renderer.removeMouseListener(listener);
-    }
-
-    void removeMouseWheelListener(MouseWheelListener listener) {
-        renderer.removeMouseWheelListener(listener);
     }
 
     void removeKeyListener(KeyAdapter listener) {
@@ -99,12 +95,19 @@ public class Engine extends Thread {
     }
 
     void setPrimaryScene(Scene scene) {
+        this.primaryScene = scene;
         this.renderer.setPrimaryRenderObject(scene.getRenderObject());
         this.ticker.setPrimaryTickObject(scene.getTickObject());
         log.info("primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
     }
 
+    public Scene getPrimaryScene() {
+        return primaryScene;
+    }
+
     void setSecondaryScene(Scene scene) {
+        this.secondaryScene = scene;
+
         if(scene != null) {
             this.renderer.setSecondaryRenderObject(scene.getRenderObject());
             this.ticker.setSecondaryTickObject(scene.getTickObject());
@@ -115,6 +118,10 @@ public class Engine extends Thread {
         this.renderer.setSecondaryRenderObject(null);
         this.ticker.setSecondaryTickObject(null);
         log.info("secondary render/tick objects removed");
+    }
+
+    public Scene getSecondaryScene() {
+        return secondaryScene;
     }
 
     /**

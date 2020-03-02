@@ -17,43 +17,27 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 
-public class ResultsScene implements Scene {
-    private ResultsRenderer renderObject = new ResultsRenderer();
-    private ResultsTicker tickObject = new ResultsTicker();
-
-    private ResultsMouseListener resultsMouseListener = new ResultsMouseListener();
-
+public class ResultsScene extends Scene {
     private Statistics statistics;
-
     private Image backgroundImage;
-    private Button menuButton = new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50);
 
     public ResultsScene() {
-        Rizumu.addMouseListener(new ResultsMouseListener());
+        renderObject = new ResultsRenderer();
+        tickObject = new ResultsTicker();
+        mouseAdapter = new ResultsMouseListener();
+
+        buttons.put("menu", new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50));
     }
 
     @Override
-    public ResultsScene init() {
-        MouseListeners.setMouseListener("results", resultsMouseListener);
+    public ResultsScene init(Object... object) {
+        MouseListeners.setMouseListener("results", mouseAdapter);
         KeyListeners.setKeyListener("results", null);
-        return this;
-    }
 
-    public ResultsScene initScene(Statistics statistics) {
-        this.statistics = statistics;
+        this.statistics = (Statistics) object[0];
         this.backgroundImage = statistics.getImage();
-        renderObject.backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth(null)+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight(null)+.0));
+        ((ResultsRenderer) renderObject).backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth(null)+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight(null)+.0));
         return this;
-    }
-
-    @Override
-    public RenderObject getRenderObject() {
-        return renderObject;
-    }
-
-    @Override
-    public TickObject getTickObject() {
-        return tickObject;
     }
 
     private class ResultsRenderer implements RenderObject {
@@ -69,11 +53,11 @@ public class ResultsScene implements Scene {
             }
 
             g.setColor(Color.DARK_GRAY);
-            g.fill(menuButton);
+            g.fill(buttons.get("menu"));
 
             g.setFont(Fonts.default12);
             g.setColor(Color.WHITE);
-            g.drawString("Exit!", (int)menuButton.getMinX(), (int)menuButton.getCenterY());
+            g.drawString("Exit!", (int)buttons.get("menu").getMinX(), (int)buttons.get("menu").getCenterY());
 
             g.setColor(Color.WHITE);
             g.drawString(statistics.getAccuracyString(), 80, 80);
@@ -91,7 +75,7 @@ public class ResultsScene implements Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                if(menuButton.getBounds().contains(e.getX(), e.getY())) {
+                if(buttons.get("menu").getBounds().contains(e.getX(), e.getY())) {
                     Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
                 }
             }

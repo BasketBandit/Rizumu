@@ -10,8 +10,7 @@ import com.basketbandit.rizumu.stage.scene.*;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseWheelListener;
+import java.awt.event.MouseAdapter;
 import java.util.HashMap;
 
 public class Rizumu {
@@ -60,24 +59,16 @@ public class Rizumu {
         return engine.getFrame();
     }
 
-    public static void addMouseListener(MouseListener listener) {
+    public static void addMouseListener(MouseAdapter listener) {
         engine.addMouseListener(listener);
     }
 
-    public static void addMouseWheelListener(MouseWheelListener listener) {
-        engine.addMouseWheelListener(listener);
+    public static void removeMouseListener(MouseAdapter listener) {
+        engine.removeMouseListener(listener);
     }
 
     public static void addKeyListener(KeyAdapter listener) {
         engine.addKeyListener(listener);
-    }
-
-    public static void removeMouseListener(MouseListener listener) {
-        engine.removeMouseListener(listener);
-    }
-
-    public static void removeMouseWheelListener(MouseWheelListener listener) {
-        engine.removeMouseWheelListener(listener);
     }
 
     public static void removeKeyListener(KeyAdapter listener) {
@@ -100,10 +91,24 @@ public class Rizumu {
     }
 
     /**
+     * @return {@link Scene}
+     */
+    public static Scene getPrimaryScene() {
+        return engine.getPrimaryScene();
+    }
+
+    /**
      * @param scene {@link Scene}
      */
     public static void setSecondaryScene(Scene scene) {
         engine.setSecondaryScene(scene);
+    }
+
+    /**
+     * @return {@link Scene}
+     */
+    public static Scene getSecondaryScene() {
+        return engine.getSecondaryScene();
     }
 
     /**

@@ -3,7 +3,6 @@ package com.basketbandit.rizumu.stage.scene;
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.audio.AudioPlayer;
-import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.NoteParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
@@ -21,10 +20,9 @@ import com.basketbandit.rizumu.score.Statistics;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
-import com.basketbandit.rizumu.utility.Colours;
-import com.basketbandit.rizumu.utility.Cursors;
-import com.basketbandit.rizumu.utility.Fonts;
 import com.basketbandit.rizumu.utility.Alignment;
+import com.basketbandit.rizumu.utility.Colours;
+import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -36,24 +34,17 @@ import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TrackScene implements Scene {
-    private TrackRenderer renderObject = new TrackRenderer();
-    private TrackTicker tickObject = new TrackTicker();
+public class TrackScene extends Scene {
     private PauseMenu pauseMenu = new PauseMenu();
-    private TrackKeyListener trackKeyListener = new TrackKeyListener();
-
-    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
-    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
 
     private Statistics statistics;
 
     protected Track track;
     protected Beatmap beatmap;
-    private List<Note> notes;
+    private CopyOnWriteArrayList<Note> notes;
 
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
@@ -63,34 +54,40 @@ public class TrackScene implements Scene {
     private boolean menuCooldownWarning = false;
     private long menuCooldown = System.currentTimeMillis();
 
-    public TrackScene initScene(Track track, Beatmap beatmap) {
-        this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-        this.track = track;
-        this.beatmap = beatmap;
-        this.statistics = new Statistics(track.getImage());
-
-        this.hitKeyFlashes = new ArrayList<>();
-        for(int i = 0; i < beatmap.getKeys(); i++) {
-            hitKeyFlashes.add(new KeyFlash(NoteParser.getKey(i)));
-        }
-
-        this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition(); // center the extended(registrar) based on key count
-        this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*beatmap.getKeys()-1) + (Configuration.getNoteGap()*4); // resize the extended(registrar) based on key count
-
-        // do render object calculations on init rather that on the fly (this saves those precious cycles, right?)
-        renderObject.backgroundImage = track.getImage();
-        renderObject.backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(renderObject.backgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(renderObject.backgroundImage.getHeight()+.0));
-        renderObject.beatmapContainer.x = Configuration.getDefaultBeatmapXPosition(); // beatmap background container horizontal position
-        renderObject.beatmapContainer.width = (beatmap.getKeys()*50) + (Configuration.getNoteGap()*beatmap.getKeys()-1) + (Configuration.getNoteGap()*4); // beatmap background container width
-
-        ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
-        return this;
+    public TrackScene() {
+        renderObject = new TrackRenderer();
+        tickObject = new TrackTicker();
+        keyAdapter = new TrackKeyListener();
     }
 
     @Override
-    public Scene init() {
+    public Scene init(Object... object) {
         MouseListeners.setMouseListener("track", null);
-        KeyListeners.setKeyListener("track", trackKeyListener);
+        KeyListeners.setKeyListener("track", keyAdapter);
+
+        if(object.length > 0) {
+            this.track = (Track) object[0];
+            this.beatmap = (Beatmap) object[1];
+            this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
+            this.statistics = new Statistics(track.getImage());
+
+            this.hitKeyFlashes = new ArrayList<>();
+            for(int i = 0; i < beatmap.getKeys(); i++) {
+                hitKeyFlashes.add(new KeyFlash(NoteParser.getKey(i)));
+            }
+
+            this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition(); // center the extended(registrar) based on key count
+            this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys() * 50) + (Configuration.getNoteGap() * beatmap.getKeys() - 1) + (Configuration.getNoteGap() * 4); // resize the extended(registrar) based on key count
+
+            // do render object calculations on init rather that on the fly (this saves those precious cycles, right?)
+            ((TrackRenderer) renderObject).backgroundImage = track.getImage();
+            ((TrackRenderer) renderObject).backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth() + .0) / (((TrackRenderer) renderObject).backgroundImage.getWidth() + .0), (Configuration.getHeight() + .0) / (((TrackRenderer) renderObject).backgroundImage.getHeight() + .0));
+            ((TrackRenderer) renderObject).beatmapContainer.x = Configuration.getDefaultBeatmapXPosition(); // beatmap background container horizontal position
+            ((TrackRenderer) renderObject).beatmapContainer.width = (beatmap.getKeys() * 50) + (Configuration.getNoteGap() * beatmap.getKeys() - 1) + (Configuration.getNoteGap() * 4); // beatmap background container width
+
+            ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
+        }
+
         return this;
     }
 
@@ -112,16 +109,6 @@ public class TrackScene implements Scene {
 
     public Beatmap getBeatmap() {
         return beatmap;
-    }
-
-    @Override
-    public RenderObject getRenderObject() {
-        return renderObject;
-    }
-
-    @Override
-    public TickObject getTickObject() {
-        return tickObject;
     }
 
     private class TrackRenderer implements RenderObject {
@@ -187,7 +174,7 @@ public class TrackScene implements Scene {
             // score
             g.setFont(Fonts.default12);
             g.setColor(Colours.MEDIUM_GREY_100);
-            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN), 10, 40);
+            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40);
 
             // menu cooldown
             if(menuCooldownWarning) {
@@ -204,10 +191,12 @@ public class TrackScene implements Scene {
                 return;
             }
 
+            menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
+
             audioPlayer.resume();
 
             hitKeyFlashes.forEach(keyFlash -> {
-                if(!trackKeyListener.isDown(keyFlash.getKey())) {
+                if(!((TrackKeyListener) keyAdapter).isDown(keyFlash.getKey())) {
                     keyFlash.decrementOpacity();
                 }
             });
@@ -217,7 +206,7 @@ public class TrackScene implements Scene {
             // single was hit (hit on time)
             notes.removeIf(Note::hit);
             notes.stream().filter(note -> !note.hit()).forEach(note -> {
-                if(note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && trackKeyListener.isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
+                if(note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && ((TrackKeyListener) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
                     if(statistics.getCombo() >= 50) {
                         effectPlayer.play("track-combobreak");
                     }
@@ -225,7 +214,7 @@ public class TrackScene implements Scene {
                 }
             });
             notes.removeIf(note -> note.getMinY() >= registrar.getMaxY()); // single has passed the registrar (hit too late or not at all)
-            notes.removeIf(note -> extendedRegistrar.intersects(note) && trackKeyListener.isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
+            notes.removeIf(note -> extendedRegistrar.intersects(note) && ((TrackKeyListener) keyAdapter).isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
             notes.removeIf(note -> (note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld());
         }
     }
@@ -239,11 +228,11 @@ public class TrackScene implements Scene {
             keys[e.getKeyCode()] = true;
 
             if(keys[KeyEvent.VK_ESCAPE]) {
-                menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
                 if(!menuCooldownWarning) {
                     audioPlayer.pause();
                     effectPlayer.play("menu-click");
                     menuCooldown = System.currentTimeMillis();
+                    menuCooldownWarning = true;
                     Rizumu.setSecondaryScene(pauseMenu.init());
                     ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
                     return;
@@ -290,32 +279,21 @@ public class TrackScene implements Scene {
     /**
      * PauseMenu subclass, not given a separate class file due to it only being used in the context of a TrackScene.
      */
-    public class PauseMenu implements Scene {
-        private PauseMenuRenderer renderObject = new PauseMenuRenderer();
-        private PauseMenuTicker tickObject = new PauseMenuTicker();
-        private PauseMenuMouseListener pauseMenuMouseListener = new PauseMenuMouseListener();
-        private HashMap<String, Button> buttons = new HashMap<>();
-
+    public class PauseMenu extends Scene {
         PauseMenu() {
+            renderObject = new PauseMenuRenderer();
+            tickObject = new PauseMenuTicker();
+            mouseAdapter = new PauseMenuMouseListener();
+
             buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
             buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
             buttons.put("quitButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
         }
 
         @Override
-        public PauseMenu init() {
-            MouseListeners.setMouseListener("pause", pauseMenuMouseListener);
+        public PauseMenu init(Object... objects) {
+            MouseListeners.setMouseListener("pause", mouseAdapter);
             return this;
-        }
-
-        @Override
-        public RenderObject getRenderObject() {
-            return renderObject;
-        }
-
-        @Override
-        public TickObject getTickObject() {
-            return tickObject;
         }
 
         private class PauseMenuRenderer implements RenderObject {
@@ -340,12 +318,6 @@ public class TrackScene implements Scene {
         private class PauseMenuTicker implements TickObject {
             @Override
             public void tick() {
-                for(Button button: buttons.values()) {
-                    if(button.getBounds().contains(MouseMovementListener.getX(), MouseMovementListener.getY())) {
-                        Rizumu.getFrame().setCursor(Cursors.HAND_CURSOR);
-                        break;
-                    }
-                }
             }
         }
 
@@ -374,7 +346,7 @@ public class TrackScene implements Scene {
                         Track trakc = Rizumu.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
                         for(Beatmap baetmap: trakc.getBeatmaps()) {
                             if(baetmap.getName().equals(beatmap.getName())) {
-                                Rizumu.setPrimaryScene(((TrackScene) Rizumu.getStaticScene(Scenes.TRACK)).initScene(trakc, baetmap).init());
+                                Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(trakc, baetmap).init());
                                 return;
                             }
                         }

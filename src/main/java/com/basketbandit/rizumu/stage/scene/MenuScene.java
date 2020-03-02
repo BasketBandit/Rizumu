@@ -2,8 +2,6 @@ package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
-import com.basketbandit.rizumu.audio.AudioPlayer;
-import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
@@ -15,6 +13,7 @@ import com.basketbandit.rizumu.input.MouseMovementListener;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Cursors;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -27,17 +26,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MenuScene implements Scene {
-    private MenuRenderer renderObject = new MenuRenderer();
-    private MenuTicker tickObject = new MenuTicker();
-
-    private MenuMouseListener menuMouseListener = new MenuMouseListener();
-    private MenuKeyListener menuKeyListener = new MenuKeyListener();
-
-    private AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
-    private AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
-
-    private static HashMap<String, Button> buttons = new HashMap<>();
+public class MenuScene extends Scene {
     private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
     private Container container;
 
@@ -46,6 +35,11 @@ public class MenuScene implements Scene {
     private String selectedBeatmap = "";
 
     public MenuScene() {
+        renderObject = new MenuRenderer();
+        tickObject = new MenuTicker();
+        mouseAdapter = new MenuMouseListener();
+        keyAdapter = new MenuKeyListener();
+
         container = new Container(0, 0, 500, Configuration.getContentHeight());
 
         buttons.put("frameRateButton", new Button(Configuration.getWidth() - 120, Configuration.getHeight() - 70, 100, 50));
@@ -63,9 +57,9 @@ public class MenuScene implements Scene {
     }
 
     @Override
-    public MenuScene init() {
-        MouseListeners.setMouseListener("menu", menuMouseListener);
-        KeyListeners.setKeyListener("menu", menuKeyListener);
+    public MenuScene init(Object... object) {
+        MouseListeners.setMouseListener("menu", mouseAdapter);
+        KeyListeners.setKeyListener("menu", keyAdapter);
 
         // select random beatmap
         int rand = new Random().nextInt(trackButtons.size());
@@ -78,16 +72,6 @@ public class MenuScene implements Scene {
         audioPlayer.hotChangeTrack(buttonTrack.getFilePath() + buttonTrack.getAudioFilename());
         audioPlayer.loop(-1);
         return this;
-    }
-
-    @Override
-    public RenderObject getRenderObject() {
-        return renderObject;
-    }
-
-    @Override
-    public TickObject getTickObject() {
-        return tickObject;
     }
 
     private class MenuRenderer implements RenderObject {
@@ -150,7 +134,7 @@ public class MenuScene implements Scene {
                             Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
                                 if(beatmap.getName().equals(trackButton.getBeatmap().getName())) {
-                                    Rizumu.setPrimaryScene(((TrackScene) Rizumu.getStaticScene(Scenes.TRACK)).initScene(track, beatmap).init());
+                                    Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(track, beatmap).init());
                                     return;
                                 }
                             }
