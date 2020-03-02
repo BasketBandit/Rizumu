@@ -5,7 +5,7 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.resource.Image;
 
 public class KeyFlash {
-    private java.awt.Image image = Image.getBufferedImage("hitflash-body").getScaledInstance(Configuration.getDefaultNoteWidth(), 150, 0);
+    private java.awt.Image image = Image.getBufferedImage("hitflash-body").getScaledInstance(Configuration.getDefaultNoteWidth()+1, 150, 0); // +1 to width to plug up any 1/2 pixel gaps
     private int key;
     private float opacity = 0.1f;
 

@@ -9,7 +9,7 @@ public class Registrar extends Rectangle {
     private Color color = Colours.MEDIUM_GREY_100;
 
     public Registrar() {
-        super(0, Configuration.getDefaultRegistrarYPosition(), Configuration.getContentWidth(), 20);
+        super(0, Configuration.getDefaultRegistrarYPosition(), Configuration.getContentWidth(), Configuration.getDefaultNoteHeight());
     }
 
     public Color getColor() {

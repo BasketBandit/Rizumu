@@ -18,10 +18,10 @@ public class Sound {
     public Sound() {
         audioStreams.put("menu-music", getClass().getResourceAsStream("/assets/sound/ffxiiimenu.wav"));
         audioStreams.put("menu-click", getClass().getResourceAsStream("/assets/sound/click.wav"));
-        audioStreams.put("menu-select", getClass().getResourceAsStream("/assets/sound/select.wav"));
         audioStreams.put("menu-click2", getClass().getResourceAsStream("/assets/sound/clickc6.wav"));
         audioStreams.put("menu-click3", getClass().getResourceAsStream("/assets/sound/clickg6.wav"));
         audioStreams.put("menu-click4", getClass().getResourceAsStream("/assets/sound/clickc7.wav"));
+        audioStreams.put("menu-select", getClass().getResourceAsStream("/assets/sound/select.wav"));
         audioStreams.put("menu-select2", getClass().getResourceAsStream("/assets/sound/selectc5g5c6.wav"));
         audioStreams.put("track-hit", getClass().getResourceAsStream("/assets/sound/hit.wav"));
         audioStreams.put("track-combobreak", getClass().getResourceAsStream("/assets/sound/combobreak.wav"));

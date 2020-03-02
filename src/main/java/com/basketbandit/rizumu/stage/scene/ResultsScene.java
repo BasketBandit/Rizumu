@@ -10,6 +10,7 @@ import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import com.basketbandit.rizumu.utility.Colours;
+import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -70,7 +71,7 @@ public class ResultsScene implements Scene {
             g.setColor(Color.DARK_GRAY);
             g.fill(menuButton);
 
-            g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
+            g.setFont(Fonts.default12);
             g.setColor(Color.WHITE);
             g.drawString("Exit!", (int)menuButton.getMinX(), (int)menuButton.getCenterY());
 

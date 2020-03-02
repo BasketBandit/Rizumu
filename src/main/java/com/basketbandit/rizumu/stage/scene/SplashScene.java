@@ -81,10 +81,11 @@ public class SplashScene implements Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                effectPlayer.play("menu-select");
+                effectPlayer.play("menu-select2");
                 audioPlayer.stop();
                 Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
             }
         }
     }
+
 }

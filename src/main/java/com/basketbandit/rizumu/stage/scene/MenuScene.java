@@ -17,6 +17,7 @@ import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Cursors;
+import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -105,7 +106,7 @@ public class MenuScene implements Scene {
             g.setColor(Colours.DARK_GREY_75);
             g.fill(container);
 
-            g.setFont(fonts[368].deriveFont(Font.PLAIN, 12));
+            g.setFont(Fonts.default12);
             g.setColor(Color.WHITE);
             g.drawString("Cap Framerate", (int)buttons.get("frameRateButton").getMinX()+12, (int)buttons.get("frameRateButton").getCenterY()+2);
             //g.drawString("Vol +0.1db", (int)buttons.get("volumeUpButton").getMinX(), (int)buttons.get("volumeUpButton").getCenterY());
@@ -144,7 +145,7 @@ public class MenuScene implements Scene {
                         Beatmap buttonBeatmap = trackButton.getBeatmap();
                         String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
                         if(selectedBeatmap.equals(trackName)) {
-                            effectPlayer.play("menu-select");
+                            effectPlayer.play("menu-select2");
                             audioPlayer.stop();
                             Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
