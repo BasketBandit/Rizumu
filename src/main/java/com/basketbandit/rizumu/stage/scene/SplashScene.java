@@ -6,7 +6,6 @@ import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -91,12 +90,12 @@ public class SplashScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                if(Configuration.getUser() == null && buttons.get("loginButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                if(Configuration.getUser() == null && buttons.get("loginButton").isHovered()) {
                     Rizumu.setSecondaryScene(loginMenu.init());
                     return;
                 }
 
-                if(Configuration.getUser() != null && buttons.get("logoutButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                if(Configuration.getUser() != null && buttons.get("logoutButton").isHovered()) {
                     Configuration.setUser(null);
                     return;
                 }
@@ -151,7 +150,7 @@ public class SplashScene extends Scene {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1) {
-                    if(buttons.get("loginButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    if(buttons.get("loginButton").isHovered()) {
                         if(Database.login("", "")) {
                             Configuration.setUser("");
                         }

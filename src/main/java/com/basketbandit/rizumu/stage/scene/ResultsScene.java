@@ -75,7 +75,7 @@ public class ResultsScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                if(buttons.get("menu").getBounds().contains(e.getX(), e.getY())) {
+                if(buttons.get("menu").isHovered()) {
                     Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
                 }
             }

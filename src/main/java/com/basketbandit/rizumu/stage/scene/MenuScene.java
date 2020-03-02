@@ -9,12 +9,10 @@ import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import com.basketbandit.rizumu.utility.Colours;
-import com.basketbandit.rizumu.utility.Cursors;
 import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
@@ -108,13 +106,6 @@ public class MenuScene extends Scene {
     private class MenuTicker implements TickObject {
         @Override
         public void tick() {
-            // dynamic cursor
-            for(Button button: buttons.values()) {
-                if(button.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
-                    Rizumu.getFrame().setCursor(Cursors.HAND_CURSOR);
-                    break;
-                }
-            }
         }
     }
 
@@ -123,7 +114,7 @@ public class MenuScene extends Scene {
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 for(TrackButton trackButton : trackButtons.values()) {
-                    if(trackButton.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    if(trackButton.isHovered()) {
                         Track buttonTrack = trackButton.getTrack();
                         Beatmap buttonBeatmap = trackButton.getBeatmap();
                         String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
@@ -148,13 +139,13 @@ public class MenuScene extends Scene {
                     }
                 }
 
-                if(buttons.get("frameRateButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                if(buttons.get("frameRateButton").isHovered()) {
                     effectPlayer.play("menu-click");
                     Configuration.toggleUnlockedFramerate();
                     return;
                 }
 
-                if(buttons.get("volumeUpButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                if(buttons.get("volumeUpButton").isHovered()) {
                     effectPlayer.play("menu-click");
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);
@@ -162,7 +153,7 @@ public class MenuScene extends Scene {
                     return;
                 }
 
-                if(buttons.get("volumeDownButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                if(buttons.get("volumeDownButton").isHovered()) {
                     effectPlayer.play("menu-click");
                     if(audioPlayer.getGain()+0.1 < 6.0206) {
                         audioPlayer.setGain(audioPlayer.getGain()+0.1f);

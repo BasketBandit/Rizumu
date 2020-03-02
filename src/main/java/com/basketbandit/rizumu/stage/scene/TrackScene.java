@@ -13,7 +13,6 @@ import com.basketbandit.rizumu.drawable.KeyFlash;
 import com.basketbandit.rizumu.drawable.Registrar;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Statistics;
@@ -229,7 +228,6 @@ public class TrackScene extends Scene {
 
             if(keys[KeyEvent.VK_ESCAPE]) {
                 if(!menuCooldownWarning) {
-                    audioPlayer.pause();
                     effectPlayer.play("menu-click");
                     menuCooldown = System.currentTimeMillis();
                     menuCooldownWarning = true;
@@ -294,6 +292,8 @@ public class TrackScene extends Scene {
         public PauseMenu init(Object... objects) {
             MouseAdapters.setMouseAdapter("pause", mouseAdapter);
             KeyAdapters.setKeyAdapter("pause", null);
+
+            audioPlayer.pause();
             return this;
         }
 
@@ -327,7 +327,7 @@ public class TrackScene extends Scene {
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     // 'resume' button, close the pause menu
-                    if(buttons.get("resumeButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    if(buttons.get("resumeButton").isHovered()) {
                         audioPlayer.resume();
                         effectPlayer.play("menu-click2");
                         TrackScene.this.init();
@@ -338,7 +338,7 @@ public class TrackScene extends Scene {
                     }
 
                     // 'restart' button, restart the beatmap
-                    if(buttons.get("restartButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    if(buttons.get("restartButton").isHovered()) {
                         effectPlayer.play("menu-click3");
                         audioPlayer.stop();
                         Rizumu.setSecondaryScene(null);
@@ -355,7 +355,7 @@ public class TrackScene extends Scene {
                     }
 
                     // 'quit' button, go back to the main menu
-                    if(buttons.get("quitButton").getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                    if(buttons.get("quitButton").isHovered()) {
                         effectPlayer.play("menu-click4");
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
