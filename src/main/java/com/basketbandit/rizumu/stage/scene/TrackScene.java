@@ -303,10 +303,10 @@ public class TrackScene extends Scene {
                 g.setColor(Colours.DARK_GREY_90);
                 g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
 
-                g.setColor(Color.DARK_GRAY);
-                buttons.values().forEach(g::fill);
                 g.setColor(Color.BLACK);
                 buttons.values().forEach(g::draw);
+                g.setColor(Color.DARK_GRAY);
+                buttons.values().forEach(g::fill);
 
                 g.setFont(Fonts.default12);
                 g.setColor(Color.WHITE);

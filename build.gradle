@@ -9,7 +9,7 @@ apply plugin: 'idea'
 group 'basketbandit'
 version '0.1.0'
 mainClassName = 'com.basketbandit.rizumu.Rizumu'
-sourceCompatibility = 1.9
+sourceCompatibility = 1.11
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'

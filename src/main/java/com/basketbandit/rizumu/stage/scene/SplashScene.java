@@ -4,8 +4,10 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.drawable.TextLine;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -16,11 +18,14 @@ import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.util.regex.Pattern;
 
 public class SplashScene extends Scene {
     private LoginMenu loginMenu = new LoginMenu();
@@ -32,8 +37,8 @@ public class SplashScene extends Scene {
         tickObject = new SplashTicker();
         mouseAdapter = new SplashMouseAdapter();
 
-        buttons.put("loginButton", new Button(20, 20, 75, 30));
-        buttons.put("logoutButton", new Button(20, 20, 75, 30));
+        buttons.put("loginButton", new Button(20, 20, 60, 30));
+        buttons.put("logoutButton", new Button(20, 20, 60, 30));
 
         try {
             // loads the master logo, uses AffineTransform to scale the image down for usage on float translations (smooth movement)
@@ -65,10 +70,10 @@ public class SplashScene extends Scene {
         public void render(Graphics2D g) {
             g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getContentWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getContentHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
 
-            for(Button button: buttons.values()) {
-                g.setColor(button.getColor());
-                g.fill(button);
-            }
+            g.setColor(Color.BLACK);
+            buttons.values().forEach(g::draw);
+            g.setColor(Color.DARK_GRAY);
+            buttons.values().forEach(g::fill);
 
             g.setColor(Color.WHITE);
             if(Configuration.getUser() == null) {
@@ -108,10 +113,21 @@ public class SplashScene extends Scene {
     }
 
     public class LoginMenu extends Scene {
+        String alphaNum = Pattern.compile("^[a-zA-Z0-9_]*$").pattern();
+        String alphaNumSpec = Pattern.compile("^[A-Za-z0-9!\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]*$").pattern();
+
+        TextLine username;
+        TextLine password;
+        TextLine selected;
+
         LoginMenu() {
             renderObject = new LoginMenuRenderer();
             tickObject = new LoginMenuTicker();
             mouseAdapter = new LoginMenuMouseAdapter();
+            keyAdapter = new LoginMenuKeyAdapter();
+
+            username = new TextLine((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75, 10);
+            password = new TextLine((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75, 10);
 
             buttons.put("loginButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
         }
@@ -119,7 +135,11 @@ public class SplashScene extends Scene {
         @Override
         public Scene init(Object... object) {
             MouseAdapters.setMouseAdapter("login", mouseAdapter);
-            KeyAdapters.setKeyAdapter("login", null);
+            KeyAdapters.setKeyAdapter("login", keyAdapter);
+
+            username.setText("");
+            password.setText("");
+            selected = username;
             return this;
         }
 
@@ -129,14 +149,34 @@ public class SplashScene extends Scene {
                 g.setColor(Colours.DARK_GREY_90);
                 g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
 
-                g.setColor(Color.DARK_GRAY);
-                buttons.values().forEach(g::fill);
                 g.setColor(Color.BLACK);
                 buttons.values().forEach(g::draw);
+                g.draw(username);
+                g.draw(password);
 
-                g.setFont(Fonts.default12);
+                g.setColor(Color.DARK_GRAY);
+                buttons.values().forEach(g::fill);
+
+                g.setColor(selected != null && selected.equals(username) ? Colours.BLUE : Color.DARK_GRAY);
+                g.fill(username);
+                g.setColor(selected != null && selected.equals(password) ? Colours.BLUE : Color.DARK_GRAY);
+                g.fill(password);
+
+                g.setColor(Color.white);
+                g.fill(username.getInnerBounds());
+                g.fill(password.getInnerBounds());
+
+                g.setFont(Fonts.default24);
                 g.setColor(Color.WHITE);
-                g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), (int) buttons.get("loginButton").getCenterY() + 4);
+
+                int[] center = Alignment.centerBoth("Login", g.getFontMetrics(Fonts.default24), buttons.get("loginButton"));
+                g.drawString("Login", center[0], center[1]);
+
+                g.setColor(Color.BLACK);
+                center = Alignment.centerBoth(username.getText(), g.getFontMetrics(Fonts.default24), username.getBounds());
+                g.drawString(username.getText(), center[0], center[1]);
+                center = Alignment.centerBoth("•".repeat(password.getText().length()), g.getFontMetrics(Fonts.default24), password.getBounds());
+                g.drawString("•".repeat(password.getText().length()), center[0], center[1]);
             }
         }
 
@@ -150,13 +190,65 @@ public class SplashScene extends Scene {
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1) {
+                    selected = null;
+
                     if(buttons.get("loginButton").isHovered()) {
-                        if(Database.login("", "")) {
-                            Configuration.setUser("");
+                        if(Database.login(username.getText(), password.getText())) {
+                            Configuration.setUser(username.getText());
+                            log.info("successfully logged in as " + username.getText());
                         }
+
                         Rizumu.getPrimaryScene().init();
                         Rizumu.setSecondaryScene(null); // important to do this second to stop audio being interrupted
                     }
+
+                    if(username.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                        selected = username;
+                    }
+
+                    if(password.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
+                        selected = password;
+                    }
+                }
+            }
+        }
+
+        private class LoginMenuKeyAdapter extends KeyAdapter {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                // change which text line is selected with tab key
+                if(e.getKeyChar() == KeyEvent.VK_TAB) {
+                    selected = (selected == null || selected.equals(password)) ? username : password;
+                    return;
+                }
+
+                // only modify username text line if it is focused
+                if(selected.equals(username)) {
+                    if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                        username.deleteChar();
+                        return;
+                    }
+                    if(username.getText().length() < 17 && (e.getKeyChar()+"").matches(alphaNum)) {
+                        username.append(e.getKeyChar() + "");
+                    }
+                }
+
+                // only modify password text line if it is focused
+                if(selected.equals(password)) {
+                    if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                        password.deleteChar();
+                        return;
+                    }
+                    if(password.getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
+                        password.append(e.getKeyChar() + "");
+                    }
+                }
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                    selected.deleteChar();
                 }
             }
         }

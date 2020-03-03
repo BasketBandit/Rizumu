@@ -2,6 +2,7 @@ package com.basketbandit.rizumu;
 
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.TrackParser;
+import com.basketbandit.rizumu.database.Connection;
 import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -32,6 +33,9 @@ public class Rizumu {
 
         // initialises system configs
         new Configuration();
+
+        // initialise database connection
+        new Connection();
 
         // loads and parses beatmaps
         trackParser = new TrackParser(Configuration.getBeatmapResourcePath());

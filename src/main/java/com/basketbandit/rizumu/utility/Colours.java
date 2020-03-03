@@ -16,4 +16,6 @@ public class Colours {
     public static final Color MEDIUM_GREY_10 = new Color(125,125,125, 25);
 
     public static final Color CRIMSON = new Color(220, 20, 60, 255);
+
+    public static final Color BLUE = new Color(50, 150, 220, 255);
 }

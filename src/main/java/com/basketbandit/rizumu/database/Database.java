@@ -21,7 +21,10 @@ public class Database {
 
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
-            rs.next();
+
+            if(!rs.next()) {
+                return false;
+            }
 
             return BCrypt.checkpw(password, rs.getString("password"));
 

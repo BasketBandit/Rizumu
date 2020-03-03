@@ -21,6 +21,7 @@ public class DatabaseTest {
 
     @Test
     public void loginIncorrect() {
+        assert !Database.login("", "");
         assert !Database.login("josh", " test");
         assert !Database.login("josh", "test ");
         assert !Database.login("josh", "Test");

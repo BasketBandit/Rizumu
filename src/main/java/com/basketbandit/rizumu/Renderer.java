@@ -8,6 +8,7 @@ import com.basketbandit.rizumu.stage.object.RenderObject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.util.Collections;
 
 public class Renderer extends Canvas {
     private JFrame frame;
@@ -34,6 +35,19 @@ public class Renderer extends Canvas {
         this.frame.setVisible(true);
         this.frame.requestFocus();
         this.frame.pack();
+
+        // https://stackoverflow.com/questions/16987937/remove-disable-override-swings-focus-traversal-keys
+        Integer[] focusKeys = new Integer[] {
+                KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
+                KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
+                KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS,
+                KeyboardFocusManager.DOWN_CYCLE_TRAVERSAL_KEYS
+        };
+
+        // disable all focus keys, allowing custom implementation of TAB key, etc.
+        for(Integer key: focusKeys) {
+            this.frame.setFocusTraversalKeys(key, Collections.EMPTY_SET);
+        }
 
         Configuration.setContentBounds(this.frame.getContentPane().getWidth(), this.frame.getContentPane().getHeight());
     }
