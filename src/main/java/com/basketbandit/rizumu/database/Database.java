@@ -17,12 +17,13 @@ public class Database {
      */
     public static boolean login(String username, String password) {
         try(java.sql.Connection c = Connection.getConnection();
-            PreparedStatement ps = c.prepareStatement("SELECT * FROM `users` WHERE `username` = ? AND `password` = ?")) {
+            PreparedStatement ps = c.prepareStatement("SELECT * FROM `users` WHERE `username` = ?")) {
 
             ps.setString(1, username);
-            ps.setString(2, BCrypt.hashpw(password, BCrypt.gensalt()));
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            rs.next();
+
+            return BCrypt.checkpw(password, rs.getString("password"));
 
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", Database.class.getSimpleName(), ex.getMessage(), ex);
