@@ -172,11 +172,15 @@ public class SplashScene extends Scene {
                 int[] center = Alignment.centerBoth("Login", g.getFontMetrics(Fonts.default24), buttons.get("loginButton"));
                 g.drawString("Login", center[0], center[1]);
 
-                g.setColor(Color.BLACK);
-                center = Alignment.centerBoth(username.getText(), g.getFontMetrics(Fonts.default24), username.getBounds());
-                g.drawString(username.getText(), center[0], center[1]);
-                center = Alignment.centerBoth("•".repeat(password.getText().length()), g.getFontMetrics(Fonts.default24), password.getBounds());
-                g.drawString("•".repeat(password.getText().length()), center[0], center[1]);
+                // if username is blank, draw placeholder
+                g.setColor(username.getText().isEmpty() ? Color.GRAY : Color.BLACK);
+                center = Alignment.centerBoth(username.getText().isEmpty() ? "Password" : username.getText(), g.getFontMetrics(Fonts.default24), username.getBounds());
+                g.drawString(username.getText().isEmpty() ? "Username" : username.getText(), center[0], center[1]);
+
+                // if password is blank, draw placeholder
+                g.setColor(password.getText().isEmpty() ? Color.GRAY : Color.BLACK);
+                center = Alignment.centerBoth(password.getText().isEmpty() ? "Password" : "•".repeat(password.getText().length()), g.getFontMetrics(Fonts.default24), password.getBounds());
+                g.drawString(password.getText().isEmpty() ? "Password" : "•".repeat(password.getText().length()), center[0], center[1]);
             }
         }
 
