@@ -31,13 +31,13 @@ public class Track {
     private BufferedImage image;
     @JsonProperty("audio_filename")
     private String audioFilename;
-    private String trackLength;
+    private int trackLength; // seconds
     @JsonProperty("start_delay")
     private Integer startDelay;
     @JsonProperty("beatmaps")
     private List<Beatmap> beatmaps = null;
 
-    public void setTrackInfo(String filePath, String fileName, File file, String trackLength) {
+    public void setTrackInfo(String filePath, String fileName, File file, int trackLength) {
         this.filePath = filePath + "/"; // file.getParent() leaves out trailing slash
         this.fileName = fileName;
         this.file = file;
@@ -94,8 +94,12 @@ public class Track {
         return filePath + audioFilename;
     }
 
-    public String getTrackLength() {
+    public int getTrackLength() {
         return trackLength;
+    }
+
+    public String getFormattedTrackLength() {
+        return ((trackLength/60) % 60) + ":" + ((((trackLength % 60)+"").length() < 2) ? "0" + (trackLength % 60) : (trackLength % 60));
     }
 
     @JsonProperty("start_delay")

@@ -105,7 +105,7 @@ public class MenuScene extends Scene {
                 g.drawString(t.getButtonText(), center[0], center[1]); // draw track title/artist
                 g.drawString(t.getBeatmap().getName(), Alignment.right(t.getBeatmap().getName(), metrics, t) - 10, (int)t.getMinY() + 20); // draw beatmap difficulty
                 g.drawString(t.getBeatmap().getKeys() + "K", Alignment.right(t.getBeatmap().getKeys() + "K", metrics, t) - 10, (int)t.getMaxY() - 10); // draw key count
-                g.drawString(t.getTrack().getTrackLength() + "", t.x + 10, (int)t.getMaxY() - 10);
+                g.drawString(t.getTrack().getFormattedTrackLength() + "", t.x + 10, (int)t.getMaxY() - 10);
             }
         }
     }

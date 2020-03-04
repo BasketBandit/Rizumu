@@ -114,14 +114,13 @@ public class AudioPlayer {
     /**
      * Utility Functions
      */
-    public static String getTrackLength(String p) {
+    public static int getTrackLength(String p) {
         try(AudioInputStream in = AudioSystem.getAudioInputStream(new File(p).getAbsoluteFile())) {
             Clip c = AudioSystem.getClip();
             c.open(in);
-            int s = (int) (c.getMicrosecondLength() / 1000000);
-            return ((s/60) % 60) + ":" + ((((s % 60)+"").length() < 2) ? "0" + (s % 60) : (s % 60));
+            return (int) (c.getMicrosecondLength() / 1000000);
         } catch(Exception ex) {
-            return "err";
+            return 0;
         }
     }
 }
