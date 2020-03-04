@@ -46,10 +46,10 @@ public class MenuScene extends Scene {
 
         AtomicInteger i = new AtomicInteger();
         Rizumu.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
-            TrackButton trackButton = new TrackButton(20,20+(85*i.get()), 460, 75, track, beatmap);
-            trackButton.setButtonText(track.getArtist() + " - " + track.getName() + " > " + beatmap.getName());
-            buttons.put(i.get() + "", trackButton);
-            trackButtons.put(i.get(), trackButton);
+            TrackButton t = new TrackButton(20,20+(85*i.get()), 460, 75, track, beatmap);
+            t.setButtonText(track.getArtist() + " - " + track.getName());
+            buttons.put(i.get() + "", t);
+            trackButtons.put(i.get(), t);
             i.getAndIncrement();
         }));
     }
@@ -67,7 +67,7 @@ public class MenuScene extends Scene {
         menuBackgroundImage = buttonTrack.getImage();
         selectedButton = trackButtons.get(rand);
         selectedBeatmap = trackName;
-        audioPlayer.hotChangeTrack(buttonTrack.getFilePath() + buttonTrack.getAudioFilename());
+        audioPlayer.hotChangeTrack(buttonTrack.getAudioFilePath());
         audioPlayer.loop(-1);
         return this;
     }
@@ -95,12 +95,17 @@ public class MenuScene extends Scene {
             //g.drawString("Vol -0.1db", (int)buttons.get("volumeDownButton").getMinX(), (int)buttons.get("volumeDownButton").getCenterY());
 
             // dynamic beatmap track buttons
-            for(TrackButton trackButton: trackButtons.values()) {
-                g.setColor(selectedButton == trackButton ? Colours.CRIMSON : Colours.DARK_GREY_90);
-                g.fill(trackButton);
+            FontMetrics metrics = g.getFontMetrics(Fonts.default12);
+            for(TrackButton t: trackButtons.values()) {
+                int[] center = Alignment.centerBoth(t.getButtonText(), metrics, t);
+
+                g.setColor(selectedButton == t ? Colours.CRIMSON : Colours.DARK_GREY_90);
+                g.fill(t);
                 g.setColor(Color.WHITE);
-                int[] center = Alignment.centerBoth(trackButton.getButtonText(), g.getFontMetrics(Fonts.default12), trackButton);
-                g.drawString(trackButton.getButtonText(), center[0], center[1]);
+                g.drawString(t.getButtonText(), center[0], center[1]); // draw track title/artist
+                g.drawString(t.getBeatmap().getName(), Alignment.right(t.getBeatmap().getName(), metrics, t) - 10, (int)t.getMinY() + 20); // draw beatmap difficulty
+                g.drawString(t.getBeatmap().getKeys() + "K", Alignment.right(t.getBeatmap().getKeys() + "K", metrics, t) - 10, (int)t.getMaxY() - 10); // draw key count
+                g.drawString(t.getTrack().getTrackLength() + "", t.x + 10, (int)t.getMaxY() - 10);
             }
         }
     }
@@ -132,7 +137,7 @@ public class MenuScene extends Scene {
                             }
                         } else {
                             effectPlayer.play("menu-click");
-                            audioPlayer.hotChangeTrack(buttonTrack.getFilePath() + buttonTrack.getAudioFilename());
+                            audioPlayer.hotChangeTrack(buttonTrack.getAudioFilePath());
                             menuBackgroundImage = buttonTrack.getImage();
                             selectedButton = trackButton;
                             selectedBeatmap = trackName;

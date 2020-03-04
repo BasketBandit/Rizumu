@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu.beatmap;
 
+import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -27,7 +28,7 @@ public class TrackParser {
                 File file = s.toFile();
                 Track track = parseTrack(file);
                 String name = track.getArtist()+track.getName();
-                track.setFileInfo(file.getParent(), name, file);
+                track.setTrackInfo(file.getParent(), name, file, AudioPlayer.getTrackLength(track.getAudioFilePath()));
                 trackFiles.put(name, file);
                 trackObjects.put(name, track);
             });
@@ -41,7 +42,7 @@ public class TrackParser {
     public Track parseTrack(String name) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(trackFiles.get(name)), Track.class);
-            track.setFileInfo(trackFiles.get(name).getParent(), name, trackFiles.get(name));
+            track.setTrackInfo(trackFiles.get(name).getParent(), name, trackFiles.get(name), AudioPlayer.getTrackLength(track.getAudioFilePath()));
             return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
@@ -52,7 +53,7 @@ public class TrackParser {
     public Track parseTrack(File file) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(file), Track.class);
-            track.setFileInfo(file.getParent(), file.getName(), file);
+            track.setTrackInfo(file.getParent(), file.getName(), file, AudioPlayer.getTrackLength(track.getAudioFilePath()));
             return track;
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);

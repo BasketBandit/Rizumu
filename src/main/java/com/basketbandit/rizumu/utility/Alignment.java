@@ -22,4 +22,8 @@ public class Alignment {
     public static int right(String string, FontMetrics metrics, int containerX, int containerWidth) {
         return containerX + (containerWidth - metrics.stringWidth(string));
     }
+
+    public static int right(String string, FontMetrics metrics, Rectangle rect) {
+        return rect.x + (rect.width - metrics.stringWidth(string));
+    }
 }

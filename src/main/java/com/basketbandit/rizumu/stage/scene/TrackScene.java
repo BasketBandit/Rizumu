@@ -115,9 +115,17 @@ public class TrackScene extends Scene {
         private Container beatmapContainer = new Container(0, 0, 0, Configuration.getHeight());
         private Container titleContainer = new Container(0, 0, Configuration.getWidth(), 50);
         int[] center;
+        private FontMetrics metrics24;
+        private FontMetrics metrics36;
 
         @Override
         public void render(Graphics2D g) {
+            // system
+            if(metrics24 == null) {
+                metrics24 = g.getFontMetrics(Fonts.default24);
+                metrics36 = g.getFontMetrics(Fonts.default36);
+            }
+
             // background
             if(backgroundImage != null) {
                 g.drawImage(backgroundImage, backgroundImageTransform, null);
@@ -153,7 +161,7 @@ public class TrackScene extends Scene {
             });
 
             // hit flashes
-            for(int i = 0; i < beatmap.getKeys(); i++) {
+            for(int i = 0; i < hitKeyFlashes.size(); i++) {
                 int imageXPos = (Configuration.getDefaultBeatmapXPosition() + (int)(Configuration.getNoteGap()*2.50) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i));
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, hitKeyFlashes.get(i).getOpacity()));
                 g.drawImage(hitKeyFlashes.get(i).getImage(), AffineTransform.getTranslateInstance(imageXPos, registrar.getY() - 150), null);
@@ -165,14 +173,14 @@ public class TrackScene extends Scene {
             g.fill(titleContainer);
             g.setFont(Fonts.default24);
             g.setColor(Color.WHITE);
-            center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), g.getFontMetrics(Fonts.default24), titleContainer);
+            center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), metrics24, titleContainer);
             g.drawString(track.getName() + " - " + beatmap.getName(), center[0], center[1]);
 
             // combo
             if(statistics.getCombo() >= 10) {
                 g.setFont(Fonts.default36);
                 g.setColor(Colours.CRIMSON);
-                center = Alignment.centerBoth(statistics.getCombo() + "", g.getFontMetrics(Fonts.default36), beatmapContainer);
+                center = Alignment.centerBoth(statistics.getCombo() + "", metrics36, beatmapContainer);
                 g.drawString(statistics.getCombo() + "", center[0], center[1]);
             }
 

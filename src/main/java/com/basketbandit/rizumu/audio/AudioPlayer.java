@@ -16,9 +16,6 @@ public class AudioPlayer {
     private FloatControl gainControl;
     private float gain = 0.0f;
 
-    public AudioPlayer() {
-    }
-
     public AudioPlayer(float gain) {
         this.gain = gain;
     }
@@ -112,5 +109,19 @@ public class AudioPlayer {
 
     public void setGain(float gain) {
         gainControl.setValue(gain);
+    }
+
+    /**
+     * Utility Functions
+     */
+    public static String getTrackLength(String p) {
+        try(AudioInputStream in = AudioSystem.getAudioInputStream(new File(p).getAbsoluteFile())) {
+            Clip c = AudioSystem.getClip();
+            c.open(in);
+            int s = (int) (c.getMicrosecondLength() / 1000000);
+            return ((s/60) % 60) + ":" + ((((s % 60)+"").length() < 2) ? "0" + (s % 60) : (s % 60));
+        } catch(Exception ex) {
+            return "err";
+        }
     }
 }
