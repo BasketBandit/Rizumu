@@ -12,6 +12,7 @@ import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
 
@@ -98,7 +99,8 @@ public class MenuScene extends Scene {
                 g.setColor(selectedButton == trackButton ? Colours.CRIMSON : Colours.DARK_GREY_90);
                 g.fill(trackButton);
                 g.setColor(Color.WHITE);
-                g.drawString(trackButton.getButtonText(), (int)trackButton.getMinX(), (int)trackButton.getCenterY());
+                int[] center = Alignment.centerBoth(trackButton.getButtonText(), g.getFontMetrics(Fonts.default12), trackButton);
+                g.drawString(trackButton.getButtonText(), center[0], center[1]);
             }
         }
     }

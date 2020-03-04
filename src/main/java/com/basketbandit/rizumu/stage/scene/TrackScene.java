@@ -8,9 +8,8 @@ import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
-import com.basketbandit.rizumu.drawable.ExtendedRegistrar;
-import com.basketbandit.rizumu.drawable.KeyFlash;
-import com.basketbandit.rizumu.drawable.Registrar;
+import com.basketbandit.rizumu.drawable.Container;
+import com.basketbandit.rizumu.drawable.*;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
@@ -113,7 +112,9 @@ public class TrackScene extends Scene {
     private class TrackRenderer implements RenderObject {
         private BufferedImage backgroundImage;
         private AffineTransform backgroundImageTransform;
-        private Rectangle beatmapContainer = new Rectangle(0, Configuration.getHeight());
+        private Container beatmapContainer = new Container(0, 0, 0, Configuration.getHeight());
+        private Container titleContainer = new Container(0, 0, Configuration.getWidth(), 50);
+        int[] center;
 
         @Override
         public void render(Graphics2D g) {
@@ -161,13 +162,18 @@ public class TrackScene extends Scene {
 
             // top bar
             g.setColor(Colours.DARK_GREY_75);
-            g.fillRect(0, 0, Configuration.getContentWidth(), 50);
+            g.fill(titleContainer);
+            g.setFont(Fonts.default24);
+            g.setColor(Color.WHITE);
+            center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), g.getFontMetrics(Fonts.default24), titleContainer);
+            g.drawString(track.getName() + " - " + beatmap.getName(), center[0], center[1]);
 
             // combo
             if(statistics.getCombo() >= 10) {
                 g.setFont(Fonts.default36);
                 g.setColor(Colours.CRIMSON);
-                g.drawString(statistics.getCombo() + "", Alignment.center(statistics.getCombo() + "", g.getFontMetrics(Fonts.default36), beatmapContainer), Configuration.getHeight()/2);
+                center = Alignment.centerBoth(statistics.getCombo() + "", g.getFontMetrics(Fonts.default36), beatmapContainer);
+                g.drawString(statistics.getCombo() + "", center[0], center[1]);
             }
 
             // score
@@ -220,19 +226,18 @@ public class TrackScene extends Scene {
 
     public class TrackKeyAdapter extends KeyAdapter {
         private static final int numKeys = 256;
-        private final boolean[] keys = new boolean[numKeys];
+        private boolean[] keys = new boolean[numKeys];
 
         @Override
         public void keyPressed(KeyEvent e) {
             keys[e.getKeyCode()] = true;
 
-            if(keys[KeyEvent.VK_ESCAPE]) {
+            if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 if(!menuCooldownWarning) {
                     effectPlayer.play("menu-click");
-                    menuCooldown = System.currentTimeMillis();
-                    menuCooldownWarning = true;
-                    Rizumu.setSecondaryScene(pauseMenu.init());
+                    menuCooldownWarning = ((menuCooldown = System.currentTimeMillis()) != 0); // != because we always want this value to return true; this is a quick and dirty way of setting both fields at once.
                     ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
+                    Rizumu.setSecondaryScene(pauseMenu.init());
                     return;
                 }
             }
@@ -308,11 +313,14 @@ public class TrackScene extends Scene {
                 g.setColor(Color.DARK_GRAY);
                 buttons.values().forEach(g::fill);
 
-                g.setFont(Fonts.default12);
+                g.setFont(Fonts.default24);
                 g.setColor(Color.WHITE);
-                g.drawString("Resume", Alignment.center("Resume", g.getFontMetrics(Fonts.default12), buttons.get("resumeButton")), (int)buttons.get("resumeButton").getCenterY()+4);
-                g.drawString("Restart", Alignment.center("Restart", g.getFontMetrics(Fonts.default12), buttons.get("restartButton")), (int)buttons.get("restartButton").getCenterY()+4);
-                g.drawString("Quit", Alignment.center("Quit", g.getFontMetrics(Fonts.default12), buttons.get("quitButton")), (int)buttons.get("quitButton").getCenterY()+4);
+                int[] center = Alignment.centerBoth("Resume", g.getFontMetrics(Fonts.default24), buttons.get("resumeButton"));
+                g.drawString("Resume", center[0], center[1]);
+                center = Alignment.centerBoth("Restart", g.getFontMetrics(Fonts.default24), buttons.get("restartButton"));
+                g.drawString("Restart", center[0], center[1]);
+                center = Alignment.centerBoth("Quit", g.getFontMetrics(Fonts.default24), buttons.get("quitButton"));
+                g.drawString("Quit", center[0], center[1]);
             }
         }
 
@@ -347,7 +355,7 @@ public class TrackScene extends Scene {
                         Track trakc = Rizumu.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
                         for(Beatmap baetmap: trakc.getBeatmaps()) {
                             if(baetmap.getName().equals(beatmap.getName())) {
-                                Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(trakc, baetmap).init());
+                                Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(trakc, baetmap));
                                 return;
                             }
                         }
