@@ -37,11 +37,16 @@ public class Track {
     @JsonProperty("beatmaps")
     private List<Beatmap> beatmaps = null;
 
-    public void setTrackInfo(String filePath, String fileName, File file, int trackLength) {
+    public Track setTrackInfo(String filePath, String fileName, File file) {
         this.filePath = filePath + "/"; // file.getParent() leaves out trailing slash
         this.fileName = fileName;
         this.file = file;
+        return this;
+    }
+
+    public Track setTrackLength(int trackLength) {
         this.trackLength = trackLength;
+        return this;
     }
 
     public String getFilePath() {

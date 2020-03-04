@@ -94,7 +94,7 @@ public class NoteParser {
             loadOffset += segment.getLength();
         }
 
-        ScheduleHandler.registerUniqueJob(new BeatmapEndJob(scene, loadOffset));
+        ScheduleHandler.registerUniqueJob(new BeatmapEndJob(scene, scene.getTrack().getTrackLength()*1000));
     }
 
     public static int getKey(int num) {

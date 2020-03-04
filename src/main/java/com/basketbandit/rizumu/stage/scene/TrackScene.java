@@ -168,11 +168,20 @@ public class TrackScene extends Scene {
             }
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
 
-            // top bar
+            // top bar + score + track progress
             g.setColor(Colours.DARK_GREY_75);
             g.fill(titleContainer);
-            g.setFont(Fonts.default24);
+
+            // progress
+            g.setColor(Colours.BLUE_50);
+            g.fillRect(0, 0, (int) ((titleContainer.width/100.0) * audioPlayer.getClipPosition()), titleContainer.height);
+
+            // score
             g.setColor(Color.WHITE);
+            g.setFont(Fonts.default12);
+            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40);
+
+            g.setFont(Fonts.default24);
             center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), metrics24, titleContainer);
             g.drawString(track.getName() + " - " + beatmap.getName(), center[0], center[1]);
 
@@ -184,13 +193,9 @@ public class TrackScene extends Scene {
                 g.drawString(statistics.getCombo() + "", center[0], center[1]);
             }
 
-            // score
-            g.setFont(Fonts.default12);
-            g.setColor(Colours.MEDIUM_GREY_100);
-            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40);
-
             // menu cooldown
             if(menuCooldownWarning) {
+                g.setFont(Fonts.default12);
                 g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);  // truncates timer to 3dp
             }
         }

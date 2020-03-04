@@ -112,6 +112,14 @@ public class AudioPlayer {
     }
 
     /**
+     * Position of currently playing clip as a percentage.
+     * @return {@link Integer}
+     */
+    public double getClipPosition() {
+        return clip.getMicrosecondPosition() != 0 ? (((clip.getMicrosecondPosition()+.0) / (clip.getMicrosecondLength()+.0)) * 100) : 0.0;
+    }
+
+    /**
      * Utility Functions
      */
     public static int getTrackLength(String p) {
