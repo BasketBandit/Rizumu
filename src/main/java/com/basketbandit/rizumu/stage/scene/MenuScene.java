@@ -68,15 +68,8 @@ public class MenuScene extends Scene {
             // dynamic beatmap track buttons
             FontMetrics metrics = g.getFontMetrics(Fonts.default12);
             for(TrackButton t: trackButtons.values()) {
-                if(t == selectedButton) {
-                    t.setSize(480, t.height); // selected
-                } else if(t.isHovered()) {
-                    t.setSize(470, t.height); // hovered
-                } else {
-                    t.setSize(460, t.height); // normal
-                }
-
-                int[] center = Alignment.centerBoth(t.getButtonText(), metrics, t.x, t.y, (t == selectedButton) ? t.width + 20 : (t.isHovered()) ? t.width + 10 : t.width, t.height); // artificially increase t.width to exaggerate the movement of the text
+                t.setSize(t == selectedButton ? 480 : t.isHovered() ? 470 : 460, t.height); // width based on selected, hovered or normal button states
+                int[] center = Alignment.centerBoth(t.getButtonText(), metrics, t.x, t.y, t == selectedButton ? t.width + 20 : t.isHovered() ? t.width + 10 : t.width, t.height); // artificially increase t.width to exaggerate the movement of the text
 
                 g.setColor((t == selectedButton) ? Colours.BLUE_75 : t.getColor());
                 g.fillRect(t.x, t.y, t.width, t.height);
