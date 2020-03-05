@@ -13,7 +13,8 @@ public class Container extends Rectangle {
         return color;
     }
 
-    public void setColor(Color color) {
+    public Container setColor(Color color) {
         this.color = color;
+        return this;
     }
 }

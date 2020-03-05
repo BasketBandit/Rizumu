@@ -44,6 +44,7 @@ public class TrackScene extends Scene {
     protected Beatmap beatmap;
     private CopyOnWriteArrayList<Note> notes;
 
+    private Container progressBar = new Container(0, 0, 0, 50).setColor(Colours.BLUE_50);
     private Registrar registrar = new Registrar();
     private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
@@ -74,14 +75,15 @@ public class TrackScene extends Scene {
                 hitKeyFlashes.add(new KeyFlash(NoteParser.getKey(i)));
             }
 
+            this.progressBar = new Container(0, 0, 0, 50).setColor(Colours.BLUE_50);
             this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition(); // center the extended(registrar) based on key count
             this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys() * 50) + (Configuration.getNoteGap() * beatmap.getKeys() - 1) + (Configuration.getNoteGap() * 4); // resize the extended(registrar) based on key count
 
             // do render object calculations on init rather that on the fly (this saves those precious cycles, right?)
             ((TrackRenderer) renderObject).backgroundImage = track.getImage();
-            ((TrackRenderer) renderObject).backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth() + .0) / (((TrackRenderer) renderObject).backgroundImage.getWidth() + .0), (Configuration.getHeight() + .0) / (((TrackRenderer) renderObject).backgroundImage.getHeight() + .0));
             ((TrackRenderer) renderObject).beatmapContainer.x = Configuration.getDefaultBeatmapXPosition(); // beatmap background container horizontal position
             ((TrackRenderer) renderObject).beatmapContainer.width = (beatmap.getKeys() * 50) + (Configuration.getNoteGap() * beatmap.getKeys() - 1) + (Configuration.getNoteGap() * 4); // beatmap background container width
+            ((TrackRenderer) renderObject).titleBar = new Container(0, 0, Configuration.getWidth(), 50);
 
             ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
         }
@@ -111,10 +113,9 @@ public class TrackScene extends Scene {
 
     private class TrackRenderer implements RenderObject {
         private BufferedImage backgroundImage;
-        private AffineTransform backgroundImageTransform;
         private Container beatmapContainer = new Container(0, 0, 0, Configuration.getHeight());
-        private Container titleContainer = new Container(0, 0, Configuration.getWidth(), 50);
-        int[] center;
+        private Container titleBar = new Container(0, 0, Configuration.getWidth(), 50);
+        private FontMetrics metrics16;
         private FontMetrics metrics24;
         private FontMetrics metrics36;
 
@@ -122,13 +123,14 @@ public class TrackScene extends Scene {
         public void render(Graphics2D g) {
             // system
             if(metrics24 == null) {
+                metrics16 = g.getFontMetrics(Fonts.default16);
                 metrics24 = g.getFontMetrics(Fonts.default24);
                 metrics36 = g.getFontMetrics(Fonts.default36);
             }
 
             // background
             if(backgroundImage != null) {
-                g.drawImage(backgroundImage, backgroundImageTransform, null);
+                g.drawImage(backgroundImage, null, null);
                 g.setColor(Colours.DARK_GREY_75);
                 g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
             }
@@ -164,25 +166,23 @@ public class TrackScene extends Scene {
             for(int i = 0; i < hitKeyFlashes.size(); i++) {
                 int imageXPos = (Configuration.getDefaultBeatmapXPosition() + (int)(Configuration.getNoteGap()*2.50) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i));
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, hitKeyFlashes.get(i).getOpacity()));
-                g.drawImage(hitKeyFlashes.get(i).getImage(), AffineTransform.getTranslateInstance(imageXPos, registrar.getY() - 150), null);
+                g.drawImage(hitKeyFlashes.get(i).getImage(), imageXPos, (int) (registrar.getY() - 150), null);
             }
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
 
             // top bar + score + track progress
             g.setColor(Colours.DARK_GREY_75);
-            g.fill(titleContainer);
+            g.fill(titleBar);
 
-            // progress
-            g.setColor(Colours.BLUE_50);
-            g.fillRect(0, 0, (int) ((titleContainer.width/100.0) * audioPlayer.getClipPosition()), titleContainer.height);
+            g.setColor(progressBar.getColor());
+            g.fill(progressBar); // progress
 
-            // score
             g.setColor(Color.WHITE);
             g.setFont(Fonts.default12);
-            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40);
+            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40); // score
 
-            g.setFont(Fonts.default24);
-            center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), metrics24, titleContainer);
+            g.setFont(Fonts.default16);
+            int[] center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), metrics16, titleBar);
             g.drawString(track.getName() + " - " + beatmap.getName(), center[0], center[1]);
 
             // combo
@@ -196,6 +196,7 @@ public class TrackScene extends Scene {
             // menu cooldown
             if(menuCooldownWarning) {
                 g.setFont(Fonts.default12);
+                g.setColor(Color.WHITE);
                 g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);  // truncates timer to 3dp
             }
         }
@@ -208,6 +209,9 @@ public class TrackScene extends Scene {
             if(!Rizumu.secondaryRenderObjectIsNull()) {
                 return;
             }
+
+            // update progress bar
+            progressBar.width = (int) ((Configuration.getWidth()/100.0) * audioPlayer.getClipPosition());
 
             menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
 
@@ -296,6 +300,8 @@ public class TrackScene extends Scene {
      * PauseMenu subclass, not given a separate class file due to it only being used in the context of a TrackScene.
      */
     public class PauseMenu extends Scene {
+        FontMetrics metrics16;
+
         PauseMenu() {
             renderObject = new PauseMenuRenderer();
             tickObject = new PauseMenuTicker();
@@ -318,6 +324,10 @@ public class TrackScene extends Scene {
         private class PauseMenuRenderer implements RenderObject {
             @Override
             public void render(Graphics2D g) {
+                if(metrics16 == null) {
+                    metrics16 = g.getFontMetrics(Fonts.default16);
+                }
+
                 g.setColor(Colours.DARK_GREY_90);
                 g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
 
@@ -326,13 +336,13 @@ public class TrackScene extends Scene {
                 g.setColor(Color.DARK_GRAY);
                 buttons.values().forEach(g::fill);
 
-                g.setFont(Fonts.default24);
+                g.setFont(Fonts.default16);
                 g.setColor(Color.WHITE);
-                int[] center = Alignment.centerBoth("Resume", g.getFontMetrics(Fonts.default24), buttons.get("resumeButton"));
+                int[] center = Alignment.centerBoth("Resume", g.getFontMetrics(Fonts.default16), buttons.get("resumeButton"));
                 g.drawString("Resume", center[0], center[1]);
-                center = Alignment.centerBoth("Restart", g.getFontMetrics(Fonts.default24), buttons.get("restartButton"));
+                center = Alignment.centerBoth("Restart", g.getFontMetrics(Fonts.default16), buttons.get("restartButton"));
                 g.drawString("Restart", center[0], center[1]);
-                center = Alignment.centerBoth("Quit", g.getFontMetrics(Fonts.default24), buttons.get("quitButton"));
+                center = Alignment.centerBoth("Quit", g.getFontMetrics(Fonts.default16), buttons.get("quitButton"));
                 g.drawString("Quit", center[0], center[1]);
             }
         }
