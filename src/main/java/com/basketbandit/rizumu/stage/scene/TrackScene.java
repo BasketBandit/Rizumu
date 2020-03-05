@@ -9,7 +9,7 @@ import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
-import com.basketbandit.rizumu.drawable.*;
+import com.basketbandit.rizumu.drawable.track.*;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
@@ -45,10 +45,13 @@ public class TrackScene extends Scene {
     private CopyOnWriteArrayList<Note> notes;
 
     private Container progressBar = new Container(0, 0, 0, 50).setColor(Colours.BLUE_50);
-    private Registrar registrar = new Registrar();
-    private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
-
     private List<KeyFlash> hitKeyFlashes;
+    private AccuracyLabel accuracyLabel;
+
+    private RegistrarMx registrarMx = new RegistrarMx();
+    private RegistrarEx registrarEx = new RegistrarEx();
+    private RegistrarNm registrarNm = new RegistrarNm();
+    private ExtendedRegistrar extendedRegistrar = new ExtendedRegistrar();
 
     private boolean menuCooldownWarning = false;
     private long menuCooldown = System.currentTimeMillis();
@@ -75,9 +78,10 @@ public class TrackScene extends Scene {
                 hitKeyFlashes.add(new KeyFlash(NoteParser.getKey(i)));
             }
 
+            this.accuracyLabel = new AccuracyLabel();
             this.progressBar = new Container(0, 0, 0, 50).setColor(Colours.BLUE_50);
-            this.extendedRegistrar.x = this.registrar.x = Configuration.getDefaultBeatmapXPosition(); // center the extended(registrar) based on key count
-            this.extendedRegistrar.width = this.registrar.width = (beatmap.getKeys() * 50) + (Configuration.getNoteGap() * beatmap.getKeys() - 1) + (Configuration.getNoteGap() * 4); // resize the extended(registrar) based on key count
+
+            this.accuracyLabel.width = this.registrarMx.width = this.registrarEx.width = this.registrarNm.width = this.extendedRegistrar.width = (beatmap.getKeys() * 50) + (Configuration.getNoteGap() * beatmap.getKeys() - 1) + (Configuration.getNoteGap() * 4); // resize the extended(registrar) based on key count
 
             // do render object calculations on init rather that on the fly (this saves those precious cycles, right?)
             ((TrackRenderer) renderObject).backgroundImage = track.getImage();
@@ -139,18 +143,26 @@ public class TrackScene extends Scene {
             g.setColor(Colours.DARK_GREY_75);
             g.fill(beatmapContainer);
 
-            // extended registrar
-            g.setColor(extendedRegistrar.getColor());
-            g.fill(extendedRegistrar);
+//            // extended registrar
+//            g.setColor(extendedRegistrar.getColor());
+//            g.fill(extendedRegistrar);
+//
+//            // registrarMx
+//            g.setColor(registrarNm.getColor());
+//            g.fill(registrarNm);
+//
+//            // registrarEx
+//            g.setColor(registrarEx.getColor());
+//            g.fill(registrarEx);
 
             // registrar
-            g.setColor(registrar.getColor());
-            g.fill(registrar);
+            g.setColor(registrarMx.getColor());
+            g.fill(registrarMx);
 
             // note channels
             g.setColor(Colours.MEDIUM_GREY_10);
             for(int i = 0; i <= beatmap.getKeys(); i++) {
-                g.fillRect(beatmapContainer.x + (int)(Configuration.getNoteGap()*1.75) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i), 0, 2, registrar.y); // *1.75 with width 2 seems to be the sweet spot for channel positions
+                g.fillRect(beatmapContainer.x + (int)(Configuration.getNoteGap()*1.75) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i), 0, 2, registrarMx.y); // *1.75 with width 2 seems to be the sweet spot for channel positions
             }
 
             // notes
@@ -166,9 +178,13 @@ public class TrackScene extends Scene {
             for(int i = 0; i < hitKeyFlashes.size(); i++) {
                 int imageXPos = (Configuration.getDefaultBeatmapXPosition() + (int)(Configuration.getNoteGap()*2.50) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i));
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, hitKeyFlashes.get(i).getOpacity()));
-                g.drawImage(hitKeyFlashes.get(i).getImage(), imageXPos, (int) (registrar.getY() - 150), null);
+                g.drawImage(hitKeyFlashes.get(i).getImage(), imageXPos, (int) (registrarMx.getY() - 150), null);
             }
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1)); // make sure to reset opacity
+
+            // sub-registrar decoration/shield
+            g.setColor(Colours.BLUE_75);
+            g.fillRect(extendedRegistrar.x, extendedRegistrar.y - 15, extendedRegistrar.width, extendedRegistrar.height);
 
             // top bar + score + track progress
             g.setColor(Colours.DARK_GREY_75);
@@ -190,8 +206,16 @@ public class TrackScene extends Scene {
                 g.setFont(Fonts.default36);
                 g.setColor(Colours.CRIMSON);
                 center = Alignment.centerBoth(statistics.getCombo() + "", metrics36, beatmapContainer);
-                g.drawString(statistics.getCombo() + "", center[0], center[1]);
+                g.drawString(statistics.getCombo() + "", center[0], 150);
             }
+
+            // accuracy label
+            g.setFont(Fonts.default24);
+            g.setColor(accuracyLabel.getColor());
+            center = Alignment.centerBoth(accuracyLabel.getText(), metrics24, accuracyLabel);
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, accuracyLabel.getOpacity()));
+            g.drawString(accuracyLabel.getText(), center[0], center[1]);
+            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1)); // make sure to reset opacity
 
             // menu cooldown
             if(menuCooldownWarning) {
@@ -222,22 +246,26 @@ public class TrackScene extends Scene {
                     keyFlash.decrementOpacity();
                 }
             });
+            accuracyLabel.decrementOpacity();
+
             notes.forEach(note -> note.translate(0, Configuration.getNoteSpeedScale())); // translate each note in positive y
 
             // TODO: work on hit registration (something is off)
             // single was hit (hit on time)
             notes.removeIf(Note::hit);
             notes.stream().filter(note -> !note.hit()).forEach(note -> {
-                if(note.getMinY() >= registrar.getMaxY() || (extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld())) {
+                if(note.getMinY() >= extendedRegistrar.getMinY() || (extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrarMx.getMaxY()+25) && !note.isHeld())) {
                     if(statistics.getCombo() >= 50) {
                         effectPlayer.play("track-combobreak");
                     }
                     statistics.incrementMissed();
+                    accuracyLabel.setState("MISSED", Colours.CRIMSON);
                 }
             });
-            notes.removeIf(note -> note.getMinY() >= registrar.getMaxY()); // single has passed the registrar (hit too late or not at all)
-            notes.removeIf(note -> extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
-            notes.removeIf(note -> (note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld());
+            notes.removeIf(note -> note.getMinY() >= extendedRegistrar.getMinY()); // single has passed the extended registrar ~kill zone (hit too late or not at all)
+            // TODO: rethink how single_long is processed for removal
+            //notes.removeIf(note -> extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
+            //notes.removeIf(note -> (note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld());
         }
     }
 
@@ -260,16 +288,26 @@ public class TrackScene extends Scene {
             }
 
             notes.stream().filter(note -> note.getKey() == e.getKeyCode()).forEach(note -> {
-                if(registrar.intersects(note) && !note.hit() && note.getNoteType().equals("single")) {
+                if(!note.hit() && note.getNoteType().equals("single") && (registrarNm.intersects(note) || registrarEx.intersects(note) || registrarMx.intersects(note))) {
                     effectPlayer.play("track-hit");
                     note.setHit();
-                    statistics.incrementHit();
+
+                    if(registrarMx.intersects(note)) {
+                        statistics.incrementMxHit();
+                        accuracyLabel.setState("MX", Colours.GOLD);
+                    } else if(registrarEx.intersects(note)) {
+                        statistics.incrementExHit();
+                        accuracyLabel.setState("EX", Color.GREEN);
+                    } else {
+                        statistics.incrementNmHit();
+                        accuracyLabel.setState("NM", Colours.BLUE);
+                    }
                 }
 
                 // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
                 // TODO: make missing single_long increase miss counter
-                if(note.getNoteType().equals("single_long") && registrar.intersects(note)) {
-                    if(keys[note.getKey()] && ((note.getMaxY() <= registrar.getMaxY() + 23) && !note.isHeld())) {
+                if(note.getNoteType().equals("single_long") && registrarMx.intersects(note)) {
+                    if(keys[note.getKey()] && ((note.getMaxY() <= registrarMx.getMaxY() + 23) && !note.isHeld())) {
                         note.setHeld();
                     }
                     if(!keys[note.getKey()] && note.isHeld()) {
@@ -375,10 +413,10 @@ public class TrackScene extends Scene {
                         Rizumu.setSecondaryScene(null);
                         ScheduleHandler.cancelExecution();
 
-                        Track trakc = Rizumu.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
-                        for(Beatmap baetmap: trakc.getBeatmaps()) {
-                            if(baetmap.getName().equals(beatmap.getName())) {
-                                Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(trakc, baetmap));
+                        Track t = Rizumu.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
+                        for(Beatmap b: t.getBeatmaps()) {
+                            if(b.getName().equals(beatmap.getName())) {
+                                Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(t, b));
                                 return;
                             }
                         }
