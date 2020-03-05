@@ -19,6 +19,13 @@ public class Alignment {
         return ints;
     }
 
+    public static int[] centerBoth(String string, FontMetrics metrics, int containerX, int containerY, int containerWidth, int containerHeight) {
+        int[] ints = new int[2];
+        ints[0] = containerX + (containerWidth - metrics.stringWidth(string)) / 2;
+        ints[1] = containerY + (metrics.getAscent() + (containerHeight - (metrics.getAscent() + metrics.getDescent())) / 2);
+        return ints;
+    }
+
     public static int right(String string, FontMetrics metrics, int containerX, int containerWidth) {
         return containerX + (containerWidth - metrics.stringWidth(string));
     }
