@@ -65,9 +65,6 @@ public class MenuScene extends Scene {
                 g.drawImage(menuBackgroundImage, null, null);
             }
 
-            g.setColor(trackContainer.getColor());
-            g.fill(trackContainer);
-
             // dynamic beatmap track buttons
             FontMetrics metrics = g.getFontMetrics(Fonts.default12);
             for(TrackButton t: trackButtons.values()) {
