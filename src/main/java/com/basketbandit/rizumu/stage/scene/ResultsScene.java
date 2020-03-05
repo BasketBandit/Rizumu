@@ -15,7 +15,6 @@ import com.basketbandit.rizumu.utility.Fonts;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 
 public class ResultsScene extends Scene {
     private Statistics statistics;
@@ -36,18 +35,14 @@ public class ResultsScene extends Scene {
 
         this.statistics = (Statistics) object[0];
         this.backgroundImage = statistics.getImage();
-        ((ResultsRenderer) renderObject).backgroundImageTransform = AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(backgroundImage.getWidth(null)+.0), (Configuration.getHeight()+.0)/(backgroundImage.getHeight(null)+.0));
         return this;
     }
 
     private class ResultsRenderer implements RenderObject {
-        AffineTransform backgroundImageTransform;
-
         @Override
         public void render(Graphics2D g) {
-            // background
             if(backgroundImage != null) {
-                g.drawImage(backgroundImage, backgroundImageTransform, null);
+                g.drawImage(backgroundImage, null, null);
                 g.setColor(Colours.DARK_GREY_75);
                 g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
             }

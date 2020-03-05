@@ -1,10 +1,13 @@
 package com.basketbandit.rizumu.beatmap.core;
 
+import com.basketbandit.rizumu.Configuration;
+import com.basketbandit.rizumu.utility.extension.AffineTransformEx;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.imageio.ImageIO;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
@@ -84,7 +87,9 @@ public class Track {
             if(image != null) {
                 return image;
             }
-            return image = ImageIO.read(new File(filePath + imageFilename));
+            BufferedImage masterImage = ImageIO.read(new File(filePath + imageFilename));
+            BufferedImage image = new BufferedImage(Configuration.getWidth(), Configuration.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            return new AffineTransformOp(new AffineTransformEx().inlineScale((Configuration.getContentWidth()+.0)/(masterImage.getWidth()+.0), (Configuration.getHeight()+.0)/(masterImage.getHeight()+.0)), AffineTransformOp.TYPE_BILINEAR).filter(masterImage, image);
         } catch(Exception ex) {
             return null;
         }
