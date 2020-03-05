@@ -14,7 +14,7 @@ import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
-import com.basketbandit.rizumu.score.Statistics;
+import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
@@ -38,7 +38,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TrackScene extends Scene {
     private PauseMenu pauseMenu = new PauseMenu();
 
-    private Statistics statistics;
+    private Score score;
 
     protected Track track;
     protected Beatmap beatmap;
@@ -71,7 +71,7 @@ public class TrackScene extends Scene {
             this.track = (Track) object[0];
             this.beatmap = (Beatmap) object[1];
             this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-            this.statistics = new Statistics(track.getImage());
+            this.score = new Score(track.getImage());
 
             this.hitKeyFlashes = new ArrayList<>();
             for(int i = 0; i < beatmap.getKeys(); i++) {
@@ -95,8 +95,8 @@ public class TrackScene extends Scene {
         return this;
     }
 
-    public Statistics getStatistics() {
-        return statistics;
+    public Score getScore() {
+        return score;
     }
 
     public List<Note> getNotes() {
@@ -195,18 +195,19 @@ public class TrackScene extends Scene {
 
             g.setColor(Color.WHITE);
             g.setFont(Fonts.default12);
-            g.drawString("%: " + new BigDecimal(statistics.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40); // score
+            g.drawString(score.getScore() + " (x" + score.getMultiplier() + ")", 10, 20);
+            g.drawString("%: " + BigDecimal.valueOf(score.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40); // score
 
             g.setFont(Fonts.default16);
             int[] center = Alignment.centerBoth(track.getName() + " - " + beatmap.getName(), metrics16, titleBar);
             g.drawString(track.getName() + " - " + beatmap.getName(), center[0], center[1]);
 
             // combo
-            if(statistics.getCombo() >= 10) {
+            if(score.getCombo() >= 10) {
                 g.setFont(Fonts.default36);
                 g.setColor(Colours.CRIMSON);
-                center = Alignment.centerBoth(statistics.getCombo() + "", metrics36, beatmapContainer);
-                g.drawString(statistics.getCombo() + "", center[0], 150);
+                center = Alignment.centerBoth(score.getCombo() + "", metrics36, beatmapContainer);
+                g.drawString(score.getCombo() + "", center[0], 150);
             }
 
             // accuracy label
@@ -255,10 +256,10 @@ public class TrackScene extends Scene {
             notes.removeIf(Note::hit);
             notes.stream().filter(note -> !note.hit()).forEach(note -> {
                 if(note.getMinY() >= extendedRegistrar.getMinY() || (extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrarMx.getMaxY()+25) && !note.isHeld())) {
-                    if(statistics.getCombo() >= 50) {
+                    if(score.getCombo() >= 50) {
                         effectPlayer.play("track-combobreak");
                     }
-                    statistics.incrementMissed();
+                    score.incrementMissed();
                     accuracyLabel.setState("MISSED", Colours.CRIMSON);
                 }
             });
@@ -293,13 +294,13 @@ public class TrackScene extends Scene {
                     note.setHit();
 
                     if(registrarMx.intersects(note)) {
-                        statistics.incrementMxHit();
+                        score.incrementMxHit();
                         accuracyLabel.setState("MX", Colours.GOLD);
                     } else if(registrarEx.intersects(note)) {
-                        statistics.incrementExHit();
+                        score.incrementExHit();
                         accuracyLabel.setState("EX", Color.GREEN);
                     } else {
-                        statistics.incrementNmHit();
+                        score.incrementNmHit();
                         accuracyLabel.setState("NM", Colours.BLUE);
                     }
                 }
@@ -315,7 +316,7 @@ public class TrackScene extends Scene {
                     }
                     if(keys[note.getKey()] && note.isHeld()) {
                         effectPlayer.play("track-hit");
-                        statistics.incrementHit();
+                        score.incrementHit();
                     }
                 }
             });

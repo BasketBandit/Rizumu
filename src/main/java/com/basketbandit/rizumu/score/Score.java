@@ -4,18 +4,21 @@ import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public class Statistics {
+public class Score {
     private Image image;
     private int hitNotes = 0, missedNotes = 0, combo = 0, highestCombo = 0;
     private int mxHit = 0, exHit = 0, nmHit = 0;
+    private int score = 0, multiplier = 1;
 
-    public Statistics(Image image) {
+    public Score(Image image) {
         this.image = image;
     }
 
     public void incrementHit() {
         hitNotes++;
-        if(++combo > highestCombo) {
+        combo++;
+        multiplier = (combo >= 40) ? 4 : (combo >= 30) ? 3 : (combo >= 20) ? 2 : 1;
+        if(combo > highestCombo) {
             highestCombo = combo;
         }
     }
@@ -23,21 +26,25 @@ public class Statistics {
     public void incrementMissed() {
         missedNotes++;
         combo = 0;
+        multiplier = 1;
     }
 
     public void incrementMxHit() {
-        mxHit++;
         incrementHit();
+        mxHit++;
+        score += (500 * multiplier);
     }
 
     public void incrementExHit() {
-        exHit++;
         incrementHit();
+        exHit++;
+        score += (250 * multiplier);
     }
 
     public void incrementNmHit() {
-        nmHit++;
         incrementHit();
+        nmHit++;
+        score += (125 * multiplier);
     }
 
     public int getHitNotes() {
@@ -58,6 +65,14 @@ public class Statistics {
 
     public int getNmHit() {
         return nmHit;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public int getMultiplier() {
+        return multiplier;
     }
 
     public int getCombo() {

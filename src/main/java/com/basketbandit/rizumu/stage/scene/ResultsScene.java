@@ -5,7 +5,7 @@ import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.score.Statistics;
+import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
@@ -17,7 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class ResultsScene extends Scene {
-    private Statistics statistics;
+    private Score score;
     private Image backgroundImage;
 
     public ResultsScene() {
@@ -33,8 +33,8 @@ public class ResultsScene extends Scene {
         MouseAdapters.setMouseAdapter("results", mouseAdapter);
         KeyAdapters.setKeyAdapter("results", null);
 
-        this.statistics = (Statistics) object[0];
-        this.backgroundImage = statistics.getImage();
+        this.score = (Score) object[0];
+        this.backgroundImage = score.getImage();
         return this;
     }
 
@@ -55,8 +55,8 @@ public class ResultsScene extends Scene {
             g.drawString("Exit!", (int)buttons.get("menu").getMinX(), (int)buttons.get("menu").getCenterY());
 
             g.setColor(Color.WHITE);
-            g.drawString(statistics.getAccuracyString(), 80, 80);
-            g.drawString("Highest Combo: " + statistics.getHighestCombo() + "!", 80, 100);
+            g.drawString(score.getAccuracyString(), 80, 80);
+            g.drawString("Highest Combo: " + score.getHighestCombo() + "!", 80, 100);
         }
     }
 

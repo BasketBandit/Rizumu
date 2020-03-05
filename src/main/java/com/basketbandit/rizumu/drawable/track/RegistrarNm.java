@@ -9,7 +9,7 @@ public class RegistrarNm extends Rectangle {
     private Color color = Colours.BLUE_50;
 
     public RegistrarNm() {
-        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYPosition() - 20, Configuration.getContentWidth(), Configuration.getDefaultNoteHeight() + 40);
+        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYPosition() - 25, Configuration.getContentWidth(), Configuration.getDefaultNoteHeight() + 50);
     }
 
     public Color getColor() {

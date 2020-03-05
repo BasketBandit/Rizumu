@@ -19,6 +19,6 @@ public class BeatmapEndTask implements Task {
         scene.getAudioPlayer().stop();
         ScheduleHandler.cancelExecution();
         ResultsScene resultsScene = (ResultsScene) Rizumu.getStaticScene(Scenes.RESULTS);
-        Rizumu.setPrimaryScene(resultsScene.init(scene.getStatistics()));
+        Rizumu.setPrimaryScene(resultsScene.init(scene.getScore()));
     }
 }
