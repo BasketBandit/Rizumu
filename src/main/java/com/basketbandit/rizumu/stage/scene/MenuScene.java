@@ -4,7 +4,6 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
-import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyAdapters;
@@ -18,19 +17,16 @@ import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MenuScene extends Scene {
     private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
-    private Container container;
+    private Container trackContainer;
 
     private BufferedImage menuBackgroundImage;
     private TrackButton selectedButton;
-    private String selectedBeatmap = "";
 
     public MenuScene() {
         renderObject = new MenuRenderer();
@@ -38,16 +34,11 @@ public class MenuScene extends Scene {
         mouseAdapter = new MenuMouseAdapter();
         keyAdapter = new MenuKeyAdapter();
 
-        container = new Container(0, 0, 500, Configuration.getContentHeight());
-
-        buttons.put("frameRateButton", new Button(Configuration.getWidth() - 120, Configuration.getHeight() - 70, 100, 50));
-        buttons.put("volumeUpButton", new Button(Configuration.getWidth() - 230, 20, 100, 50));
-        buttons.put("volumeDownButton", new Button(Configuration.getWidth() - 340, 20, 100, 50));
+        trackContainer = new Container(0, 0, 490, Configuration.getContentHeight()).setColor(Colours.TRANSPARENT);
 
         AtomicInteger i = new AtomicInteger();
         Rizumu.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
-            TrackButton t = new TrackButton(20,20+(85*i.get()), 460, 75, track, beatmap);
-            t.setButtonText(track.getArtist() + " - " + track.getName());
+            TrackButton t = (TrackButton) new TrackButton(0,2 + (67*i.get()), 460, 65, i.get(), track, beatmap).setColor(Colours.DARK_GREY_90).setButtonText(track.getArtist() + " - " + track.getName());
             buttons.put(i.get() + "", t);
             trackButtons.put(i.get(), t);
             i.getAndIncrement();
@@ -59,15 +50,10 @@ public class MenuScene extends Scene {
         MouseAdapters.setMouseAdapter("menu", mouseAdapter);
         KeyAdapters.setKeyAdapter("menu", keyAdapter);
 
-        // select random beatmap
-        int rand = new Random().nextInt(trackButtons.size());
-        Track buttonTrack = trackButtons.get(rand).getTrack();
-        Beatmap buttonBeatmap = trackButtons.get(rand).getBeatmap();
-        String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
-        menuBackgroundImage = buttonTrack.getImage();
-        selectedButton = trackButtons.get(rand);
-        selectedBeatmap = trackName;
-        audioPlayer.hotChangeTrack(buttonTrack.getAudioFilePath());
+        // select middle track (5)
+        selectedButton = trackButtons.get(5);
+        menuBackgroundImage = selectedButton.getTrack().getImage();
+        audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
         audioPlayer.loop(-1);
         return this;
     }
@@ -76,36 +62,41 @@ public class MenuScene extends Scene {
         @Override
         public void render(Graphics2D g) {
             if(menuBackgroundImage != null) {
-                g.drawImage(menuBackgroundImage, AffineTransform.getScaleInstance((Configuration.getWidth()+.0)/(menuBackgroundImage.getWidth()+.0), (Configuration.getHeight()+.0)/(menuBackgroundImage.getHeight()+.0)), null);
+                g.drawImage(menuBackgroundImage, null, null);
             }
 
-            g.setColor(Colours.DARK_GREY_90);
-
-            g.fill(buttons.get("frameRateButton"));
-            //g.fill(buttons.get("volumeUpButton"));
-            //g.fill(buttons.get("volumeDownButton"));
-
-            g.setColor(Colours.DARK_GREY_75);
-            g.fill(container);
-
-            g.setFont(Fonts.default12);
-            g.setColor(Color.WHITE);
-            g.drawString("Cap Framerate", (int)buttons.get("frameRateButton").getMinX()+12, (int)buttons.get("frameRateButton").getCenterY()+2);
-            //g.drawString("Vol +0.1db", (int)buttons.get("volumeUpButton").getMinX(), (int)buttons.get("volumeUpButton").getCenterY());
-            //g.drawString("Vol -0.1db", (int)buttons.get("volumeDownButton").getMinX(), (int)buttons.get("volumeDownButton").getCenterY());
+            g.setColor(trackContainer.getColor());
+            g.fill(trackContainer);
 
             // dynamic beatmap track buttons
             FontMetrics metrics = g.getFontMetrics(Fonts.default12);
             for(TrackButton t: trackButtons.values()) {
-                int[] center = Alignment.centerBoth(t.getButtonText(), metrics, t);
+                if(t == selectedButton) {
+                    t.setSize(480, t.height); // selected
+                } else if(t.isHovered()) {
+                    t.setSize(470, t.height); // hovered
+                } else {
+                    t.setSize(460, t.height); // normal
+                }
 
-                g.setColor(selectedButton == t ? Colours.CRIMSON : Colours.DARK_GREY_90);
-                g.fill(t);
+                int[] center = Alignment.centerBoth(t.getButtonText(), metrics, t.x, t.y, (t == selectedButton) ? t.width + 20 : (t.isHovered()) ? t.width + 10 : t.width, t.height); // artificially increase t.width to exaggerate the movement of the text
+
+                g.setColor((t == selectedButton) ? Colours.BLUE_75 : t.getColor());
+                g.fillRect(t.x, t.y, t.width, t.height);
+                g.setColor((t == selectedButton) ? Colours.BLUE : t.getColor());
+                g.drawRect(t.x, t.y, t.width, t.height);
+
                 g.setColor(Color.WHITE);
-                g.drawString(t.getButtonText(), center[0], center[1]); // draw track title/artist
-                g.drawString(t.getBeatmap().getName(), Alignment.right(t.getBeatmap().getName(), metrics, t) - 10, (int)t.getMinY() + 20); // draw beatmap difficulty
-                g.drawString(t.getBeatmap().getKeys() + "K", Alignment.right(t.getBeatmap().getKeys() + "K", metrics, t) - 10, (int)t.getMaxY() - 10); // draw key count
-                g.drawString(t.getTrack().getFormattedTrackLength() + "", t.x + 10, (int)t.getMaxY() - 10);
+                g.drawString(t.getButtonText(), center[0], center[1]); // track title/artist
+                g.drawString(t.getBeatmap().getName(), Alignment.right(t.getBeatmap().getName(), metrics, t.x, t.width) - 10, (int) t.getMinY() + 20); // beatmap difficulty
+                g.drawString(t.getBeatmap().getKeys() + "K", Alignment.right(t.getBeatmap().getKeys() + "K", metrics, t.x, t.width) - 10, (int) t.getMaxY() - 10); // key count
+            }
+
+            if(selectedButton != null) {
+                g.setColor(Colours.DARK_GREY_75);
+                g.fillRect(Configuration.getWidth() - 200, 50, 200, 35);
+                g.setColor(Color.WHITE);
+                g.drawString(selectedButton.getTrack().getFormattedTrackLength() + "", Alignment.right(selectedButton.getTrack().getFormattedTrackLength() + "", metrics, 0, Configuration.getWidth()) - 10, 70); // track length
             }
         }
     }
@@ -120,50 +111,25 @@ public class MenuScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                for(TrackButton trackButton : trackButtons.values()) {
-                    if(trackButton.isHovered()) {
-                        Track buttonTrack = trackButton.getTrack();
-                        Beatmap buttonBeatmap = trackButton.getBeatmap();
-                        String trackName = buttonTrack.getArtist() + buttonTrack.getName() + buttonBeatmap.getName();
-                        if(selectedBeatmap.equals(trackName)) {
+                for(TrackButton t : trackButtons.values()) {
+                    if(t.isHovered()) {
+                        if(selectedButton.getId() == t.getId()) {
                             effectPlayer.play("menu-select2");
                             audioPlayer.stop();
-                            Track track = Rizumu.getTrackParser().parseTrack(trackButton.getTrack().getFile()); // re-parse the map
+                            Track track = Rizumu.getTrackParser().parseTrack(t.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
-                                if(beatmap.getName().equals(trackButton.getBeatmap().getName())) {
+                                if(beatmap.getName().equals(t.getBeatmap().getName())) {
                                     Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(track, beatmap).init());
                                     return;
                                 }
                             }
                         } else {
                             effectPlayer.play("menu-click");
-                            audioPlayer.hotChangeTrack(buttonTrack.getAudioFilePath());
-                            menuBackgroundImage = buttonTrack.getImage();
-                            selectedButton = trackButton;
-                            selectedBeatmap = trackName;
+                            audioPlayer.hotChangeTrack(t.getTrack().getAudioFilePath());
+                            selectedButton = t;
+                            menuBackgroundImage = t.getTrack().getImage();
                             return;
                         }
-                    }
-                }
-
-                if(buttons.get("frameRateButton").isHovered()) {
-                    effectPlayer.play("menu-click");
-                    Configuration.toggleUnlockedFramerate();
-                    return;
-                }
-
-                if(buttons.get("volumeUpButton").isHovered()) {
-                    effectPlayer.play("menu-click");
-                    if(audioPlayer.getGain()+0.1 < 6.0206) {
-                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
-                    }
-                    return;
-                }
-
-                if(buttons.get("volumeDownButton").isHovered()) {
-                    effectPlayer.play("menu-click");
-                    if(audioPlayer.getGain()+0.1 < 6.0206) {
-                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
                     }
                 }
             }
@@ -172,16 +138,16 @@ public class MenuScene extends Scene {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             // track list scrolling functionality
-            if(container.getBounds().contains(e.getX(), e.getY())) {
+            if(trackContainer.getBounds().contains(e.getX(), e.getY())) {
                 if(e.getWheelRotation() > 0) {
                     for(int i = trackButtons.size()-1; i > -1; i--) { // this specific loop needs to run in reverse to avoid a weird button creep bug?
-                        if(trackButtons.get(0).getMinY() < 19) {
+                        if(trackButtons.get(0).getMinY() < 2) {
                             trackButtons.get(i).y += e.getUnitsToScroll() + 20; // speed boooost!
                         }
                     }
                 } else if(e.getWheelRotation() < 0) {
                     for(int i = 0; i < trackButtons.size(); i++) {
-                        if(trackButtons.get(trackButtons.size()-1).getMaxY() > Configuration.getHeight() - 19) {
+                        if(trackButtons.get(trackButtons.size()-1).getMaxY() > Configuration.getHeight() - 2) {
                             trackButtons.get(i).y += e.getUnitsToScroll() - 20; // speed boooost!
                         }
                     }
