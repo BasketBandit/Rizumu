@@ -30,7 +30,9 @@ public class MenuScene extends Scene {
     private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
     private Container trackContainer;
 
+    private BufferedImage prevBackgroundImage;
     private BufferedImage menuBackgroundImage;
+    private float menuBackgroundOpacity;
     private TrackButton selectedButton;
 
     public MenuScene() {
@@ -56,6 +58,8 @@ public class MenuScene extends Scene {
         MouseAdapters.setMouseAdapter("menu", mouseAdapter);
         KeyAdapters.setKeyAdapter("menu", keyAdapter);
 
+        menuBackgroundOpacity = 1.0f;
+
         // select middle track (5)
         if(trackButtons.size() > 0) {
             selectedButton = trackButtons.get(5);
@@ -71,8 +75,14 @@ public class MenuScene extends Scene {
 
         @Override
         public void render(Graphics2D g) {
+            if(prevBackgroundImage != null && menuBackgroundOpacity < 1.0f) {
+                g.drawImage(prevBackgroundImage, null, null); // draw the previous background image to help achieve fade-in effect
+            }
+
             if(menuBackgroundImage != null) {
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, menuBackgroundOpacity));
                 g.drawImage(menuBackgroundImage, null, null);
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
             }
 
             if(trackButtons.size() == 0) {
@@ -114,6 +124,7 @@ public class MenuScene extends Scene {
     private class MenuTicker implements TickObject {
         @Override
         public void tick() {
+            menuBackgroundOpacity += (menuBackgroundOpacity + 0.05f <= 1.0f) ? 0.05f : 1 - menuBackgroundOpacity; // background fade-in on selection
         }
     }
 
@@ -147,6 +158,8 @@ public class MenuScene extends Scene {
                             effectPlayer.play("menu-click");
                             audioPlayer.hotChangeTrack(t.getTrack().getAudioFilePath());
                             selectedButton = t;
+                            menuBackgroundOpacity = 0.05f;
+                            prevBackgroundImage = menuBackgroundImage;
                             menuBackgroundImage = t.getTrack().getImage();
                             return;
                         }

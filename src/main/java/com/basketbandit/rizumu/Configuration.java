@@ -106,8 +106,9 @@ public class Configuration {
 
     /**
      * Calculates the track start delay time and returns that value.
-     * # (defaultRegistrarYPosition + (defaultNoteHeight/2) / noteSpeedScale) --- (time in ticks to reach registrar, rounded up since we cannot work in half ticks)
-     * # (above result/60) * 1000 --- (calculating in seconds how long it takes to reach registrar, then multiplying by 1000 to get time in milliseconds)
+     * # ((defaultRegistrarYFromBottom + (defaultNoteHeight/2) / noteSpeedScale) / 60) * 1000 ---
+     * # Time in ticks to reach registrar, rounded up since we cannot work in half ticks.
+     * # Calculating in seconds, then multiplying by 1000 to get time in milliseconds.
      * @return {@link Long}
      */
     public static long getTrackStartDelay() {
