@@ -21,7 +21,7 @@ public class Configuration {
     private static boolean frameLock = false;
 
     private static String userDirectory;
-    private static String beatmapResourcePath;
+    private static String tracksPath;
     private static float globalGain = -10.0f; // decibels
 
     private static int defaultBeatmapXPosition = (int) (250 * scale); // pixels
@@ -37,7 +37,7 @@ public class Configuration {
         File file = new File(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Rizumu");
         userDirectory = file.getPath();
         if(!file.exists()) {
-            if(file.mkdirs() && new File(userDirectory + File.separator + "songs").mkdir()) {
+            if(file.mkdirs() && new File(userDirectory + File.separator + "tracks").mkdir()) {
                 log.info("Successfully created directory created at: " + userDirectory);
             }
 
@@ -48,7 +48,7 @@ public class Configuration {
                 bw.newLine();
                 bw.write("frame_lock = false");
                 bw.newLine();
-                bw.write("songs_directory = " + userDirectory + "/songs");
+                bw.write("songs_directory = " + userDirectory + File.separator + "tracks");
             } catch(Exception ex) {
                 log.error("An error occurred during directory setup, message: {}", ex.getMessage(), ex);
             }
@@ -60,7 +60,7 @@ public class Configuration {
             height = Integer.parseInt(vals.get(1));
             scale = width / 1280.0;
             frameLock = Boolean.parseBoolean(vals.get(2));
-            beatmapResourcePath = vals.get(3);
+            tracksPath = vals.get(3);
 
             log.info("Successfully read configuration file!");
         } catch(Exception ex) {
@@ -126,12 +126,12 @@ public class Configuration {
         return frameLock;
     }
 
-    public static String getBeatmapResourcePath() {
-        return beatmapResourcePath;
+    public static String getTracksPath() {
+        return tracksPath;
     }
 
-    public static void setBeatmapResourcePath(String path) {
-        beatmapResourcePath = path;
+    public static void setTracksPath(String path) {
+        tracksPath = path;
     }
 
     public static void setUser(String user) {

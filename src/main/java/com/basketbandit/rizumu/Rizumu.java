@@ -45,7 +45,7 @@ public class Rizumu {
         }
 
         // loads and parses beatmaps
-        trackParser = new TrackParser(Configuration.getBeatmapResourcePath());
+        trackParser = new TrackParser(Configuration.getTracksPath());
 
         // initialises AudioPlayerController
         new AudioPlayerController();

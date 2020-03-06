@@ -24,7 +24,7 @@ public class DefaultSystemRenderObject implements RenderObject {
             g.setFont(Fonts.default12);
             g.setColor(Color.RED);
             g.drawString("DEBUG MODE / " +
-                            "RESOURCE PATH \"" + Configuration.getBeatmapResourcePath() + "\" / " +
+                            "RESOURCE PATH \"" + Configuration.getTracksPath() + "\" / " +
                             "TICKRATE " + Configuration.getTickRateNs() + " / " +
                             "WIDTH " + Configuration.getWidth() + " / " +
                             "HEIGHT " + Configuration.getHeight() + " / " +

@@ -77,20 +77,20 @@ public class SettingsScene extends Scene {
                     return;
                 }
 
-                if(buttons.get("volumeUpButton").isHovered()) {
-                    effectPlayer.play("menu-click");
-                    if(audioPlayer.getGain()+0.1 < 6.0206) {
-                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
-                    }
-                    return;
-                }
-
-                if(buttons.get("volumeDownButton").isHovered()) {
-                    effectPlayer.play("menu-click");
-                    if(audioPlayer.getGain()+0.1 < 6.0206) {
-                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
-                    }
-                }
+//                if(buttons.get("volumeUpButton").isHovered()) {
+//                    effectPlayer.play("menu-click");
+//                    if(audioPlayer.getGain()+0.1 < 6.0206) {
+//                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
+//                    }
+//                    return;
+//                }
+//
+//                if(buttons.get("volumeDownButton").isHovered()) {
+//                    effectPlayer.play("menu-click");
+//                    if(audioPlayer.getGain()+0.1 < 6.0206) {
+//                        audioPlayer.setGain(audioPlayer.getGain()+0.1f);
+//                    }
+//                }
             }
         }
     }

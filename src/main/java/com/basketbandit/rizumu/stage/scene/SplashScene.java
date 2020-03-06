@@ -100,6 +100,8 @@ public class SplashScene extends Scene {
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(buttons.get("settingsButton").isHovered()) {
+                    effectPlayer.play("menu-click");
+                    audioPlayer.stop();
                     Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SETTINGS).init());
                     return;
                 }

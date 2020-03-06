@@ -4,10 +4,12 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
+import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
+import com.basketbandit.rizumu.resource.Image;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
@@ -17,7 +19,10 @@ import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,8 +39,7 @@ public class MenuScene extends Scene {
         mouseAdapter = new MenuMouseAdapter();
         keyAdapter = new MenuKeyAdapter();
 
-        trackContainer = new Container(0, 0, 490, Configuration.getContentHeight()).setColor(Colours.TRANSPARENT);
-
+        trackContainer = new Container(0, 0, 490, Configuration.getHeight()).setColor(Colours.TRANSPARENT);
         AtomicInteger i = new AtomicInteger();
         Rizumu.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
             TrackButton t = (TrackButton) new TrackButton(0,2 + (67*i.get()), 460, 65, i.get(), track, beatmap).setColor(Colours.DARK_GREY_90).setButtonText(track.getArtist() + " - " + track.getName());
@@ -43,6 +47,8 @@ public class MenuScene extends Scene {
             trackButtons.put(i.get(), t);
             i.getAndIncrement();
         }));
+
+        buttons.put("directoryButton", new Button(Configuration.getWidth() - 170, Configuration.getHeight()- 70, 150, 50).setButtonText("Open Track Directory"));
     }
 
     @Override
@@ -51,25 +57,39 @@ public class MenuScene extends Scene {
         KeyAdapters.setKeyAdapter("menu", keyAdapter);
 
         // select middle track (5)
-        selectedButton = trackButtons.get(5);
-        menuBackgroundImage = selectedButton.getTrack().getImage();
-        audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
-        audioPlayer.loop(-1);
+        if(trackButtons.size() > 0) {
+            selectedButton = trackButtons.get(5);
+            menuBackgroundImage = selectedButton.getTrack().getImage();
+            audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
+            audioPlayer.loop(-1);
+        }
         return this;
     }
 
     private class MenuRenderer implements RenderObject {
+        BufferedImage noSong = Image.getBufferedImage("no-song");
+
         @Override
         public void render(Graphics2D g) {
             if(menuBackgroundImage != null) {
                 g.drawImage(menuBackgroundImage, null, null);
             }
 
+            if(trackButtons.size() == 0) {
+                g.drawImage(noSong, AffineTransform.getTranslateInstance(Configuration.getWidth()/2.0 - noSong.getWidth()/2.0, (Configuration.getHeight()/2.0) - (noSong.getHeight()/2.0)), null);
+            }
+
+            int[] center = Alignment.centerBoth(buttons.get("directoryButton").getButtonText(), g.getFontMetrics(Fonts.default12), buttons.get("directoryButton"));
+            g.setColor(buttons.get("directoryButton").getColor());
+            g.fill(buttons.get("directoryButton"));
+            g.setColor(Color.WHITE);
+            g.drawString(buttons.get("directoryButton").getButtonText(), center[0], center[1]);
+
             // dynamic beatmap track buttons
             FontMetrics metrics = g.getFontMetrics(Fonts.default12);
             for(TrackButton t: trackButtons.values()) {
                 t.setSize(t == selectedButton ? 480 : t.isHovered() ? 470 : 460, t.height); // width based on selected, hovered or normal button states
-                int[] center = Alignment.centerBoth(t.getButtonText(), metrics, t.x, t.y, t == selectedButton ? t.width + 20 : t.isHovered() ? t.width + 10 : t.width, t.height); // artificially increase t.width to exaggerate the movement of the text
+                center = Alignment.centerBoth(t.getButtonText(), metrics, t.x, t.y, t == selectedButton ? t.width + 20 : t.isHovered() ? t.width + 10 : t.width, t.height); // artificially increase t.width to exaggerate the movement of the text
 
                 g.setColor((t == selectedButton) ? Colours.BLUE_75 : t.getColor());
                 g.fillRect(t.x, t.y, t.width, t.height);
@@ -101,6 +121,16 @@ public class MenuScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
+                if(buttons.get("directoryButton").isHovered()) {
+                    effectPlayer.play("menu-click");
+                    try {
+                        Desktop.getDesktop().open(new File(Configuration.getTracksPath()));
+                    } catch(IOException ex) {
+                        log.error("An error occurred trying to open song directory, message: {}", ex.getMessage(), ex);
+                    }
+                    return;
+                }
+
                 for(TrackButton t : trackButtons.values()) {
                     if(t.isHovered()) {
                         if(selectedButton.getId() == t.getId()) {
