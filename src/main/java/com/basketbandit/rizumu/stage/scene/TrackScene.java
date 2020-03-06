@@ -143,18 +143,6 @@ public class TrackScene extends Scene {
             g.setColor(Colours.DARK_GREY_75);
             g.fill(beatmapContainer);
 
-//            // extended registrar
-//            g.setColor(extendedRegistrar.getColor());
-//            g.fill(extendedRegistrar);
-//
-//            // registrarMx
-//            g.setColor(registrarNm.getColor());
-//            g.fill(registrarNm);
-//
-//            // registrarEx
-//            g.setColor(registrarEx.getColor());
-//            g.fill(registrarEx);
-
             // registrar
             g.setColor(registrarMx.getColor());
             g.fill(registrarMx);
@@ -234,14 +222,13 @@ public class TrackScene extends Scene {
             if(!Rizumu.secondaryRenderObjectIsNull()) {
                 return;
             }
+            audioPlayer.resume();
+            menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
 
             // update progress bar
             progressBar.width = (int) ((Configuration.getWidth()/100.0) * audioPlayer.getClipPosition());
 
-            menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
-
-            audioPlayer.resume();
-
+            // stuff related to opacity
             hitKeyFlashes.forEach(keyFlash -> {
                 if(!((TrackKeyAdapter) keyAdapter).isDown(keyFlash.getKey())) {
                     keyFlash.decrementOpacity();
@@ -249,18 +236,18 @@ public class TrackScene extends Scene {
             });
             accuracyLabel.decrementOpacity();
 
+            // translation
             notes.forEach(note -> note.translate(0, Configuration.getNoteSpeedScale())); // translate each note in positive y
 
-            // TODO: work on hit registration (something is off)
-            // single was hit (hit on time)
-            notes.removeIf(Note::hit);
-            notes.stream().filter(note -> !note.hit()).forEach(note -> {
-                if(note.getMinY() >= extendedRegistrar.getMinY() || (extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()) || ((note.getMaxY() >= registrarMx.getMaxY()+25) && !note.isHeld())) {
+            // TODO: work on hit registration (something is off) (single_long)
+            notes.forEach(note -> {
+                if(note.getMinY() >= extendedRegistrar.getMinY()) {
                     if(score.getCombo() >= 50) {
                         effectPlayer.play("track-combobreak");
                     }
                     score.incrementMissed();
                     accuracyLabel.setState("MISSED", Colours.CRIMSON);
+                    notes.remove(note);
                 }
             });
             notes.removeIf(note -> note.getMinY() >= extendedRegistrar.getMinY()); // single has passed the extended registrar ~kill zone (hit too late or not at all)
@@ -291,7 +278,6 @@ public class TrackScene extends Scene {
             notes.stream().filter(note -> note.getKey() == e.getKeyCode()).forEach(note -> {
                 if(!note.hit() && note.getNoteType().equals("single") && (registrarNm.intersects(note) || registrarEx.intersects(note) || registrarMx.intersects(note))) {
                     effectPlayer.play("track-hit");
-                    note.setHit();
 
                     if(registrarMx.intersects(note)) {
                         score.incrementMxHit();
@@ -303,6 +289,8 @@ public class TrackScene extends Scene {
                         score.incrementNmHit();
                         accuracyLabel.setState("NM", Colours.BLUE);
                     }
+
+                    notes.remove(note);
                 }
 
                 // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
@@ -346,9 +334,9 @@ public class TrackScene extends Scene {
             tickObject = new PauseMenuTicker();
             mouseAdapter = new PauseMenuMouseAdapter();
 
-            buttons.put("resumeButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75));
-            buttons.put("restartButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75));
-            buttons.put("quitButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
+            buttons.put("resumeButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75));
+            buttons.put("restartButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75));
+            buttons.put("quitButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75));
         }
 
         @Override
@@ -368,7 +356,7 @@ public class TrackScene extends Scene {
                 }
 
                 g.setColor(Colours.DARK_GREY_90);
-                g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
+                g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
 
                 g.setColor(Color.BLACK);
                 buttons.values().forEach(g::draw);

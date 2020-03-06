@@ -9,7 +9,7 @@ public class RegistrarEx extends Rectangle {
     private Color color = Colours.BLUE_25;
 
     public RegistrarEx() {
-        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYPosition() - 10, Configuration.getContentWidth(), Configuration.getDefaultNoteHeight() + 20);
+        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYFromBottom() - 10, Configuration.getWidth(), Configuration.getDefaultNoteHeight() + 20);
     }
 
     public Color getColor() {

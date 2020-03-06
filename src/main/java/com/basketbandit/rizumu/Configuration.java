@@ -1,35 +1,71 @@
 package com.basketbandit.rizumu;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class Configuration {
-    private static final int width = 1280; // pixels
-    private static final int height = 720; // pixels
-    private static int contentWidth = 0; // pixels
-    private static int contentHeight = 0; // pixels
+    private static final Logger log = LoggerFactory.getLogger(Configuration.class);
+
+    private static int width = 1280; // pixels
+    private static int height = 720; // pixels
+    private static double scale = width / 1280.0;;
+
     private static double tickRateNs = 1000000000.0 / 60.0; // nanoseconds
     private static double tickRateMs = tickRateNs / 1000000.0; // milliseconds
-    private static boolean unlockedFramerate = true;
-    private static String beatmapResourcePath = "D:/Program Files (x86)/Rizumu/songs";
+    private static boolean frameLock = false;
+
+    private static String userDirectory;
+    private static String beatmapResourcePath;
     private static float globalGain = -10.0f; // decibels
 
-    private static int defaultBeatmapXPosition = 250; // pixels
+    private static int defaultBeatmapXPosition = (int) (250 * scale); // pixels
     private static int defaultNoteWidth = 50; // pixels
     private static int defaultNoteHeight = 20; // pixels
-    private static int defaultRegistrarYPosition = 600; // pixels
+    private static int defaultRegistrarYFromBottom = height - 120; // pixels
     private static int noteGap = 3; // pixels
-
     private static int noteSpeedScale = 7; // default 3
 
     private static String username; // can logged in user be as simple as having this username set? (should we check login information on each score upload?)
 
     public Configuration() {
-    }
+        File file = new File(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Rizumu");
+        userDirectory = file.getPath();
+        if(!file.exists()) {
+            if(file.mkdirs() && new File(userDirectory + File.separator + "songs").mkdir()) {
+                log.info("Successfully created directory created at: " + userDirectory);
+            }
 
-    public static void setContentBounds(int width, int height) {
-        contentWidth = width;
-        contentHeight = height;
+            try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File(userDirectory + File.separator + "rizumu.ini").getAbsoluteFile()))) {
+                bw.write("width = 1280");
+                bw.newLine();
+                bw.write("height = 720");
+                bw.newLine();
+                bw.write("frame_lock = false");
+                bw.newLine();
+                bw.write("songs_directory = " + userDirectory + "/songs");
+            } catch(Exception ex) {
+                log.error("An error occurred during directory setup, message: {}", ex.getMessage(), ex);
+            }
+        }
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(new File(userDirectory + File.separator + "rizumu.ini")))) {
+            List<String> vals = reader.lines().map(s -> {s = s.substring(s.indexOf("=") + 1).strip(); return s;}).collect(Collectors.toList());
+            width = Integer.parseInt(vals.get(0));
+            height = Integer.parseInt(vals.get(1));
+            scale = width / 1280.0;
+            frameLock = Boolean.parseBoolean(vals.get(2));
+            beatmapResourcePath = vals.get(3);
+
+            log.info("Successfully read configuration file!");
+        } catch(Exception ex) {
+            log.error("An error occurred while reading configuration file, message: {}", ex.getMessage(), ex);
+        }
     }
 
     public static int getHeight() {
@@ -40,24 +76,12 @@ public class Configuration {
         return width;
     }
 
-    public static int getContentWidth() {
-        return contentWidth;
-    }
-
-    public static int getContentHeight() {
-        return contentHeight;
-    }
-
     public static double getTickRateNs() {
         return tickRateNs;
     }
 
     public static double getTickRateMs() {
         return tickRateMs;
-    }
-
-    public static void setNoteSpeedScale(int noteSpeed) {
-        noteSpeedScale = noteSpeed;
     }
 
     public static int getNoteSpeedScale() {
@@ -87,19 +111,19 @@ public class Configuration {
      * @return {@link Long}
      */
     public static long getTrackStartDelay() {
-        return new BigDecimal((new BigDecimal((defaultRegistrarYPosition + (defaultNoteHeight/2.0)) / noteSpeedScale).setScale(0,  RoundingMode.UP).doubleValue() / 60.0) * 1000).setScale(1, RoundingMode.UP).longValue();
+        return BigDecimal.valueOf((new BigDecimal((defaultRegistrarYFromBottom + (defaultNoteHeight / 2.0)) / noteSpeedScale).setScale(0, RoundingMode.UP).doubleValue() / 60.0) * 1000).setScale(1, RoundingMode.UP).longValue();
     }
 
-    public static int getDefaultRegistrarYPosition() {
-        return defaultRegistrarYPosition;
+    public static int getDefaultRegistrarYFromBottom() {
+        return defaultRegistrarYFromBottom;
     }
 
     public static void toggleUnlockedFramerate() {
-        unlockedFramerate = !unlockedFramerate;
+        frameLock = !frameLock;
     }
 
-    public static boolean isUnlockedFramerate() {
-        return unlockedFramerate;
+    public static boolean isFrameLock() {
+        return frameLock;
     }
 
     public static String getBeatmapResourcePath() {

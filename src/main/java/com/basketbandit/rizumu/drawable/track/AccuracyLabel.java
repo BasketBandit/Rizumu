@@ -11,7 +11,7 @@ public class AccuracyLabel extends Rectangle {
     String text = "";
 
     public AccuracyLabel() {
-        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYPosition() - 150, Configuration.getContentWidth(), 50);
+        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYFromBottom() - 150, Configuration.getWidth(), 50);
     }
 
     public AccuracyLabel setState(String text, Color color) {

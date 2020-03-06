@@ -25,7 +25,7 @@ public class SettingsScene extends Scene {
         keyAdapter = new SettingsKeyAdapter();
 
         buttons.put("frameRateButton", new Button(Configuration.getWidth() - 120, Configuration.getHeight() - 70, 100, 50));
-        buttons.put("menu", new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50));
+        buttons.put("menu", new Button(Configuration.getWidth() - 200, Configuration.getHeight() - 150, 100, 50));
     }
 
     @Override

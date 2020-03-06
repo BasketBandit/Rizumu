@@ -46,7 +46,7 @@ public class Engine extends Thread {
                 unprocessed--;
                 canRender = true;
             } else {
-                canRender = Configuration.isUnlockedFramerate(); // setting to true unlocked framerate but adds possibility for concurrent modification exceptions - need to fix this urgently
+                canRender = Configuration.isFrameLock(); // setting to true unlocked framerate but adds possibility for concurrent modification exceptions - need to fix this urgently
             }
 
             if(canRender) {
@@ -98,7 +98,7 @@ public class Engine extends Thread {
         this.primaryScene = scene;
         this.renderer.setPrimaryRenderObject(scene.getRenderObject());
         this.ticker.setPrimaryTickObject(scene.getTickObject());
-        log.info("primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+        log.info("Primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
     }
 
     public Scene getPrimaryScene() {
@@ -111,13 +111,13 @@ public class Engine extends Thread {
         if(scene != null) {
             this.renderer.setSecondaryRenderObject(scene.getRenderObject());
             this.ticker.setSecondaryTickObject(scene.getTickObject());
-            log.info("secondary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+            log.info("Secondary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
             return;
         }
 
         this.renderer.setSecondaryRenderObject(null);
         this.ticker.setSecondaryTickObject(null);
-        log.info("secondary render/tick objects removed");
+        log.info("Secondary render/tick objects removed.");
     }
 
     public Scene getSecondaryScene() {

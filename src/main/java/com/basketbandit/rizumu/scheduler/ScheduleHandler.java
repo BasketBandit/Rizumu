@@ -17,7 +17,7 @@ public class ScheduleHandler {
      * @param job {@link Job}
      */
     public static void registerJob(Job job) {
-        log.info("recurring job registered: " + job.toString() + ", delay: " + job.getDelay() + job.getUnit() + ", period: " + job.getPeriod());
+        log.info("Recurring job registered: " + job.toString() + ", delay: " + job.getDelay() + job.getUnit() + ", period: " + job.getPeriod());
         tasks.put(job, schedulerService.scheduleAtFixedRate(job, job.getDelay(), job.getPeriod(), job.getUnit()));
     }
 
@@ -26,7 +26,7 @@ public class ScheduleHandler {
      * @param job {@link Job}
      */
     public static void registerUniqueJob(Job job) {
-        log.info("unique job registered: " + job.toString() + ", delay: " + job.getDelay() + job.getUnit());
+        log.info("Unique job registered: " + job.toString() + ", delay: " + job.getDelay() + job.getUnit());
         tasks.put(job, schedulerService.schedule(job, job.getDelay(), job.getUnit()));
     }
 

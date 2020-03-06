@@ -8,7 +8,7 @@ public class DefaultBackgroundRenderObject implements RenderObject {
     @Override
     public void render(Graphics2D g) {
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
+        g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
     }
 }
 

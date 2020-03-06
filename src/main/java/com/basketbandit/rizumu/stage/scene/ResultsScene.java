@@ -25,7 +25,7 @@ public class ResultsScene extends Scene {
         tickObject = new ResultsTicker();
         mouseAdapter = new ResultsMouseAdapter();
 
-        buttons.put("menu", new Button(Configuration.getContentWidth() - 200, Configuration.getContentHeight() - 150, 100, 50));
+        buttons.put("menu", new Button(Configuration.getWidth() - 200, Configuration.getHeight() - 150, 100, 50));
     }
 
     @Override

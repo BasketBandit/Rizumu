@@ -25,8 +25,8 @@ public class Renderer extends Canvas {
 
     private void initFrame() {
         this.frame = new JFrame("Rizumu");
-        this.frame.getContentPane().setPreferredSize(new Dimension(1280, 720));
-        this.frame.setSize(1280, 720);
+        this.frame.getContentPane().setPreferredSize(new Dimension(Configuration.getWidth(), Configuration.getHeight()));
+        this.frame.setSize(Configuration.getWidth(), Configuration.getHeight());
         this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setResizable(false);
         this.frame.setFocusable(true);
@@ -48,8 +48,6 @@ public class Renderer extends Canvas {
         for(Integer key: focusKeys) {
             this.frame.setFocusTraversalKeys(key, Collections.EMPTY_SET);
         }
-
-        Configuration.setContentBounds(this.frame.getContentPane().getWidth(), this.frame.getContentPane().getHeight());
     }
 
     /**

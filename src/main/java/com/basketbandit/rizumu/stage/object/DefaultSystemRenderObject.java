@@ -14,12 +14,12 @@ public class DefaultSystemRenderObject implements RenderObject {
         g.setFont(Fonts.default12);
         g.setColor(Color.GRAY);
         String frames = Rizumu.engine.getFps() + " FPS" + (Rizumu.isDebug() ? " | " + Rizumu.engine.getTps() + " TPS" : "");
-        g.drawString(frames, Alignment.right(frames, g.getFontMetrics(Fonts.default12), 0, Configuration.getContentWidth()) - 10, 20);
+        g.drawString(frames, Alignment.right(frames, g.getFontMetrics(Fonts.default12), 0, Configuration.getWidth()) - 10, 20);
 
         if(Rizumu.isDebug()) {
-            g.fillRect(Configuration.getContentWidth()/2, 0, 2, Configuration.getContentHeight());
-            g.fillRect(0, Configuration.getContentHeight()/2, Configuration.getContentWidth(), 2);
-            g.fillRect(250, 0, 1, Configuration.getContentHeight());
+            g.fillRect(Configuration.getWidth()/2, 0, 2, Configuration.getHeight());
+            g.fillRect(0, Configuration.getHeight()/2, Configuration.getWidth(), 2);
+            g.fillRect(250, 0, 1, Configuration.getHeight());
 
             g.setFont(Fonts.default12);
             g.setColor(Color.RED);
@@ -28,10 +28,10 @@ public class DefaultSystemRenderObject implements RenderObject {
                             "TICKRATE " + Configuration.getTickRateNs() + " / " +
                             "WIDTH " + Configuration.getWidth() + " / " +
                             "HEIGHT " + Configuration.getHeight() + " / " +
-                            "CONTENT WIDTH " + Configuration.getContentWidth() + " / " +
-                            "CONTENT HEIGHT " + Configuration.getContentHeight() + " / " +
+                            "CONTENT WIDTH " + Configuration.getWidth() + " / " +
+                            "CONTENT HEIGHT " + Configuration.getHeight() + " / " +
                             "MOUSE-X " + MouseMovementAdapter.getX() + " / MOUSE-Y " + MouseMovementAdapter.getY(),
-                    10, Configuration.getContentHeight() - 10);
+                    10, Configuration.getHeight() - 10);
         }
     }
 }

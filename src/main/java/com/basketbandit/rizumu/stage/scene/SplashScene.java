@@ -70,7 +70,7 @@ public class SplashScene extends Scene {
     private class SplashRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
-            g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getContentWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getContentHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
+            g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
 
             buttons.values().forEach(b -> {
                 g.setColor(b.getColor());
@@ -137,10 +137,10 @@ public class SplashScene extends Scene {
             mouseAdapter = new LoginMenuMouseAdapter();
             keyAdapter = new LoginMenuKeyAdapter();
 
-            username = new TextLine((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) - 25, 400, 75, 10);
-            password = new TextLine((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 60, 400, 75, 10);
+            username = new TextLine((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75, 10);
+            password = new TextLine((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75, 10);
 
-            buttons.put("loginButton", new Button((Configuration.getContentWidth()/2) - 200, (Configuration.getContentHeight()/3) + 145, 400, 75));
+            buttons.put("loginButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75));
         }
 
         @Override
@@ -162,7 +162,7 @@ public class SplashScene extends Scene {
                 }
 
                 g.setColor(Colours.DARK_GREY_90);
-                g.fillRect(0, 0, Configuration.getContentWidth(), Configuration.getContentHeight());
+                g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
 
                 g.setColor(Color.BLACK);
                 buttons.values().forEach(g::draw);
@@ -214,7 +214,7 @@ public class SplashScene extends Scene {
                     if(buttons.get("loginButton").isHovered()) {
                         if(Database.login(username.getText(), password.getText())) {
                             Configuration.setUser(username.getText());
-                            log.info("successfully logged in as " + username.getText());
+                            log.info("Successfully logged in as: " + username.getText());
                         }
 
                         Rizumu.getPrimaryScene().init();

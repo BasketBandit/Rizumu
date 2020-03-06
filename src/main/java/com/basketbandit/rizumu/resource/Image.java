@@ -13,6 +13,7 @@ public class Image {
 
     public Image() {
         try {
+            images.put("no-song", ImageIO.read(getClass().getResourceAsStream("/assets/image/no-song.png")));
             images.put("logo", ImageIO.read(getClass().getResourceAsStream("/assets/image/logo.png")));
             images.put("note", ImageIO.read(getClass().getResourceAsStream("/assets/image/note.png")));
             images.put("noteb", ImageIO.read(getClass().getResourceAsStream("/assets/image/noteb.png")));

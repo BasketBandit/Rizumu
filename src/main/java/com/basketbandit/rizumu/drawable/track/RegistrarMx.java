@@ -9,7 +9,7 @@ public class RegistrarMx extends Rectangle {
     private Color color = Colours.MEDIUM_GREY;
 
     public RegistrarMx() {
-        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYPosition(), Configuration.getContentWidth(), Configuration.getDefaultNoteHeight());
+        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYFromBottom(), Configuration.getWidth(), Configuration.getDefaultNoteHeight());
     }
 
     public Color getColor() {

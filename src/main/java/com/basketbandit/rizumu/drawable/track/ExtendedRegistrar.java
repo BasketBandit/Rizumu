@@ -8,7 +8,7 @@ public class ExtendedRegistrar extends Rectangle {
     private Color color = new Color(100, 0,0, 50);
 
     public ExtendedRegistrar() {
-        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYPosition() + 45, Configuration.getContentWidth(), (Configuration.getHeight() - Configuration.getDefaultRegistrarYPosition()));
+        super(Configuration.getDefaultBeatmapXPosition(), Configuration.getDefaultRegistrarYFromBottom() + 45, Configuration.getWidth(), (Configuration.getHeight() - Configuration.getDefaultRegistrarYFromBottom()));
     }
 
     public Color getColor() {
