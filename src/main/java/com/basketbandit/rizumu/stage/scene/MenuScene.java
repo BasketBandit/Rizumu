@@ -76,7 +76,7 @@ public class MenuScene extends Scene {
         @Override
         public void render(Graphics2D g) {
             if(prevBackgroundImage != null && menuBackgroundOpacity < 1.0f) {
-                g.drawImage(prevBackgroundImage, null, null); // draw the previous background image to help achieve fade-in effect
+                g.drawImage(prevBackgroundImage, null, null); // draw the previous background image to help achieve fade-in effect (white flashes without this)
             }
 
             if(menuBackgroundImage != null) {
@@ -85,6 +85,7 @@ public class MenuScene extends Scene {
                 g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
             }
 
+            // draw if there are no parsed tracks
             if(trackButtons.size() == 0) {
                 g.drawImage(noSong, AffineTransform.getTranslateInstance(Configuration.getWidth()/2.0 - noSong.getWidth()/2.0, (Configuration.getHeight()/2.0) - (noSong.getHeight()/2.0)), null);
             }

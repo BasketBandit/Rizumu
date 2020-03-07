@@ -236,24 +236,35 @@ public class TrackScene extends Scene {
             });
             accuracyLabel.decrementOpacity();
 
-            // translation
-            notes.forEach(note -> note.translate(0, Configuration.getNoteSpeedScale())); // translate each note in positive y
-
-            // TODO: work on hit registration (something is off) (single_long)
             notes.forEach(note -> {
+                boolean missed = false;
+
+                // translate all of the notes in positive Y
+                note.translate(0, Configuration.getNoteSpeedScale());
+
+                // check single notes and the tails of single_long notes
                 if(note.getMinY() >= extendedRegistrar.getMinY()) {
+                    missed = true;
+                    notes.remove(note);
+                }
+
+                // using note.getMaxY() instead of note.getMinY() allows us to check the head of single_long...
+                // ...with only the addition of !note.isMissed() and !note.isHeld() which prevents erroneous misses every tick for the duration of the single_long
+                // This statement should never be reached by a single note and only single_long due to the previous statement.
+                if((note.getMaxY() - Configuration.getDefaultNoteHeight()) >= extendedRegistrar.getMinY() && !note.isHeld() && !note.isMissed() ) {
+                    missed = true;
+                    note.setMissed();
+                    note.setColor(Colours.DARK_GREY_50);
+                }
+
+                if(missed) {
                     if(score.getCombo() >= 50) {
                         effectPlayer.play("track-combobreak");
                     }
                     score.incrementMissed();
                     accuracyLabel.setState("MISSED", Colours.CRIMSON);
-                    notes.remove(note);
                 }
             });
-            notes.removeIf(note -> note.getMinY() >= extendedRegistrar.getMinY()); // single has passed the extended registrar ~kill zone (hit too late or not at all)
-            // TODO: rethink how single_long is processed for removal
-            //notes.removeIf(note -> extendedRegistrar.intersects(note) && ((TrackKeyAdapter) keyAdapter).isDown(note.getKey()) && !note.isHeld()); // single_long has passed the registrar for the length of a single and the single_long isn't being held (hit too late)
-            //notes.removeIf(note -> (note.getMaxY() >= registrar.getMaxY()+25) && !note.isHeld());
         }
     }
 
@@ -263,6 +274,10 @@ public class TrackScene extends Scene {
 
         @Override
         public void keyPressed(KeyEvent e) {
+            if(keys[e.getKeyCode()]) {
+                return; // acts as a lock to prevent holding keys and hitting notes
+            }
+
             keys[e.getKeyCode()] = true;
 
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -275,14 +290,19 @@ public class TrackScene extends Scene {
                 }
             }
 
-            notes.stream().filter(note -> note.getKey() == e.getKeyCode()).forEach(note -> {
-                if(!note.hit() && note.getNoteType().equals("single") && (registrarNm.intersects(note) || registrarEx.intersects(note) || registrarMx.intersects(note))) {
+            notes.stream().filter(note -> note.getKey() == e.getKeyCode() && !note.isHit()).forEach(note -> {
+                // create a rectangle which represents the head of a single_long OR just a regular single
+                Rectangle head = new Rectangle(note.x, (int) note.getMaxY() - Configuration.getDefaultNoteHeight(), note.width, Configuration.getDefaultNoteHeight());
+
+                if(registrarNm.intersects(head) || registrarEx.intersects(head) || registrarMx.intersects(head)) {
                     effectPlayer.play("track-hit");
 
-                    if(registrarMx.intersects(note)) {
+                    // decides the accuracy of the hit note, starts checking the most accurate first, since note height is larger than any individual accuracy zone...
+                    // ...which means that if the checks were in reverse, you would only hit NM and never EX, or MX.
+                    if(registrarMx.intersects(head)) {
                         score.incrementMxHit();
                         accuracyLabel.setState("MX", Colours.GOLD);
-                    } else if(registrarEx.intersects(note)) {
+                    } else if(registrarEx.intersects(head)) {
                         score.incrementExHit();
                         accuracyLabel.setState("EX", Color.GREEN);
                     } else {
@@ -290,21 +310,13 @@ public class TrackScene extends Scene {
                         accuracyLabel.setState("NM", Colours.BLUE);
                     }
 
-                    notes.remove(note);
-                }
-
-                // we use .getMinY() here because Y = 0 starts at the top left of the shape and extends downwards. (negative height to reverse this isn't possible)
-                // TODO: make missing single_long increase miss counter
-                if(note.getNoteType().equals("single_long") && registrarMx.intersects(note)) {
-                    if(keys[note.getKey()] && ((note.getMaxY() <= registrarMx.getMaxY() + 23) && !note.isHeld())) {
-                        note.setHeld();
-                    }
-                    if(!keys[note.getKey()] && note.isHeld()) {
+                    // don't remove the single_long if you miss the head, because it's fairly jarring to see a huge note just disappear.
+                    // Instead we grey it out and leave it alone until the tail reaches the extended registrar.
+                    if(note.getNoteType().equals("single")) {
+                        notes.remove(note);
+                    } else {
                         note.setHit();
-                    }
-                    if(keys[note.getKey()] && note.isHeld()) {
-                        effectPlayer.play("track-hit");
-                        score.incrementHit();
+                        note.setHeld();
                     }
                 }
             });
@@ -316,6 +328,35 @@ public class TrackScene extends Scene {
         @Override
         public void keyReleased(KeyEvent e) {
             keys[e.getKeyCode()] = false;
+
+            // process the release of single_long
+            notes.stream().filter(note -> note.getNoteType().equals("single_long") && note.getKey() == e.getKeyCode()).forEach(note -> {
+                // create a rectangle which represents the tail of a single_long.
+                Rectangle tail = new Rectangle(note.x, note.y, note.width, Configuration.getDefaultNoteHeight());
+
+                if(note.isHeld() && !note.isMissed()) {
+                    if((registrarNm.intersects(tail) || registrarEx.intersects(tail) || registrarMx.intersects(tail))) {
+                        effectPlayer.play("track-hit");
+
+                        if(registrarMx.intersects(tail)) {
+                            score.incrementMxHit();
+                            accuracyLabel.setState("MX", Colours.GOLD);
+                        } else if(registrarEx.intersects(tail)) {
+                            score.incrementExHit();
+                            accuracyLabel.setState("EX", Color.GREEN);
+                        } else {
+                            score.incrementNmHit();
+                            accuracyLabel.setState("NM", Colours.BLUE);
+                        }
+
+                        notes.remove(note);
+                    } else {
+                        // prevents releasing key on single_long notes and then re-pressing it at the end for a hit
+                        note.setMissed();
+                        note.setColor(Colours.DARK_GREY_50);
+                    }
+                }
+            });
         }
 
         public boolean isDown(int keyCode) {

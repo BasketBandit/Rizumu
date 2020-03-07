@@ -23,11 +23,13 @@ public class Note extends Rectangle {
     private String noteType = "";
     @JsonProperty("note_length")
     private int noteLength;
-    private boolean hit;
-    private boolean held;
     private int key;
-    private Image[] noteImage;
     private Color color;
+    private Image[] noteImage;
+
+    private boolean hit;
+    private boolean missed;
+    private boolean held;
 
     public Note() {
         super(0, -Configuration.getDefaultNoteHeight(), Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight());
@@ -70,20 +72,6 @@ public class Note extends Rectangle {
         this.color = color;
     }
 
-    public void setHit() {
-        this.hit = true;
-    }
-
-    public boolean hit() { return hit; }
-
-    public void setHeld() {
-        this.held = true;
-    }
-
-    public boolean isHeld() {
-        return held;
-    }
-
     public int getKey() {
         return key;
     }
@@ -106,5 +94,31 @@ public class Note extends Rectangle {
 
     public Image getBody() {
         return noteImage.length > 1 ? noteImage[1] : noteImage[0];
+    }
+
+    /**
+     * Usage of below methods primarily for single_long notes since single notes can be removed right away on hit.
+     */
+
+    public void setHit() {
+        this.hit = true;
+    }
+
+    public boolean isHit() { return hit; }
+
+    public void setMissed() {
+        this.missed = true;
+    }
+
+    public boolean isMissed() {
+        return missed;
+    }
+
+    public void setHeld() {
+        this.held = true;
+    }
+
+    public boolean isHeld() {
+        return held;
     }
 }
