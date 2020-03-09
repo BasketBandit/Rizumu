@@ -34,6 +34,6 @@ public class AccuracyLabel extends Rectangle {
     }
 
     public void decrementOpacity() {
-        textOpacity += (textOpacity > 0) ? (textOpacity < 0.075) ? -textOpacity : -0.075f : 0;
+        textOpacity += (textOpacity > 0) ? (textOpacity < 0.033) ? -textOpacity : -0.033f : 0;
     }
 }
