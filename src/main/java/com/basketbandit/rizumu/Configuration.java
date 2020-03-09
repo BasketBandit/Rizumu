@@ -32,6 +32,7 @@ public class Configuration {
     private static int noteSpeedScale = 7; // default 3
 
     private static String username; // can logged in user be as simple as having this username set? (should we check login information on each score upload?)
+    private static int userId = -1;
 
     public Configuration() {
         File file = new File(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "Rizumu");
@@ -137,6 +138,15 @@ public class Configuration {
 
     public static void setUser(String user) {
         username = user;
+    }
+
+    public static int setUserId(int userId) {
+        Configuration.userId = userId;
+        return userId;
+    }
+
+    public static int getUserId() {
+        return userId;
     }
 
     public static String getUser() {

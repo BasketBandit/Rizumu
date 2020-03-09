@@ -1,17 +1,31 @@
 package com.basketbandit.rizumu.score;
 
+import com.basketbandit.rizumu.beatmap.core.Beatmap;
+import com.basketbandit.rizumu.beatmap.core.Track;
+
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 public class Score {
-    private Image image;
+    private Track track;
+    private Beatmap beatmap;
+
     private int hitNotes = 0, missedNotes = 0, combo = 0, highestCombo = 0;
     private int mxHit = 0, exHit = 0, nmHit = 0;
     private int score = 0, multiplier = 1;
 
-    public Score(Image image) {
-        this.image = image;
+    public Score(Track track, Beatmap beatmap) {
+        this.track = track;
+        this.beatmap = beatmap;
+    }
+
+    public Track getTrack() {
+        return track;
+    }
+
+    public Beatmap getBeatmap() {
+        return beatmap;
     }
 
     public void incrementHit() {
@@ -95,6 +109,6 @@ public class Score {
     }
 
     public Image getImage() {
-        return image;
+        return track.getImage();
     }
 }

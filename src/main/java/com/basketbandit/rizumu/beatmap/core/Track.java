@@ -14,6 +14,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
+        "id",
         "name",
         "artist",
         "image_filename",
@@ -22,9 +23,8 @@ import java.util.List;
         "beatmaps"
 })
 public class Track {
-    private String filePath;
-    private String fileName;
-    private File file;
+    @JsonProperty("id")
+    private int id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("artist")
@@ -34,11 +34,15 @@ public class Track {
     private BufferedImage image;
     @JsonProperty("audio_filename")
     private String audioFilename;
-    private int trackLength; // seconds
     @JsonProperty("start_delay")
     private Integer startDelay;
     @JsonProperty("beatmaps")
     private List<Beatmap> beatmaps = null;
+
+    private String filePath;
+    private String fileName;
+    private File file;
+    private int trackLength; // seconds
 
     public Track setTrackInfo(String filePath, String fileName, File file) {
         this.filePath = filePath + "/"; // file.getParent() leaves out trailing slash
@@ -52,16 +56,9 @@ public class Track {
         return this;
     }
 
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public File getFile() {
-        return file;
+    @JsonProperty("id")
+    public int getId() {
+        return id;
     }
 
     @JsonProperty("name")
@@ -120,5 +117,17 @@ public class Track {
     @JsonProperty("beatmaps")
     public List<Beatmap> getBeatmaps() {
         return beatmaps;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public File getFile() {
+        return file;
     }
 }

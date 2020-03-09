@@ -113,6 +113,7 @@ public class SplashScene extends Scene {
 
                 if(Configuration.getUser() != null && buttons.get("logoutButton").isHovered()) {
                     Configuration.setUser(null);
+                    Configuration.setUserId(-1);
                     return;
                 }
 

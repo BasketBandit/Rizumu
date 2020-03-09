@@ -71,7 +71,7 @@ public class TrackScene extends Scene {
             this.track = (Track) object[0];
             this.beatmap = (Beatmap) object[1];
             this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
-            this.score = new Score(track.getImage());
+            this.score = new Score(track, beatmap);
 
             this.hitKeyFlashes = new ArrayList<>();
             for(int i = 0; i < beatmap.getKeys(); i++) {

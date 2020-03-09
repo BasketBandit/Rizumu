@@ -2,6 +2,7 @@ package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
@@ -19,6 +20,7 @@ import java.awt.event.MouseEvent;
 public class ResultsScene extends Scene {
     private Score score;
     private Image backgroundImage;
+    private boolean uploaded = false;
 
     public ResultsScene() {
         renderObject = new ResultsRenderer();
@@ -35,6 +37,9 @@ public class ResultsScene extends Scene {
 
         this.score = (Score) object[0];
         this.backgroundImage = score.getImage();
+        if(Configuration.getUserId() != -1) {
+            uploaded = Database.uploadScore(score);
+        }
         return this;
     }
 
@@ -45,6 +50,17 @@ public class ResultsScene extends Scene {
                 g.drawImage(backgroundImage, null, null);
                 g.setColor(Colours.DARK_GREY_75);
                 g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
+            }
+
+            g.setColor(Color.WHITE);
+            if(Configuration.getUserId() == -1) {
+                g.drawString("Login to submit scores!", 10, 20);
+            } else {
+                if(uploaded) {
+                    g.drawString("Score submitted successfully!", 10, 20);
+                } else {
+                    g.drawString("Score submission unsuccessful...", 10, 20);
+                }
             }
 
             g.setColor(Color.DARK_GRAY);
