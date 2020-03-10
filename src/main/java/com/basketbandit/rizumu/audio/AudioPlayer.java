@@ -1,23 +1,37 @@
 package com.basketbandit.rizumu.audio;
 
 import com.basketbandit.rizumu.resource.Sound;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.sampled.*;
 import java.io.File;
 
 public class AudioPlayer {
     private static final Logger log = LoggerFactory.getLogger(AudioPlayer.class);
+    private MediaPlayer player;
     private String path;
-    private Clip clip;
-    private long currentFrame;
-    private String status = "stopped";
-    private FloatControl gainControl;
-    private float gain = 0.0f;
+    private Media media;
+    private float volume = 0.0f;
 
-    public AudioPlayer(float gain) {
-        this.gain = gain;
+    public AudioPlayer(float volume) {
+        this.volume = volume;
+    }
+
+    public void changeTrack(String path) {
+        this.path = path;
+        player = new MediaPlayer(new Media(new File(path).toURI().toString()));
+        player.setVolume(volume);
+        player.setOnEndOfMedia(player::dispose);
+        log.info("Track changed: " + path + ", volume: " + volume + ".");
+    }
+
+    public void changeTrack(Media media) {
+        player = new MediaPlayer(media);
+        player.setVolume(volume);
+        player.setOnEndOfMedia(player::dispose);
+        log.info("Track changed: " + media.getSource() + ", volume: " + volume);
     }
 
     public void hotChangeTrack(String path) {
@@ -26,109 +40,49 @@ public class AudioPlayer {
         play();
     }
 
-    public void changeTrack(String path) {
-        try {
-            this.path = path;
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(path).getAbsoluteFile());
-            clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            gainControl.setValue(gain);
-            log.info("Track changed: " + path + ", level: " + clip.getLevel() + ", length: " + clip.getMicrosecondLength()/1000000 + " seconds.");
-        } catch(Exception ex) {
-            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
-        }
-    }
-
     public void play() {
-        clip.start();
-        status = "playing";
+        player.setOnReady(() -> player.play());
     }
 
     public void play(String identifier) {
         try {
-            Clip audioClip = AudioSystem.getClip(); // get clip
-            audioClip.open(Sound.getAudioInputStream(identifier)); // open clip
-            ((FloatControl) audioClip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(gain); // set gain
-            audioClip.addLineListener(event -> {
-                if(event.getType().equals(LineEvent.Type.STOP)) {
-                    event.getLine().close(); // close clip on end
-                }
+            MediaPlayer tempPlayer = new MediaPlayer(Sound.getMedia(identifier));
+            tempPlayer.setOnReady(() -> {
+                tempPlayer.setVolume(volume);
+                tempPlayer.play();
             });
-            audioClip.start(); // start clip
+            tempPlayer.setOnEndOfMedia(tempPlayer::dispose);
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
     }
 
     public void pause() {
-        if(status.equals("paused") || status.equals("stopped")) {
-            return;
-        }
-        status = "paused";
-        currentFrame = clip.getMicrosecondPosition();
-        clip.stop();
+        player.pause();
     }
 
     public void resume() {
-        if(status.equals("playing") || status.equals("stopped")) {
-            return;
-        }
-        status = "playing";
-        clip.close();
-        changeTrack(path);
-        clip.setMicrosecondPosition(currentFrame);
-        play();
+        player.play();
     }
 
     public void stop() {
-        if(status.equals("stopped")) {
-            return;
-        }
-        status = "stopped";
-        currentFrame = 0L;
-        clip.stop();
-        clip.close();
+        player.stop();
     }
 
-    public void loop(int type) {
-        clip.loop(type);
+    public float getVolume() {
+        return volume;
     }
 
-    public float getMasterGain() {
-        return gain;
-    }
-
-    public void setMasterGain(float gain) {
-        this.gain = gain;
-    }
-
-    public float getGain() {
-        return gainControl.getValue();
-    }
-
-    public void setGain(float gain) {
-        gainControl.setValue(gain);
+    public void setVolume(float volume) {
+        this.volume = volume;
     }
 
     /**
-     * Position of currently playing clip as a percentage.
+     * Position of currently playing media as a percentage.
      * @return {@link Integer}
      */
-    public double getClipPosition() {
-        return clip.getMicrosecondPosition() != 0 ? (((clip.getMicrosecondPosition()+.0) / (clip.getMicrosecondLength()+.0)) * 100) : 0.0;
-    }
-
-    /**
-     * Utility Functions
-     */
-    public static int getTrackLength(String p) {
-        try(AudioInputStream in = AudioSystem.getAudioInputStream(new File(p).getAbsoluteFile())) {
-            Clip c = AudioSystem.getClip();
-            c.open(in);
-            return (int) (c.getMicrosecondLength() / 1000000);
-        } catch(Exception ex) {
-            return 0;
-        }
+    public double getMediaPosition() {
+        System.out.println(player.getCurrentTime().toMillis() + " : " + player.getTotalDuration().toMillis());
+        return player.getCurrentTime().toMillis() != 0 ? (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis()) * 100 : 0.0;
     }
 }

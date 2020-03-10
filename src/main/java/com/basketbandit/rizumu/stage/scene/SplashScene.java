@@ -61,8 +61,7 @@ public class SplashScene extends Scene {
         KeyAdapters.setKeyAdapter("splash", null);
 
         if(Rizumu.getSecondaryScene() == null) {
-            audioPlayer.changeTrack(Sound.getAudioFile("menu-music").getAbsolutePath());
-            audioPlayer.loop(-1);
+            audioPlayer.changeTrack(Sound.getMedia("menu-music"));
             audioPlayer.play();
         }
         return this;

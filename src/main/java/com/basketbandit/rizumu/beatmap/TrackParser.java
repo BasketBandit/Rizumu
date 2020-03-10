@@ -1,6 +1,5 @@
 package com.basketbandit.rizumu.beatmap;
 
-import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -48,7 +47,7 @@ public class TrackParser {
     public Track parseTrack(File file) {
         try {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(file), Track.class);
-            track.setTrackInfo(file.getParent(), file.getName(), file).setTrackLength(AudioPlayer.getTrackLength(track.getAudioFilePath()));
+            track.setTrackInfo(file.getParent(), file.getName(), file);
 
             // all of this to determine the length of the track...
             AtomicInteger a = new AtomicInteger();

@@ -221,11 +221,10 @@ public class TrackScene extends Scene {
                 return;
             }
 
-            audioPlayer.resume();
             menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
 
             // update progress bar
-            progressBar.width = (int) ((Configuration.getWidth()/100.0) * audioPlayer.getClipPosition());
+            progressBar.width = (int) ((Configuration.getWidth()/100.0) * audioPlayer.getMediaPosition());
 
             // stuff related to opacity
             hitKeyFlashes.forEach(keyFlash -> {
