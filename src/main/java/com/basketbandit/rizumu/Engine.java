@@ -46,7 +46,7 @@ public class Engine extends Thread {
                 unprocessed--;
                 canRender = true;
             } else {
-                canRender = Configuration.isFrameLock(); // setting to true unlocked framerate but adds possibility for concurrent modification exceptions - need to fix this urgently
+                canRender = Configuration.isFrameLock();
             }
 
             if(canRender) {

@@ -13,6 +13,7 @@ import com.basketbandit.rizumu.drawable.track.*;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
+import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -38,11 +39,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class TrackScene extends Scene {
     private PauseMenu pauseMenu = new PauseMenu();
 
-    private Score score;
-
     protected Track track;
     protected Beatmap beatmap;
-    private CopyOnWriteArrayList<Note> notes;
+    private CopyOnWriteArrayList<Note> notes = new CopyOnWriteArrayList<>();
+    private Score score;
 
     private Container progressBar = new Container(0, 0, 0, 50).setColor(Colours.BLUE_50);
     private List<KeyFlash> hitKeyFlashes;
@@ -70,8 +70,8 @@ public class TrackScene extends Scene {
         if(object.length > 0) {
             this.track = (Track) object[0];
             this.beatmap = (Beatmap) object[1];
-            this.notes = new CopyOnWriteArrayList<>(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
             this.score = new Score(track, beatmap);
+            this.notes = new NoteParser(beatmap).parseNotes(); // Use this type of ArrayList to overcome concurrent modification exceptions. (it's costly, is this method suitable)
 
             this.hitKeyFlashes = new ArrayList<>();
             for(int i = 0; i < beatmap.getKeys(); i++) {
@@ -90,6 +90,7 @@ public class TrackScene extends Scene {
             ((TrackRenderer) renderObject).titleBar = new Container(0, 0, Configuration.getWidth(), 50);
 
             ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
+            ScheduleHandler.registerUniqueJob(new BeatmapEndJob(this, track.getTrackLength()*1000));
         }
 
         return this;
@@ -97,10 +98,6 @@ public class TrackScene extends Scene {
 
     public Score getScore() {
         return score;
-    }
-
-    public List<Note> getNotes() {
-        return notes;
     }
 
     public AudioPlayer getAudioPlayer() {
@@ -212,6 +209,7 @@ public class TrackScene extends Scene {
                 g.setColor(Color.WHITE);
                 g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);  // truncates timer to 3dp
             }
+
         }
     }
 
@@ -222,6 +220,7 @@ public class TrackScene extends Scene {
             if(!Rizumu.secondaryRenderObjectIsNull()) {
                 return;
             }
+
             audioPlayer.resume();
             menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
 

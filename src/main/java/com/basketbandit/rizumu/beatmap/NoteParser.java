@@ -5,9 +5,6 @@ import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Segment;
 import com.basketbandit.rizumu.resource.Image;
-import com.basketbandit.rizumu.scheduler.ScheduleHandler;
-import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
-import com.basketbandit.rizumu.stage.scene.TrackScene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,19 +12,19 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NoteParser {
     private static final Logger log = LoggerFactory.getLogger(NoteParser.class);
-    private TrackScene scene;
+
     private Beatmap beatmap;
 
-    public NoteParser(TrackScene scene, Beatmap beatmap) {
-        this.scene = scene;
+    public NoteParser(Beatmap beatmap) {
         this.beatmap = beatmap;
-        parseNotes();
     }
 
-    private void parseNotes() {
+    public CopyOnWriteArrayList<Note> parseNotes() {
+        CopyOnWriteArrayList<Note> notes = new CopyOnWriteArrayList<>();
         List<Segment> segments = beatmap.getSegments();
         int noteGap = Configuration.getNoteGap();
         int loadOffset = 0; // Counter for overall segment length, used to help time the next segment
@@ -35,13 +32,12 @@ public class NoteParser {
         java.awt.Image notebImage =  Image.getBufferedImage("noteb").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
 
         for(Segment segment: segments) {
-            List<Note> notes = segment.getNotes();
-            for(Note note: notes) {
+            for(Note note: segment.getNotes()) {
                 note.setTime(loadOffset + note.getTime()); // set the relative segment note time to absolute beatmap time
 
                 int noteXPosition = Configuration.getDefaultBeatmapXPosition() + noteGap*2 + 1; // formula w/o noteGap - (Configuration.getContentWidth()/2) - (50*beatmap.getKeys()/2)
-                int noteYPosition = new BigDecimal((note.getTime() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.DOWN).intValue(); // calculate the position of the note
-                int noteHeight = new BigDecimal((note.getNoteLength() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.DOWN).intValue(); // calculate the height of the note
+                int noteYPosition = BigDecimal.valueOf((note.getTime() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.DOWN).intValue(); // calculate the position of the note
+                int noteHeight = BigDecimal.valueOf((note.getNoteLength() / Configuration.getTickRateMs()) * Configuration.getNoteSpeedScale()).setScale(0, RoundingMode.DOWN).intValue(); // calculate the height of the note
 
                 // deal with Osu transferred keyNums -- floor(x * columnCount / 512)
                 if(note.getKeyNum() > 9) {
@@ -89,12 +85,12 @@ public class NoteParser {
                     note.initImages(noteImage);
                 }
 
-                scene.getNotes().add(note);
+                notes.add(note);
             }
             loadOffset += segment.getLength();
         }
 
-        ScheduleHandler.registerUniqueJob(new BeatmapEndJob(scene, scene.getTrack().getTrackLength()*1000));
+        return notes;
     }
 
     public static int getKey(int num) {
