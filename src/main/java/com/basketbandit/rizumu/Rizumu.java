@@ -8,6 +8,8 @@ import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +18,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
 import java.util.HashMap;
 
-public class Rizumu {
+public class Rizumu extends Application {
     private static final Logger log = LoggerFactory.getLogger(Rizumu.class);
     private static boolean debug;
     public static Engine engine = new Engine();
@@ -44,9 +46,6 @@ public class Rizumu {
             log.error("An error occurred while running the {} class, message: {}", Connection.class.getSimpleName(), ex.getMessage(), ex);
         }
 
-        // loads and parses beatmaps
-        trackParser = new TrackParser(Configuration.getTracksPath());
-
         // initialises AudioPlayerController
         new AudioPlayerController();
 
@@ -58,12 +57,22 @@ public class Rizumu {
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
         staticScenes.put(Scenes.SETTINGS, new SettingsScene());
-        staticScenes.put(Scenes.MENU, new MenuScene());
-        staticScenes.put(Scenes.TRACK, new TrackScene());
         staticScenes.put(Scenes.RESULTS, new ResultsScene());
 
+        // start the engine early so TrackParser doesn't
         engine.setPrimaryScene(getStaticScene(Scenes.SPLASH).init());
         engine.start();
+
+        // loads and parses beatmaps
+        trackParser = new TrackParser(Configuration.getTracksPath());
+
+        // these scenes require track parser to finish
+        staticScenes.put(Scenes.MENU, new MenuScene());
+        staticScenes.put(Scenes.TRACK, new TrackScene());
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
     }
 
     public static boolean isDebug() {

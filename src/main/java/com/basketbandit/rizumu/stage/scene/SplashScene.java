@@ -2,6 +2,7 @@ package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.TextLine;
@@ -72,12 +73,19 @@ public class SplashScene extends Scene {
         public void render(Graphics2D g) {
             g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
 
+            g.setFont(Fonts.default24);
+            g.setColor(Color.BLACK);
+            if(!TrackParser.isFinished()) {
+                g.drawString("Loading tracks...", Alignment.center("Loading tracks...", g.getFontMetrics(Fonts.default24), 0, Configuration.getWidth()), (float) (Configuration.getHeight()/2.0 + 150));
+            }
+
             buttons.values().forEach(b -> {
                 g.setColor(b.getColor());
                 g.fill(b);
             });
 
             g.setColor(Color.WHITE);
+            g.setFont(Fonts.default12);
             if(Configuration.getUser() == null) {
                 g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), buttons.get("loginButton").y + buttons.get("loginButton").height/2 + 4);
             } else {
@@ -117,9 +125,12 @@ public class SplashScene extends Scene {
                     return;
                 }
 
-                effectPlayer.play("menu-select2");
-                audioPlayer.stop();
-                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+                // prevent access to menu before tracks are parsed
+                if(TrackParser.isFinished()) {
+                    effectPlayer.play("menu-select2");
+                    audioPlayer.stop();
+                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+                }
             }
         }
     }

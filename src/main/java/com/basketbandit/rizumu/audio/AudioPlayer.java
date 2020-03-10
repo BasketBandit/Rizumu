@@ -20,15 +20,15 @@ public class AudioPlayer {
         this.gain = gain;
     }
 
-    public void hotChangeTrack(String inPath) {
+    public void hotChangeTrack(String path) {
         stop();
-        changeTrack(inPath);
+        changeTrack(path);
         play();
     }
 
-    public void changeTrack(String inPath) {
+    public void changeTrack(String path) {
         try {
-            path = inPath;
+            this.path = path;
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(path).getAbsoluteFile());
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);

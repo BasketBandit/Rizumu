@@ -70,7 +70,6 @@ public class MenuScene extends Scene {
             selectedLeaderboard = Database.getScores(selectedButton.getTrack(), selectedButton.getBeatmap());
             menuBackgroundImage = selectedButton.getTrack().getImage();
             audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
-            audioPlayer.loop(-1);
         }
         return this;
     }

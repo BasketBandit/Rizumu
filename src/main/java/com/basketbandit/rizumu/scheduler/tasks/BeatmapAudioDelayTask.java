@@ -17,7 +17,6 @@ public class BeatmapAudioDelayTask implements Task {
     @Override
     public void run() {
         audioPlayer.changeTrack(track.getAudioFilePath());
-        audioPlayer.loop(0);
         audioPlayer.play();
     }
 }
