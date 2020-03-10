@@ -4,12 +4,14 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.Rizumu;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
+import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
@@ -23,6 +25,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,6 +37,7 @@ public class MenuScene extends Scene {
     private BufferedImage menuBackgroundImage;
     private float menuBackgroundOpacity;
     private TrackButton selectedButton;
+    private ArrayList<Score> selectedLeaderboard = new ArrayList<>();
 
     public MenuScene() {
         renderObject = new MenuRenderer();
@@ -63,6 +67,7 @@ public class MenuScene extends Scene {
         // select middle track (5)
         if(trackButtons.size() > 0) {
             selectedButton = trackButtons.get(5);
+            selectedLeaderboard = Database.getScores(selectedButton.getTrack(), selectedButton.getBeatmap());
             menuBackgroundImage = selectedButton.getTrack().getImage();
             audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
             audioPlayer.loop(-1);
@@ -111,13 +116,21 @@ public class MenuScene extends Scene {
                 g.drawString(t.getButtonText(), center[0], center[1]); // track title/artist
                 g.drawString(t.getBeatmap().getName(), Alignment.right(t.getBeatmap().getName(), metrics, t.x, t.width) - 10, (int) t.getMinY() + 20); // beatmap difficulty
                 g.drawString(t.getBeatmap().getKeys() + "K", Alignment.right(t.getBeatmap().getKeys() + "K", metrics, t.x, t.width) - 10, (int) t.getMaxY() - 10); // key count
+                g.drawString(t.getTrack().getFormattedTrackLength() + "", 10, (int) t.getMaxY() - 10); // track length
             }
 
             if(selectedButton != null) {
-                g.setColor(Colours.DARK_GREY_75);
-                g.fillRect(Configuration.getWidth() - 200, 50, 200, 35);
-                g.setColor(Color.WHITE);
-                g.drawString(selectedButton.getTrack().getFormattedTrackLength() + "", Alignment.right(selectedButton.getTrack().getFormattedTrackLength() + "", metrics, 0, Configuration.getWidth()) - 10, 70); // track length
+                int i = 0;
+                for(Score score: selectedLeaderboard) {
+                    g.setColor(Colours.DARK_GREY_75);
+                    g.fillRect(Configuration.getWidth() - 400, 75 + 76*i, 400, 75);
+                    g.setColor(Color.WHITE);
+                    g.setFont(Fonts.default12);
+                    g.drawString(score.getUsername(), Configuration.getWidth() - 390, 95 + 76*i);
+                    g.setFont(Fonts.default24);
+                    g.drawString(score.getScore() + " (x" + score.getHighestCombo() + ")", Configuration.getWidth() - 390, 135 + 76*i);
+                    i++;
+                }
             }
         }
     }
@@ -159,6 +172,7 @@ public class MenuScene extends Scene {
                             effectPlayer.play("menu-click");
                             audioPlayer.hotChangeTrack(t.getTrack().getAudioFilePath());
                             selectedButton = t;
+                            selectedLeaderboard = Database.getScores(t.getTrack(), t.getBeatmap());
                             menuBackgroundOpacity = 0.05f;
                             prevBackgroundImage = menuBackgroundImage;
                             menuBackgroundImage = t.getTrack().getImage();

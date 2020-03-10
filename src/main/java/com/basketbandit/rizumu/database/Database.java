@@ -1,6 +1,8 @@
 package com.basketbandit.rizumu.database;
 
 import com.basketbandit.rizumu.Configuration;
+import com.basketbandit.rizumu.beatmap.core.Beatmap;
+import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.score.Score;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 public class Database {
     private static final Logger log = LoggerFactory.getLogger(Database.class);
@@ -34,13 +37,43 @@ public class Database {
             }
 
             return false;
-
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", Database.class.getSimpleName(), ex.getMessage(), ex);
             return false;
         }
     }
 
+    /**
+     * Retrieves the username corresponding to the input id
+     * @param id {@link Integer}
+     * @return {@link String}
+     */
+    private static String getUsername(int id) {
+        try(java.sql.Connection c = Connection.getConnection();
+            PreparedStatement ps = c.prepareStatement("SELECT `username` FROM `user` WHERE id = ?")) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if(!rs.next()) {
+                return null;
+            }
+
+            return rs.getString("username");
+
+        } catch(Exception ex) {
+            log.error("An error occurred while running the {} class, message: {}", Database.class.getSimpleName(), ex.getMessage(), ex);
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves a beatmap id using the set key {track_id, name, keys}
+     * @param trackId {@link Integer}
+     * @param name {@link String}
+     * @param keys {@link Integer}
+     * @return {@link Integer}
+     */
     private static int getBeatmapId(int trackId, String name, int keys) {
         try(java.sql.Connection c = Connection.getConnection();
             PreparedStatement ps = c.prepareStatement("SELECT `id` FROM `beatmap` WHERE track_id = ? AND title = ? AND key_count = ?")) {
@@ -62,6 +95,38 @@ public class Database {
         }
     }
 
+    /**
+     * Retrieves the top 5 scores for a given beatmap
+     * @param track {@link Track}
+     * @param beatmap {@link Beatmap}
+     * @return {@link ArrayList<Score>}
+     */
+    public static ArrayList<Score> getScores(Track track, Beatmap beatmap) {
+        try(java.sql.Connection c = Connection.getConnection();
+            PreparedStatement ps = c.prepareStatement("SELECT score.*, user.username FROM `score` INNER JOIN user ON score.user_id = user.id WHERE track_id = ? AND beatmap_id = ? ORDER BY `score` DESC LIMIT 5")) {
+
+            ps.setInt(1, track.getId());
+            ps.setInt(2, getBeatmapId(track.getId(), beatmap.getName(), beatmap.getKeys()));
+            ResultSet rs = ps.executeQuery();
+
+            ArrayList<Score> scores = new ArrayList<>();
+            while(rs.next()) {
+                scores.add(new Score(track, beatmap, rs.getString("username"), rs.getInt("score"), rs.getInt("max_combo")));
+            }
+
+            return scores;
+
+        } catch(Exception ex) {
+            log.error("An error occurred while running the {} class, message: {}", Database.class.getSimpleName(), ex.getMessage(), ex);
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * Uploads a score generated form playing a {@link Beatmap}
+     * @param score {@link Score}
+     * @return boolean
+     */
     public static boolean uploadScore(Score score) {
         try(java.sql.Connection c = Connection.getConnection();
             PreparedStatement ps = c.prepareStatement("INSERT INTO `score` (user_id, track_id, beatmap_id, score, max_combo, mx_hits, ex_hits, nm_hits, misses) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")) {

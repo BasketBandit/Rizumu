@@ -1,5 +1,6 @@
 package com.basketbandit.rizumu.score;
 
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
 
@@ -10,6 +11,8 @@ import java.math.RoundingMode;
 public class Score {
     private Track track;
     private Beatmap beatmap;
+    private String username = Configuration.getUser();
+    private int userId = Configuration.getUserId();
 
     private int hitNotes = 0, missedNotes = 0, combo = 0, highestCombo = 0;
     private int mxHit = 0, exHit = 0, nmHit = 0;
@@ -20,12 +23,29 @@ public class Score {
         this.beatmap = beatmap;
     }
 
+    public Score(Track track, Beatmap beatmap, String username, int score, int highestCombo) {
+        this.track = track;
+        this.beatmap = beatmap;
+        this.username = username;
+        this.userId = -1;
+        this.score = score;
+        this.highestCombo = highestCombo;
+    }
+
     public Track getTrack() {
         return track;
     }
 
     public Beatmap getBeatmap() {
         return beatmap;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public void incrementHit() {
