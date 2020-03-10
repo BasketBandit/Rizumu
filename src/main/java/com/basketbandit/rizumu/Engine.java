@@ -46,7 +46,7 @@ public class Engine extends Thread {
                 unprocessed--;
                 canRender = true;
             } else {
-                canRender = Configuration.isFrameLock();
+                canRender = Configuration.isFrameUnlocked();
             }
 
             if(canRender) {

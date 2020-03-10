@@ -14,7 +14,7 @@ public class Configuration {
 
     private static int width = 1280; // pixels
     private static int height = 720; // pixels
-    private static double scale = width / 1280.0;;
+    private static double scale = width / 1280.0;
 
     private static double tickRateNs = 1000000000.0 / 60.0; // nanoseconds
     private static double tickRateMs = tickRateNs / 1000000.0; // milliseconds
@@ -47,7 +47,7 @@ public class Configuration {
                 bw.newLine();
                 bw.write("height = 720");
                 bw.newLine();
-                bw.write("frame_lock = false");
+                bw.write("frame_unlocked = false");
                 bw.newLine();
                 bw.write("songs_directory = " + userDirectory + File.separator + "tracks");
             } catch(Exception ex) {
@@ -124,7 +124,7 @@ public class Configuration {
         frameLock = !frameLock;
     }
 
-    public static boolean isFrameLock() {
+    public static boolean isFrameUnlocked() {
         return frameLock;
     }
 

@@ -115,5 +115,4 @@ public class Renderer extends Canvas {
         g.dispose();
         bs.show();
     }
-
 }
