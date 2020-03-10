@@ -11,16 +11,13 @@ import java.io.File;
 public class AudioPlayer {
     private static final Logger log = LoggerFactory.getLogger(AudioPlayer.class);
     private MediaPlayer player;
-    private String path;
-    private Media media;
-    private float volume = 0.0f;
+    private float volume;
 
     public AudioPlayer(float volume) {
         this.volume = volume;
     }
 
     public void changeTrack(String path) {
-        this.path = path;
         player = new MediaPlayer(new Media(new File(path).toURI().toString()));
         player.setVolume(volume);
         player.setOnEndOfMedia(player::dispose);
