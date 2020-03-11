@@ -25,7 +25,6 @@ public class SettingsScene extends Scene {
         keyAdapter = new SettingsKeyAdapter();
 
         buttons.put("frameRateButton", new Button(Configuration.getWidth() - 120, Configuration.getHeight() - 70, 100, 50));
-        buttons.put("menu", new Button(Configuration.getWidth() - 200, Configuration.getHeight() - 150, 100, 50));
     }
 
     @Override
@@ -43,13 +42,11 @@ public class SettingsScene extends Scene {
             g.setFont(Fonts.default12);
 
             g.setColor(Color.DARK_GRAY);
-            g.fill(buttons.get("menu"));
             g.fill(buttons.get("frameRateButton"));
             //g.fill(buttons.get("volumeUpButton"));
             //g.fill(buttons.get("volumeDownButton"));
 
             g.setColor(Color.WHITE);
-            g.drawString("Menu", (int)buttons.get("menu").getMinX(), (int)buttons.get("menu").getCenterY());
             g.drawString("Cap Framerate", (int)buttons.get("frameRateButton").getMinX()+12, (int)buttons.get("frameRateButton").getCenterY()+2);
             //g.drawString("Vol +0.1db", (int)buttons.get("volumeUpButton").getMinX(), (int)buttons.get("volumeUpButton").getCenterY());
             //g.drawString("Vol -0.1db", (int)buttons.get("volumeDownButton").getMinX(), (int)buttons.get("volumeDownButton").getCenterY());
@@ -66,11 +63,6 @@ public class SettingsScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                if(buttons.get("menu").isHovered()) {
-                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
-                    return;
-                }
-
                 if(buttons.get("frameRateButton").isHovered()) {
                     effectPlayer.play("menu-click");
                     Configuration.toggleUnlockedFramerate();

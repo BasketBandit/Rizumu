@@ -19,6 +19,7 @@ public class Image {
             images.put("noteb", ImageIO.read(getClass().getResourceAsStream("/assets/image/noteb.png")));
             images.put("hitflash-body", ImageIO.read(getClass().getResourceAsStream("/assets/image/hitflash-body.png")));
             images.put("settings-icon", ImageIO.read(getClass().getResourceAsStream("/assets/image/settings.png")));
+            images.put("splash-background", ImageIO.read(getClass().getResourceAsStream("/assets/image/splash-background.jpg")));
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", Image.class.getSimpleName(), ex.getMessage(), ex);
         }

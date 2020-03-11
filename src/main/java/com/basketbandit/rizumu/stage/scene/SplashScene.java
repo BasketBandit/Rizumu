@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 public class SplashScene extends Scene {
     private LoginMenu loginMenu = new LoginMenu();
     private BufferedImage logo;
+    private java.awt.Image background;
     private java.awt.Image settingsIcon;
     private float x = 0;
 
@@ -50,6 +51,8 @@ public class SplashScene extends Scene {
             logo = new BufferedImage(masterLogo.getWidth()/2, masterLogo.getHeight()/2, BufferedImage.TYPE_INT_ARGB);
             logo = new AffineTransformOp(new AffineTransformEx().inlineScale(.5, .5), AffineTransformOp.TYPE_BILINEAR).filter(masterLogo, logo);
             settingsIcon = Image.getBufferedImage("settings-icon").getScaledInstance(50, 50, 0);
+
+            background = Image.getBufferedImage("splash-background").getScaledInstance(Configuration.getWidth(), Configuration.getHeight(), 0);
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
@@ -70,6 +73,9 @@ public class SplashScene extends Scene {
     private class SplashRenderer implements RenderObject {
         @Override
         public void render(Graphics2D g) {
+            g.drawImage(background, null, null);
+            g.setColor(Colours.WHITE_20);
+            g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
             g.drawRenderedImage(logo, AffineTransform.getTranslateInstance(Configuration.getWidth()/2.0 - logo.getWidth()/2.0, (Configuration.getHeight()/2.0) - (logo.getHeight()/2.0) + Math.sin(x)*3));
 
             g.setFont(Fonts.default24);
