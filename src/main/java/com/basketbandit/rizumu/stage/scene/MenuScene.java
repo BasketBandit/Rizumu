@@ -132,7 +132,7 @@ public class MenuScene extends Scene {
                     g.setColor(Color.WHITE);
                     g.setFont(Fonts.default12);
                     g.drawString(score.getUsername(), Configuration.getWidth() - 390, 92 + 76*i);
-                    g.drawString("MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76*i);
+                    g.drawString(score.getAccuracyString() + ", MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76*i);
                     g.setFont(Fonts.default24);
                     g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 120 + 76*i);
                     i++;

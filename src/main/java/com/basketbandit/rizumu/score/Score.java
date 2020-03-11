@@ -128,7 +128,7 @@ public class Score {
     }
 
     public String getAccuracyString() {
-        return "Accuracy: " + getAccuracy() + "% (" + getHitNotes() + "/" + (getHitNotes()+missedNotes) + ")";
+        return getAccuracy() + "% (" + getHitNotes() + "/" + (getHitNotes()+missedNotes) + ")";
     }
 
     public Image getImage() {
