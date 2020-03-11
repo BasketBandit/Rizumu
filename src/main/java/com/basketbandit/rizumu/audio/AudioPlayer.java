@@ -20,6 +20,7 @@ public class AudioPlayer {
     public void changeTrack(String path) {
         player = new MediaPlayer(new Media(new File(path).toURI().toString()));
         player.setVolume(volume);
+        player.setOnStopped(player::dispose);
         player.setOnEndOfMedia(player::dispose);
         log.info("Track changed: " + path + ", volume: " + volume + ".");
     }
@@ -27,6 +28,7 @@ public class AudioPlayer {
     public void changeTrack(Media media) {
         player = new MediaPlayer(media);
         player.setVolume(volume);
+        player.setOnStopped(player::dispose);
         player.setOnEndOfMedia(player::dispose);
         log.info("Track changed: " + media.getSource() + ", volume: " + volume);
     }
@@ -79,7 +81,6 @@ public class AudioPlayer {
      * @return {@link Integer}
      */
     public double getMediaPosition() {
-        System.out.println(player.getCurrentTime().toMillis() + " : " + player.getTotalDuration().toMillis());
         return player.getCurrentTime().toMillis() != 0 ? (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis()) * 100 : 0.0;
     }
 }

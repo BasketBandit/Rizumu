@@ -7,8 +7,8 @@ public class AudioPlayerController {
     private static HashMap<String, AudioPlayer> audioPlayers = new HashMap<>();
 
     public AudioPlayerController() {
-        addAudioPlayer("music", new AudioPlayer(0.5f));
-        addAudioPlayer("effect", new AudioPlayer(0.3f));
+        addAudioPlayer("music", new AudioPlayer(0.3f));
+        addAudioPlayer("effect", new AudioPlayer(0.1f));
     }
 
     public void addAudioPlayer(String name, AudioPlayer audioPlayer) {
