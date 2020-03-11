@@ -111,7 +111,7 @@ public class Database {
 
             ArrayList<Score> scores = new ArrayList<>();
             while(rs.next()) {
-                scores.add(new Score(track, beatmap, rs.getString("username"), rs.getInt("score"), rs.getInt("max_combo")));
+                scores.add(new Score(track, beatmap, rs.getString("username"), rs.getInt("score"), rs.getInt("max_combo"), rs.getInt("mx_hits"), rs.getInt("ex_hits"), rs.getInt("nm_hits"), rs.getInt("misses")));
             }
 
             return scores;

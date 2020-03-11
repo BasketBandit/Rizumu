@@ -14,7 +14,7 @@ public class Score {
     private String username = Configuration.getUser();
     private int userId = Configuration.getUserId();
 
-    private int hitNotes = 0, missedNotes = 0, combo = 0, highestCombo = 0;
+    private int missedNotes = 0, combo = 0, highestCombo = 0;
     private int mxHit = 0, exHit = 0, nmHit = 0;
     private int score = 0, multiplier = 1;
 
@@ -23,13 +23,17 @@ public class Score {
         this.beatmap = beatmap;
     }
 
-    public Score(Track track, Beatmap beatmap, String username, int score, int highestCombo) {
+    public Score(Track track, Beatmap beatmap, String username, int score, int highestCombo, int mxHit, int exHit, int nmHit, int missedNotes) {
         this.track = track;
         this.beatmap = beatmap;
         this.username = username;
         this.userId = -1;
         this.score = score;
         this.highestCombo = highestCombo;
+        this.mxHit = mxHit;
+        this.exHit = exHit;
+        this.nmHit = nmHit;
+        this.missedNotes = missedNotes;
     }
 
     public Track getTrack() {
@@ -49,7 +53,6 @@ public class Score {
     }
 
     public void incrementHit() {
-        hitNotes++;
         combo++;
         multiplier = (combo >= 40) ? 4 : (combo >= 30) ? 3 : (combo >= 20) ? 2 : 1;
         if(combo > highestCombo) {
@@ -82,7 +85,7 @@ public class Score {
     }
 
     public int getHitNotes() {
-        return hitNotes;
+        return mxHit + exHit + nmHit;
     }
 
     public int getMissedNotes() {
@@ -118,14 +121,14 @@ public class Score {
     }
 
     public double getAccuracy() {
-        if(hitNotes == 0 && missedNotes == 0) {
+        if(getHitNotes() == 0 && missedNotes == 0) {
             return 100; // prevent NumberFormatException
         }
-        return new BigDecimal((double)hitNotes/((double)hitNotes+(double)missedNotes)*100).setScale(2, RoundingMode.DOWN).doubleValue();
+        return new BigDecimal((double)getHitNotes()/((double)getHitNotes()+(double)missedNotes)*100).setScale(2, RoundingMode.DOWN).doubleValue();
     }
 
     public String getAccuracyString() {
-        return "Accuracy: " + getAccuracy() + "% (" + hitNotes + "/" + (hitNotes+missedNotes) + ")";
+        return "Accuracy: " + getAccuracy() + "% (" + getHitNotes() + "/" + (getHitNotes()+missedNotes) + ")";
     }
 
     public Image getImage() {

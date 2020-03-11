@@ -118,17 +118,32 @@ public class MenuScene extends Scene {
                 g.drawString(t.getTrack().getFormattedTrackLength() + "", 10, (int) t.getMaxY() - 10); // track length
             }
 
+            // leaderboards
             if(selectedButton != null) {
+                g.setColor(Colours.DARK_GREY_75);
+                g.fillRect(Configuration.getWidth() - 400, 45, 400, 25);
+                g.setColor(Color.WHITE);
+                g.drawString("HIGHSCORES", Configuration.getWidth() - 390, 62);
+
                 int i = 0;
                 for(Score score: selectedLeaderboard) {
                     g.setColor(Colours.DARK_GREY_75);
                     g.fillRect(Configuration.getWidth() - 400, 75 + 76*i, 400, 75);
                     g.setColor(Color.WHITE);
                     g.setFont(Fonts.default12);
-                    g.drawString(score.getUsername(), Configuration.getWidth() - 390, 95 + 76*i);
+                    g.drawString(score.getUsername(), Configuration.getWidth() - 390, 92 + 76*i);
+                    g.drawString("MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76*i);
                     g.setFont(Fonts.default24);
-                    g.drawString(score.getScore() + " (x" + score.getHighestCombo() + ")", Configuration.getWidth() - 390, 135 + 76*i);
+                    g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 120 + 76*i);
                     i++;
+                }
+
+                if(i == 0) {
+                    g.setColor(Colours.DARK_GREY_75);
+                    g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
+                    g.setColor(Color.WHITE);
+                    g.setFont(Fonts.default24);
+                    g.drawString(":(", Configuration.getWidth() - 390, 102);
                 }
             }
         }
