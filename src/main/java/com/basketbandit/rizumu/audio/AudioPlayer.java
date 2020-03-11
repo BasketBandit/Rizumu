@@ -1,6 +1,7 @@
 package com.basketbandit.rizumu.audio;
 
 import com.basketbandit.rizumu.resource.Sound;
+import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import org.slf4j.Logger;
@@ -43,17 +44,15 @@ public class AudioPlayer {
         player.setOnReady(() -> player.play());
     }
 
+    /**
+     * Plays an {@link AudioClip} from {@link Sound} using a {@link String} identifier, instead of {@link Media} like regular playback.
+     * This method is perfect for short audio clips since it is usable immediately, unlike Media which uses a buffer. (Shouldn't be used to play full tracks, since it loads entire track into memory!)
+     * @param identifier {@link String}
+     */
     public void play(String identifier) {
-        try {
-            MediaPlayer tempPlayer = new MediaPlayer(Sound.getMedia(identifier));
-            tempPlayer.setOnReady(() -> {
-                tempPlayer.setVolume(volume);
-                tempPlayer.play();
-            });
-            tempPlayer.setOnEndOfMedia(tempPlayer::dispose);
-        } catch(Exception ex) {
-            log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
-        }
+        AudioClip clip = Sound.getAudioClip(identifier);
+        clip.setVolume(volume);
+        clip.play();
     }
 
     public void pause() {

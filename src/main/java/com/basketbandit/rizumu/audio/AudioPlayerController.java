@@ -8,7 +8,7 @@ public class AudioPlayerController {
 
     public AudioPlayerController() {
         addAudioPlayer("music", new AudioPlayer(0.3f));
-        addAudioPlayer("effect", new AudioPlayer(0.1f));
+        addAudioPlayer("effect", new AudioPlayer(0.2f));
     }
 
     public void addAudioPlayer(String name, AudioPlayer audioPlayer) {
