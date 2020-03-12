@@ -21,20 +21,17 @@ import java.util.HashMap;
 public class Rizumu extends Application {
     private static final Logger log = LoggerFactory.getLogger(Rizumu.class);
     private static boolean debug;
-    public static Engine engine = new Engine();
+    public static Engine engine;
     private static HashMap<Scenes, Scene> staticScenes = new HashMap<>();
     private static TrackParser trackParser;
 
-    //TODO Login menu
-    //TODO Track select auto-scroll
-
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "true"); // OpenGL
+        //System.setProperty("sun.java2d.d3d", "false"); // DirectX
+
         if(args.length > 0) {
             debug = Boolean.parseBoolean(args[0]);
         }
-
-        System.setProperty("sun.java2d.opengl", "true"); // OpenGL
-        //System.setProperty("sun.java2d.3d3", args[1]); // DirectX
 
         // initialises system configs
         new Configuration();
@@ -60,6 +57,7 @@ public class Rizumu extends Application {
         staticScenes.put(Scenes.RESULTS, new ResultsScene());
 
         // start the engine early so TrackParser doesn't
+        engine = new Engine();
         engine.setPrimaryScene(getStaticScene(Scenes.SPLASH).init());
         engine.start();
 

@@ -11,6 +11,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Collections;
 
 public class Renderer extends Canvas {
+    private GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0];
     private JFrame frame;
     private RenderObject backgroundRenderObject = new DefaultBackgroundRenderObject();
     private RenderObject primaryRenderObject;
@@ -20,21 +21,15 @@ public class Renderer extends Canvas {
     Renderer() {
         addMouseMotionListener(new MouseMovementAdapter());
         initFrame();
-        this.frame.add(this);
+        frame.add(this);
     }
 
     private void initFrame() {
-        this.frame = new JFrame("Rizumu");
-        this.frame.getContentPane().setPreferredSize(new Dimension(Configuration.getWidth(), Configuration.getHeight()));
-        this.frame.setSize(Configuration.getWidth(), Configuration.getHeight());
-        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.frame.setResizable(false);
-        this.frame.setFocusable(true);
-        this.frame.setUndecorated(false);
-        this.frame.setLocationRelativeTo(null);
-        this.frame.setVisible(true);
-        this.frame.requestFocus();
-        this.frame.pack();
+        frame = new JFrame("Rizumu");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setPreferredSize(new Dimension(Configuration.getWidth(), Configuration.getHeight()));
+        frame.setSize(Configuration.getWidth(), Configuration.getHeight());
+        frame.setResizable(false);
 
         // https://stackoverflow.com/questions/16987937/remove-disable-override-swings-focus-traversal-keys
         Integer[] focusKeys = new Integer[] {
@@ -46,8 +41,20 @@ public class Renderer extends Canvas {
 
         // disable all focus keys, allowing custom implementation of TAB key, etc.
         for(Integer key: focusKeys) {
-            this.frame.setFocusTraversalKeys(key, Collections.EMPTY_SET);
+            frame.setFocusTraversalKeys(key, Collections.EMPTY_SET);
         }
+
+        if(Configuration.isFullscreen()) {
+            frame.setUndecorated(true);
+            device.setFullScreenWindow(frame);
+            device.setDisplayMode(new DisplayMode(Configuration.getWidth(), Configuration.getHeight(), 32, 60));
+        }
+
+        frame.setLocationRelativeTo(null);
+        frame.setFocusable(true);
+        frame.requestFocus();
+        frame.pack();
+        frame.setVisible(true);
     }
 
     /**

@@ -15,14 +15,14 @@ public class Configuration {
     private static int width = 1280; // pixels
     private static int height = 720; // pixels
     private static double scale = width / 1280.0;
+    private static boolean fullscreen = false;
 
     private static double tickRateNs = 1000000000.0 / 60.0; // nanoseconds
     private static double tickRateMs = tickRateNs / 1000000.0; // milliseconds
-    private static boolean frameLock = false;
+    private static boolean unlockedFramerate = true;
 
     private static String userDirectory;
     private static String tracksPath;
-    private static float globalGain = -10.0f; // decibels
 
     private static int defaultBeatmapXPosition = (int) (250 * scale); // pixels
     private static int defaultNoteWidth = 50; // pixels
@@ -47,7 +47,9 @@ public class Configuration {
                 bw.newLine();
                 bw.write("height = 720");
                 bw.newLine();
-                bw.write("frame_unlocked = false");
+                bw.write("fullscreen = true");
+                bw.newLine();
+                bw.write("framerate_unlocked = true");
                 bw.newLine();
                 bw.write("songs_directory = " + userDirectory + File.separator + "tracks");
             } catch(Exception ex) {
@@ -60,8 +62,9 @@ public class Configuration {
             width = Integer.parseInt(vals.get(0));
             height = Integer.parseInt(vals.get(1));
             scale = width / 1280.0;
-            frameLock = Boolean.parseBoolean(vals.get(2));
-            tracksPath = vals.get(3);
+            fullscreen = Boolean.parseBoolean(vals.get(2));
+            unlockedFramerate = Boolean.parseBoolean(vals.get(3));
+            tracksPath = vals.get(4);
 
             log.info("Successfully read configuration file!");
         } catch(Exception ex) {
@@ -121,11 +124,19 @@ public class Configuration {
     }
 
     public static void toggleUnlockedFramerate() {
-        frameLock = !frameLock;
+        unlockedFramerate = !unlockedFramerate;
     }
 
-    public static boolean isFrameUnlocked() {
-        return frameLock;
+    public static boolean isFramerateUnlocked() {
+        return unlockedFramerate;
+    }
+
+    public static void toggleFullscreen() {
+        fullscreen = !fullscreen;
+    }
+
+    public static boolean isFullscreen() {
+        return fullscreen;
     }
 
     public static String getTracksPath() {
