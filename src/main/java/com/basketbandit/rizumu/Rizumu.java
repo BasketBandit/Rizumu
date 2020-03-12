@@ -27,7 +27,7 @@ public class Rizumu extends Application {
 
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true"); // OpenGL
-        //System.setProperty("sun.java2d.d3d", "false"); // DirectX
+        System.setProperty("sun.java2d.d3d", "false"); // DirectX
 
         if(args.length > 0) {
             debug = Boolean.parseBoolean(args[0]);
