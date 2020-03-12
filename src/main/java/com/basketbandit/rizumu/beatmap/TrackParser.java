@@ -20,19 +20,24 @@ import java.util.stream.Stream;
 public class TrackParser {
     private static final Logger log = LoggerFactory.getLogger(TrackParser.class);
 
-    private HashMap<String, File> trackFiles = new HashMap<>();
-    private HashMap<String, Track> trackObjects = new HashMap<>();
-    private static boolean finished;
+    private HashMap<String, File> trackFiles;
+    private HashMap<String, Track> trackObjects;
+    private static boolean finished = true;
+    private static String loadingTrack = "";
 
     public TrackParser(String path) {
         finished = false;
 
+        trackFiles = new HashMap<>();
+        trackObjects = new HashMap<>();
+
         // Checks all the files in the directory of the given path for files ending in .yaml, then tries to parse them as beatmaps.
         try(Stream<Path> walk = Files.walk(Paths.get(path))) {
-            walk.filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> {
+            walk.parallel().filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> {
                 File file = s.toFile();
                 Track track = parseTrack(file);
                 String name = track.getArtist()+track.getName();
+                loadingTrack = track.getArtist() + " - " + track.getName();
                 trackFiles.put(name, file);
                 trackObjects.put(name, track);
             });
@@ -67,6 +72,10 @@ public class TrackParser {
 
     public HashMap<String, Track> getTrackObjects() {
         return trackObjects;
+    }
+
+    public static String getLoadingTrack() {
+        return loadingTrack;
     }
 
     public static boolean isFinished() {

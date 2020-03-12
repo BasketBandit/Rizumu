@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
@@ -14,10 +14,10 @@ import com.basketbandit.rizumu.resource.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
-import com.basketbandit.rizumu.utility.extension.AffineTransformEx;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
+import com.basketbandit.rizumu.utility.extension.AffineTransformEx;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -63,7 +63,7 @@ public class SplashScene extends Scene {
         MouseAdapters.setMouseAdapter("splash", mouseAdapter);
         KeyAdapters.setKeyAdapter("splash", null);
 
-        if(Rizumu.getSecondaryScene() == null) {
+        if(Engine.getSecondaryScene() == null) {
             audioPlayer.changeTrack(Sound.getMedia("menu-music"));
             audioPlayer.play();
         }
@@ -81,7 +81,7 @@ public class SplashScene extends Scene {
             g.setFont(Fonts.default24);
             g.setColor(Color.BLACK);
             if(!TrackParser.isFinished()) {
-                g.drawString("Loading tracks...", Alignment.center("Loading tracks...", g.getFontMetrics(Fonts.default24), 0, Configuration.getWidth()), (float) (Configuration.getHeight()/2.0 + 150));
+                g.drawString(TrackParser.getLoadingTrack(), Alignment.center(TrackParser.getLoadingTrack(), g.getFontMetrics(Fonts.default24), 0, Configuration.getWidth()), (float) (Configuration.getHeight()/2.0 + 150));
             }
 
             buttons.values().forEach(b -> {
@@ -115,12 +115,12 @@ public class SplashScene extends Scene {
                 if(buttons.get("settingsButton").isHovered()) {
                     effectPlayer.play("menu-click");
                     audioPlayer.stop();
-                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SETTINGS).init());
+                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SETTINGS).init());
                     return;
                 }
 
                 if(Configuration.getUser() == null && buttons.get("loginButton").isHovered()) {
-                    Rizumu.setSecondaryScene(loginMenu.init());
+                    Engine.setSecondaryScene(loginMenu.init());
                     return;
                 }
 
@@ -134,7 +134,7 @@ public class SplashScene extends Scene {
                 if(TrackParser.isFinished()) {
                     effectPlayer.play("menu-select2");
                     audioPlayer.stop();
-                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
                 }
             }
         }
@@ -236,8 +236,8 @@ public class SplashScene extends Scene {
                             log.info("Successfully logged in as: " + username.getText());
                         }
 
-                        Rizumu.getPrimaryScene().init();
-                        Rizumu.setSecondaryScene(null); // important to do this second to stop audio being interrupted
+                        Engine.getPrimaryScene().init();
+                        Engine.setSecondaryScene(null); // important to do this second to stop audio being interrupted
                     }
 
                     if(username.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {

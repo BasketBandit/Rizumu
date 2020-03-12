@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.stage.object;
 
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.utility.Cursors;
 
@@ -12,12 +12,12 @@ public class DefaultBackgroundTickObject implements TickObject {
         // update mouse cursor to be default (loop eliminates cursor flickering associated with rapid updates)
         if(x++ > 5) {
             x = 0;
-            Rizumu.getFrame().setCursor(Cursors.DEFAULT_CURSOR);
+            Engine.getFrame().setCursor(Cursors.DEFAULT_CURSOR);
         }
 
-        for(Button button: (Rizumu.getSecondaryScene() == null) ? Rizumu.getPrimaryScene().getButtons().values() : Rizumu.getSecondaryScene().getButtons().values()) {
+        for(Button button: (Engine.getSecondaryScene() == null) ? Engine.getPrimaryScene().getButtons().values() : Engine.getSecondaryScene().getButtons().values()) {
             if(button.isHovered()) {
-                Rizumu.getFrame().setCursor(Cursors.HAND_CURSOR);
+                Engine.getFrame().setCursor(Cursors.HAND_CURSOR);
                 break;
             }
         }

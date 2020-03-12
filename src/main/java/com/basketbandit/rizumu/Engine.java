@@ -1,35 +1,75 @@
 package com.basketbandit.rizumu;
 
+import com.basketbandit.rizumu.audio.AudioPlayerController;
+import com.basketbandit.rizumu.beatmap.TrackParser;
+import com.basketbandit.rizumu.database.Connection;
+import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.resource.Sound;
+import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
-import com.basketbandit.rizumu.stage.scene.Scene;
+import com.basketbandit.rizumu.stage.scene.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.MouseAdapter;
+import java.util.HashMap;
 
 public class Engine extends Thread {
     private static final Logger log = LoggerFactory.getLogger(Engine.class);
+    private static HashMap<Scenes, Scene> staticScenes = new HashMap<>();
+    private static TrackParser trackParser;
 
-    private Renderer renderer;
-    private Ticker ticker;
+    private static Renderer renderer;
+    private static Ticker ticker;
 
-    private Scene primaryScene;
-    private Scene secondaryScene;
+    private static Scene primaryScene;
+    private static Scene secondaryScene;
 
-    private boolean isRunning = true;
+    private static boolean isRunning = true;
 
-    private int tps, fps = 0;
-    private int frames, ticks = 0;
+    private static int tps, fps = 0;
+    private static int frames, ticks = 0;
 
-    Engine() {
+    public Engine() {
         this.setName("Engine");
-        this.renderer = new Renderer();
-        this.ticker = new Ticker();
     }
 
     public void run() {
+        // initialises system configs
+        new Configuration();
+
+        // initialises renderer
+        renderer = new Renderer();
+
+        // initialises ticker
+        ticker = new Ticker();
+
+        // initialise database connection
+        try {
+            new Connection();
+        } catch(Exception ex) {
+            log.error("An error occurred while running the {} class, message: {}", Connection.class.getSimpleName(), ex.getMessage(), ex);
+        }
+
+        // initialises AudioPlayerController
+        new AudioPlayerController();
+
+        // initialises Sound
+        new Sound();
+
+        // initialises Image
+        new Image();
+
+        staticScenes.put(Scenes.SPLASH, new SplashScene());
+        staticScenes.put(Scenes.SETTINGS, new SettingsScene());
+        staticScenes.put(Scenes.MENU, new MenuScene());
+        staticScenes.put(Scenes.TRACK, new TrackScene());
+        staticScenes.put(Scenes.RESULTS, new ResultsScene());
+
+        setPrimaryScene(staticScenes.get(Scenes.SPLASH).init());
+
         long time = System.currentTimeMillis();
         long lastTime = System.nanoTime();
         double unprocessed = 0.0;
@@ -64,96 +104,107 @@ public class Engine extends Thread {
         }
     }
 
-    public int getFps() {
+    public static int getFps() {
         return frames;
     }
 
-    public int getTps() {
+    public static int getTps() {
         return ticks;
     }
 
-    JFrame getFrame() {
+    public static JFrame getFrame() {
         return renderer.getFrame();
     }
 
-    void addMouseAdapter(MouseAdapter adapter) {
+    public static void addMouseAdapter(MouseAdapter adapter) {
         renderer.addMouseListener(adapter);
         renderer.addMouseWheelListener(adapter);
     }
 
-    void removeMouseAdapter(MouseAdapter adapter) {
+    public static void removeMouseAdapter(MouseAdapter adapter) {
         renderer.removeMouseListener(adapter);
         renderer.removeMouseListener(adapter);
     }
 
-    void addKeyAdapter(KeyAdapter adapter) {
+    public static void addKeyAdapter(KeyAdapter adapter) {
         renderer.addKeyListener(adapter);
     }
 
-    void removeKeyAdapter(KeyAdapter adapter) {
+    public static void removeKeyAdapter(KeyAdapter adapter) {
         renderer.removeKeyListener(adapter);
     }
 
-    void setPrimaryScene(Scene scene) {
-        this.primaryScene = scene;
-        this.renderer.setPrimaryRenderObject(scene.getRenderObject());
-        this.ticker.setPrimaryTickObject(scene.getTickObject());
+    public static Scene getStaticScene(Scenes scene) {
+        return staticScenes.get(scene);
+    }
+
+    public static void setPrimaryScene(Scene scene) {
+        primaryScene = scene;
+        renderer.setPrimaryRenderObject(scene.getRenderObject());
+        ticker.setPrimaryTickObject(scene.getTickObject());
         log.info("Primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
     }
 
-    public Scene getPrimaryScene() {
+    public static Scene getPrimaryScene() {
         return primaryScene;
     }
 
-    void setSecondaryScene(Scene scene) {
-        this.secondaryScene = scene;
+    public static void setSecondaryScene(Scene scene) {
+        secondaryScene = scene;
 
         if(scene != null) {
-            this.renderer.setSecondaryRenderObject(scene.getRenderObject());
-            this.ticker.setSecondaryTickObject(scene.getTickObject());
+            renderer.setSecondaryRenderObject(scene.getRenderObject());
+            ticker.setSecondaryTickObject(scene.getTickObject());
             log.info("Secondary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
             return;
         }
 
-        this.renderer.setSecondaryRenderObject(null);
-        this.ticker.setSecondaryTickObject(null);
+        renderer.setSecondaryRenderObject(null);
+        ticker.setSecondaryTickObject(null);
         log.info("Secondary render/tick objects removed.");
     }
 
-    public Scene getSecondaryScene() {
+    public static Scene getSecondaryScene() {
         return secondaryScene;
     }
 
     /**
      * @param renderObject {@link RenderObject}
      */
-    void setBackgroundRenderObject(RenderObject renderObject) {
-        this.renderer.setBackgroundRenderObject(renderObject);
+    public static void setBackgroundRenderObject(RenderObject renderObject) {
+        renderer.setBackgroundRenderObject(renderObject);
     }
 
     /**
      * @param renderObject {@link RenderObject}
      */
-    void setPrimaryRenderObject(RenderObject renderObject) {
-        this.renderer.setPrimaryRenderObject(renderObject);
+    public static void setPrimaryRenderObject(RenderObject renderObject) {
+        renderer.setPrimaryRenderObject(renderObject);
     }
 
     /**
      * @param renderObject {@link RenderObject}
      */
-    void setSecondaryRenderObject(RenderObject renderObject) {
-        this.renderer.setSecondaryRenderObject(renderObject);
+    public static void setSecondaryRenderObject(RenderObject renderObject) {
+        renderer.setSecondaryRenderObject(renderObject);
     }
 
     /**
      * @param renderObject {@link RenderObject}
      */
-    void setSystemRenderObject(RenderObject renderObject) {
-        this.renderer.setSystemRenderObject(renderObject);
+    public static void setSystemRenderObject(RenderObject renderObject) {
+        renderer.setSystemRenderObject(renderObject);
     }
 
-    boolean secondaryRenderObjectIsNull() {
-        return this.renderer.secondaryRenderObjectIsNull();
+    public static boolean secondaryRenderObjectIsNull() {
+        return renderer.secondaryRenderObjectIsNull();
     }
 
+    public static void setTrackParser(TrackParser parser) {
+        trackParser = parser;
+    }
+
+    public static TrackParser getTrackParser() {
+        return trackParser;
+    }
 }

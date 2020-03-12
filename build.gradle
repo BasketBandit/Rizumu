@@ -1,18 +1,30 @@
 plugins {
     id 'java'
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
-
-apply plugin: 'java'
-apply plugin: 'idea'
 
 group 'basketbandit'
 version '0.1.0'
-mainClassName = 'com.basketbandit.rizumu.Rizumu'
-sourceCompatibility = 1.11
+mainClassName = 'com.basketbandit.rizumu.Launch'
+sourceCompatibility = 1.13
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+javafx {
+    version = '13'
+    modules = [ 'javafx.controls', 'javafx.media' ]
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }
 
 repositories {
@@ -28,7 +40,6 @@ ext {
     commonsIO                    = '2.6'
     mysqlConnectorJava           = '8.0.18'
     springSecurity               = '5.2.2.RELEASE'
-
     jUnit                        = '4.12'
 }
 
@@ -41,6 +52,5 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: hikaricp
     compile group: 'mysql', name: 'mysql-connector-java', version: mysqlConnectorJava
     compile group: 'org.springframework.security', name: 'spring-security-crypto', version: springSecurity
-
     testCompile group: 'junit', name: 'junit', version: jUnit
 }

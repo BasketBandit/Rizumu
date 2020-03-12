@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyAdapters;
@@ -87,7 +87,7 @@ public class ResultsScene extends Scene {
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(buttons.get("menu").isHovered()) {
-                    Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
+                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
                 }
             }
         }

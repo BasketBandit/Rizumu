@@ -1,7 +1,8 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.database.Database;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MenuScene extends Scene {
-    private static HashMap<Integer, TrackButton> trackButtons = new HashMap<>(); // we use integer here to keep track of list ordering
+    private static HashMap<Integer, TrackButton> trackButtons;// we use integer here to keep track of list ordering
     private Container trackContainer;
 
     private BufferedImage prevBackgroundImage;
@@ -44,10 +45,22 @@ public class MenuScene extends Scene {
         tickObject = new MenuTicker();
         mouseAdapter = new MenuMouseAdapter();
         keyAdapter = new MenuKeyAdapter();
+        // in this scene, we load buttons dynamically to account for on-the-fly track additions/removals
+    }
+
+    @Override
+    public MenuScene init(Object... object) {
+        Engine.setTrackParser(new TrackParser(Configuration.getTracksPath()));
+
+        MouseAdapters.setMouseAdapter("menu", mouseAdapter);
+        KeyAdapters.setKeyAdapter("menu", keyAdapter);
+
+        buttons = new HashMap<>();
+        trackButtons = new HashMap<>();
 
         trackContainer = new Container(0, 0, 490, Configuration.getHeight()).setColor(Colours.TRANSPARENT);
         AtomicInteger i = new AtomicInteger();
-        Rizumu.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
+        Engine.getTrackParser().getTrackObjects().values().forEach(track -> track.getBeatmaps().forEach(beatmap -> {
             TrackButton t = (TrackButton) new TrackButton(0,2 + (67*i.get()), 460, 65, i.get(), track, beatmap).setColor(Colours.DARK_GREY_90).setButtonText(track.getArtist() + " - " + track.getName());
             buttons.put(i.get() + "", t);
             trackButtons.put(i.get(), t);
@@ -55,14 +68,6 @@ public class MenuScene extends Scene {
         }));
 
         buttons.put("directoryButton", new Button(Configuration.getWidth() - 170, Configuration.getHeight()- 70, 150, 50).setButtonText("Open Track Directory"));
-    }
-
-    @Override
-    public MenuScene init(Object... object) {
-        MouseAdapters.setMouseAdapter("menu", mouseAdapter);
-        KeyAdapters.setKeyAdapter("menu", keyAdapter);
-
-        menuBackgroundOpacity = 1.0f;
 
         // select middle track (5)
         if(trackButtons.size() > 0) {
@@ -71,6 +76,8 @@ public class MenuScene extends Scene {
             menuBackgroundImage = selectedButton.getTrack().getImage();
             audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
         }
+
+        menuBackgroundOpacity = 1.0f;
         return this;
     }
 
@@ -175,10 +182,10 @@ public class MenuScene extends Scene {
                         if(selectedButton.getId() == t.getId()) {
                             effectPlayer.play("menu-select2");
                             audioPlayer.stop();
-                            Track track = Rizumu.getTrackParser().parseTrack(t.getTrack().getFile()); // re-parse the map
+                            Track track = Engine.getTrackParser().parseTrack(t.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
                                 if(beatmap.getName().equals(t.getBeatmap().getName())) {
-                                    Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(track, beatmap).init());
+                                    Engine.setPrimaryScene((Engine.getStaticScene(Scenes.TRACK)).init(track, beatmap).init());
                                     return;
                                 }
                             }
@@ -223,7 +230,7 @@ public class MenuScene extends Scene {
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                 audioPlayer.stop();
-                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH).init());
+                Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SPLASH).init());
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
@@ -91,7 +91,7 @@ public class SettingsScene extends Scene {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.SPLASH).init());
+                Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SPLASH).init());
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.scheduler.tasks;
 
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.Task;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -17,6 +17,6 @@ public class BeatmapEndTask implements Task {
     public void run() {
         scene.getAudioPlayer().stop();
         ScheduleHandler.cancelExecution();
-        Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.RESULTS).init(scene.getScore()));
+        Engine.setPrimaryScene(Engine.getStaticScene(Scenes.RESULTS).init(scene.getScore()));
     }
 }

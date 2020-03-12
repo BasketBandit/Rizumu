@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Rizumu;
+import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.NoteParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
@@ -217,7 +217,7 @@ public class TrackScene extends Scene {
         @Override
         public void tick() {
             // if the secondary render object is NOT null (implies pause menu is open)
-            if(!Rizumu.secondaryRenderObjectIsNull()) {
+            if(!Engine.secondaryRenderObjectIsNull()) {
                 return;
             }
 
@@ -283,7 +283,7 @@ public class TrackScene extends Scene {
                     effectPlayer.play("menu-click");
                     menuCooldownWarning = ((menuCooldown = System.currentTimeMillis()) != 0); // != because we always want this value to return true; this is a quick and dirty way of setting both fields at once.
                     ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
-                    Rizumu.setSecondaryScene(pauseMenu.init());
+                    Engine.setSecondaryScene(pauseMenu.init());
                     return;
                 }
             }
@@ -428,7 +428,7 @@ public class TrackScene extends Scene {
                         audioPlayer.resume();
                         effectPlayer.play("menu-click2");
                         TrackScene.this.init();
-                        Rizumu.setSecondaryScene(null);
+                        Engine.setSecondaryScene(null);
                         ScheduleHandler.resumeExecution();
                         menuCooldown = System.currentTimeMillis();
                         return;
@@ -438,13 +438,13 @@ public class TrackScene extends Scene {
                     if(buttons.get("restartButton").isHovered()) {
                         effectPlayer.play("menu-click3");
                         audioPlayer.stop();
-                        Rizumu.setSecondaryScene(null);
+                        Engine.setSecondaryScene(null);
                         ScheduleHandler.cancelExecution();
 
-                        Track t = Rizumu.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
+                        Track t = Engine.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
                         for(Beatmap b: t.getBeatmaps()) {
                             if(b.getName().equals(beatmap.getName())) {
-                                Rizumu.setPrimaryScene((Rizumu.getStaticScene(Scenes.TRACK)).init(t, b));
+                                Engine.setPrimaryScene((Engine.getStaticScene(Scenes.TRACK)).init(t, b));
                                 return;
                             }
                         }
@@ -456,8 +456,8 @@ public class TrackScene extends Scene {
                         effectPlayer.play("menu-click4");
                         audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
-                        Rizumu.setPrimaryScene(Rizumu.getStaticScene(Scenes.MENU).init());
-                        Rizumu.setSecondaryScene(null);
+                        Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
+                        Engine.setSecondaryScene(null);
                     }
                 }
             }
