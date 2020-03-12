@@ -28,8 +28,8 @@ public class NoteParser {
         List<Segment> segments = beatmap.getSegments();
         int noteGap = Configuration.getNoteGap();
         int loadOffset = 0; // Counter for overall segment length, used to help time the next segment
-        java.awt.Image noteImage = Image.getBufferedImage("note").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
-        java.awt.Image notebImage =  Image.getBufferedImage("noteb").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), 0);
+        java.awt.Image noteImage = Image.getBufferedImage("note").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), java.awt.Image.SCALE_REPLICATE);
+        java.awt.Image notebImage =  Image.getBufferedImage("noteb").getScaledInstance(Configuration.getDefaultNoteWidth(), Configuration.getDefaultNoteHeight(), java.awt.Image.SCALE_REPLICATE);
 
         for(Segment segment: segments) {
             for(Note note: segment.getNotes()) {
@@ -80,7 +80,7 @@ public class NoteParser {
 
                 // pre-scale notes (this saves A LOT of cpu cycles compared to scaling on the fly... as fast as the cpu can render)
                 if(note.getNoteType().equals("single_long")) {
-                    note.initImages(noteImage, notebImage.getScaledInstance(note.width, note.height, 0));
+                    note.initImages(noteImage, notebImage.getScaledInstance(note.width, note.height, java.awt.Image.SCALE_REPLICATE));
                 } else {
                     note.initImages(noteImage);
                 }
