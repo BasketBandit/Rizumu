@@ -15,7 +15,7 @@ public class BeatmapEndTask implements Task {
 
     @Override
     public void run() {
-        scene.getAudioPlayer().stop();
+        scene.getAudioPlayer().stopMedia();
         ScheduleHandler.cancelExecution();
         Engine.setPrimaryScene(Engine.getStaticScene(Scenes.RESULTS).init(scene.getScore()));
     }

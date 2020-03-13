@@ -9,14 +9,20 @@ public class AudioPlayerController {
     public AudioPlayerController() {
         addAudioPlayer("music", new AudioPlayer(0.3f));
         addAudioPlayer("effect", new AudioPlayer(0.2f));
+
+        for(AudioPlayer player: audioPlayers.values()) {
+            player.start();
+        }
     }
 
     public void addAudioPlayer(String name, AudioPlayer audioPlayer) {
         audioPlayers.put(name, audioPlayer);
+        audioPlayer.start();
     }
 
     public void removeAudioPlayer(String player) {
         audioPlayers.remove(player);
+
     }
 
     public static AudioPlayer getAudioPlayer(String player) {

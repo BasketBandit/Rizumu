@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class AudioPlayer {
+public class AudioPlayer extends Thread {
     private static final Logger log = LoggerFactory.getLogger(AudioPlayer.class);
     private MediaPlayer player;
     private float volume;
@@ -35,7 +35,7 @@ public class AudioPlayer {
     }
 
     public void hotChangeTrack(String path) {
-        stop();
+        stopMedia();
         changeTrack(path);
         play();
     }
@@ -50,20 +50,18 @@ public class AudioPlayer {
      * @param identifier {@link String}
      */
     public void play(String identifier) {
-        AudioClip clip = Sound.getAudioClip(identifier);
-        clip.setVolume(volume);
-        clip.play();
+        Sound.getAudioClip(identifier).play(volume);
     }
 
-    public void pause() {
+    public void pauseMedia() {
         player.pause();
     }
 
-    public void resume() {
+    public void resumeMedia() {
         player.play();
     }
 
-    public void stop() {
+    public void stopMedia() {
         player.stop();
     }
 

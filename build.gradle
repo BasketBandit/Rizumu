@@ -7,7 +7,7 @@ plugins {
 group 'basketbandit'
 version '0.1.0'
 mainClassName = 'com.basketbandit.rizumu.Launch'
-sourceCompatibility = 1.13
+sourceCompatibility = 1.11
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'

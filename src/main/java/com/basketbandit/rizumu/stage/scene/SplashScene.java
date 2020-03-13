@@ -114,7 +114,7 @@ public class SplashScene extends Scene {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(buttons.get("settingsButton").isHovered()) {
                     effectPlayer.play("menu-click");
-                    audioPlayer.stop();
+                    audioPlayer.stopMedia();
                     Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SETTINGS).init());
                     return;
                 }
@@ -133,7 +133,7 @@ public class SplashScene extends Scene {
                 // prevent access to menu before tracks are parsed
                 if(TrackParser.isFinished()) {
                     effectPlayer.play("menu-select2");
-                    audioPlayer.stop();
+                    audioPlayer.stopMedia();
                     Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
                 }
             }

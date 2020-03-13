@@ -383,7 +383,7 @@ public class TrackScene extends Scene {
             MouseAdapters.setMouseAdapter("pause", mouseAdapter);
             KeyAdapters.setKeyAdapter("pause", null);
 
-            audioPlayer.pause();
+            audioPlayer.pauseMedia();
             return this;
         }
 
@@ -425,7 +425,7 @@ public class TrackScene extends Scene {
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     // 'resume' button, close the pause menu
                     if(buttons.get("resumeButton").isHovered()) {
-                        audioPlayer.resume();
+                        audioPlayer.resumeMedia();
                         effectPlayer.play("menu-click2");
                         TrackScene.this.init();
                         Engine.setSecondaryScene(null);
@@ -437,7 +437,7 @@ public class TrackScene extends Scene {
                     // 'restart' button, restart the beatmap
                     if(buttons.get("restartButton").isHovered()) {
                         effectPlayer.play("menu-click3");
-                        audioPlayer.stop();
+                        audioPlayer.stopMedia();
                         Engine.setSecondaryScene(null);
                         ScheduleHandler.cancelExecution();
 
@@ -454,7 +454,7 @@ public class TrackScene extends Scene {
                     // 'quit' button, go back to the main menu
                     if(buttons.get("quitButton").isHovered()) {
                         effectPlayer.play("menu-click4");
-                        audioPlayer.stop();
+                        audioPlayer.stopMedia();
                         ScheduleHandler.cancelExecution();
                         Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
                         Engine.setSecondaryScene(null);

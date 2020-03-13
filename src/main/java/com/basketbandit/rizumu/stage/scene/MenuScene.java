@@ -181,7 +181,7 @@ public class MenuScene extends Scene {
                     if(t.isHovered()) {
                         if(selectedButton.getId() == t.getId()) {
                             effectPlayer.play("menu-select2");
-                            audioPlayer.stop();
+                            audioPlayer.stopMedia();
                             Track track = Engine.getTrackParser().parseTrack(t.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
                                 if(beatmap.getName().equals(t.getBeatmap().getName())) {
@@ -229,7 +229,7 @@ public class MenuScene extends Scene {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                audioPlayer.stop();
+                audioPlayer.stopMedia();
                 Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SPLASH).init());
             }
         }

@@ -23,7 +23,7 @@ public class TrackParser {
     private HashMap<String, File> trackFiles;
     private HashMap<String, Track> trackObjects;
     private static boolean finished = true;
-    private static String loadingTrack = "";
+    private static String loadingTrack = "Loading...";
 
     public TrackParser(String path) {
         finished = false;
@@ -74,7 +74,7 @@ public class TrackParser {
         return trackObjects;
     }
 
-    public static String getLoadingTrack() {
+    public synchronized static String getLoadingTrack() {
         return loadingTrack;
     }
 
