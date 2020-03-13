@@ -61,7 +61,6 @@ public class Configuration {
             List<String> vals = reader.lines().map(s -> {s = s.substring(s.indexOf("=") + 1).strip(); return s;}).collect(Collectors.toList());
             width = Integer.parseInt(vals.get(0));
             height = Integer.parseInt(vals.get(1));
-            scale = width / 1280.0;
             fullscreen = Boolean.parseBoolean(vals.get(2));
             unlockedFramerate = Boolean.parseBoolean(vals.get(3));
             tracksPath = vals.get(4);
@@ -70,6 +69,10 @@ public class Configuration {
         } catch(Exception ex) {
             log.error("An error occurred while reading configuration file, message: {}", ex.getMessage(), ex);
         }
+
+        scale = width / 1280.0;
+        defaultRegistrarYFromBottom = height - 120;
+        defaultBeatmapXPosition = (int) (250 * scale);
     }
 
     public static int getHeight() {
