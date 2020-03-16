@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.stage.scene.track.scondary;
+package com.basketbandit.rizumu.stage.scene.play.scondary;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.database.Database;
@@ -27,7 +27,7 @@ public class ResultsMenu extends Scene {
         tickObject = null;
         mouseAdapter = new ResultsMouseAdapter();
 
-        buttons.put("menu", new Button(Configuration.getWidth() - 200, Configuration.getHeight() - 150, 100, 50));
+        buttons.put("track_select", new Button(Configuration.getWidth() - 200, Configuration.getHeight() - 150, 100, 50));
     }
 
     @Override
@@ -61,11 +61,11 @@ public class ResultsMenu extends Scene {
             }
 
             g.setColor(Color.DARK_GRAY);
-            g.fill(buttons.get("menu"));
+            g.fill(buttons.get("track_select"));
 
             g.setFont(Fonts.default12);
             g.setColor(Color.WHITE);
-            g.drawString("Exit!", (int)buttons.get("menu").getMinX(), (int)buttons.get("menu").getCenterY());
+            g.drawString("Exit!", (int)buttons.get("track_select").getMinX(), (int)buttons.get("track_select").getCenterY());
 
             g.setColor(Color.WHITE);
             g.drawString(score.getAccuracyString(), 80, 80);
@@ -77,8 +77,8 @@ public class ResultsMenu extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                if(buttons.get("menu").isHovered()) {
-                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
+                if(buttons.get("track_select").isHovered()) {
+                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SELECT).init());
                     Engine.setSecondaryScene(null);
                 }
             }

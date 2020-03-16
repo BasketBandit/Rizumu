@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.stage.scene.track;
+package com.basketbandit.rizumu.stage.scene.play;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayer;
@@ -18,7 +18,7 @@ import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import com.basketbandit.rizumu.stage.scene.Scene;
-import com.basketbandit.rizumu.stage.scene.track.scondary.PauseMenu;
+import com.basketbandit.rizumu.stage.scene.play.scondary.PauseMenu;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class TrackScene extends Scene {
+public class PlayScene extends Scene {
     private PauseMenu pauseMenu = new PauseMenu();
 
     protected Track track;
@@ -54,7 +54,7 @@ public class TrackScene extends Scene {
     private boolean menuCooldownWarning = false;
     private long menuCooldown = System.currentTimeMillis();
 
-    public TrackScene() {
+    public PlayScene() {
         renderObject = new TrackRenderer();
         tickObject = new TrackTicker();
         keyAdapter = new TrackKeyAdapter();
@@ -92,6 +92,10 @@ public class TrackScene extends Scene {
         }
 
         return this;
+    }
+
+    public PauseMenu getPauseMenu() {
+        return pauseMenu;
     }
 
     public Score getScore() {
@@ -285,7 +289,7 @@ public class TrackScene extends Scene {
                     effectPlayer.play("menu-click");
                     menuCooldownWarning = ((menuCooldown = System.currentTimeMillis()) != 0); // != because we always want this value to return true; this is a quick and dirty way of setting both fields at once.
                     ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
-                    Engine.setSecondaryScene(pauseMenu.init(TrackScene.this));
+                    Engine.setSecondaryScene(pauseMenu.init(PlayScene.this));
                     return;
                 }
             }

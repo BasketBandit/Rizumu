@@ -134,7 +134,7 @@ public class SplashScene extends Scene {
                 if(TrackParser.isFinished()) {
                     effectPlayer.play("menu-select2");
                     audioPlayer.stop();
-                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
+                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SELECT).init());
                 }
             }
         }

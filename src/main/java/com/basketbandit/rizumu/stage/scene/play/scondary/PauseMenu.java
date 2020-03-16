@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.stage.scene.track.scondary;
+package com.basketbandit.rizumu.stage.scene.play.scondary;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
@@ -11,7 +11,7 @@ import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.Scene;
-import com.basketbandit.rizumu.stage.scene.track.TrackScene;
+import com.basketbandit.rizumu.stage.scene.play.PlayScene;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -21,7 +21,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PauseMenu extends Scene {
-    private TrackScene trackScene;
+    private PlayScene playScene;
     private FontMetrics metrics16;
 
     public PauseMenu() {
@@ -39,7 +39,7 @@ public class PauseMenu extends Scene {
         MouseAdapters.setMouseAdapter("pause", mouseAdapter);
         KeyAdapters.setKeyAdapter("pause", null);
 
-        trackScene = (TrackScene) objects[0];
+        playScene = (PlayScene) objects[0];
         audioPlayer.pause();
         return this;
     }
@@ -81,7 +81,7 @@ public class PauseMenu extends Scene {
                     Engine.getPrimaryScene().init();
                     Engine.setSecondaryScene(null);
                     ScheduleHandler.resumeExecution();
-                    trackScene.setMenuCooldown(System.currentTimeMillis());
+                    playScene.setMenuCooldown(System.currentTimeMillis());
                     return;
                 }
 
@@ -92,10 +92,10 @@ public class PauseMenu extends Scene {
                     Engine.setSecondaryScene(null);
                     ScheduleHandler.cancelExecution();
 
-                    Track t = Engine.getTrackParser().parseTrack(trackScene.getTrack().getFile()); // forgive me for the horrible variable naming...
+                    Track t = Engine.getTrackParser().parseTrack(playScene.getTrack().getFile()); // forgive me for the horrible variable naming...
                     for(Beatmap b: t.getBeatmaps()) {
-                        if(b.getName().equals(trackScene.getBeatmap().getName())) {
-                            Engine.setPrimaryScene((Engine.getStaticScene(Scenes.TRACK)).init(t, b));
+                        if(b.getName().equals(playScene.getBeatmap().getName())) {
+                            Engine.setPrimaryScene((Engine.getStaticScene(Scenes.PLAY)).init(t, b));
                             return;
                         }
                     }
@@ -107,7 +107,7 @@ public class PauseMenu extends Scene {
                     effectPlayer.play("menu-click4");
                     audioPlayer.stop();
                     ScheduleHandler.cancelExecution();
-                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
+                    Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SELECT).init());
                     Engine.setSecondaryScene(null);
                 }
             }

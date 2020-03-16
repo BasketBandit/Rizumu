@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.stage.scene.menu;
+package com.basketbandit.rizumu.stage.scene.select;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.engine.Engine;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MenuScene extends Scene {
+public class SelectScene extends Scene {
     private static HashMap<Integer, TrackButton> trackButtons;// we use integer here to keep track of list ordering
     private Container trackContainer;
 
@@ -41,7 +41,7 @@ public class MenuScene extends Scene {
     private TrackButton selectedButton;
     private ArrayList<Score> selectedLeaderboard = new ArrayList<>();
 
-    public MenuScene() {
+    public SelectScene() {
         renderObject = new MenuRenderer();
         tickObject = new MenuTicker();
         mouseAdapter = new MenuMouseAdapter();
@@ -50,7 +50,7 @@ public class MenuScene extends Scene {
     }
 
     @Override
-    public MenuScene init(Object... object) {
+    public SelectScene init(Object... object) {
         Engine.setTrackParser(new TrackParser(Configuration.getTracksPath()));
 
         MouseAdapters.setMouseAdapter("menu", mouseAdapter);
@@ -186,7 +186,7 @@ public class MenuScene extends Scene {
                             Track track = Engine.getTrackParser().parseTrack(t.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
                                 if(beatmap.getName().equals(t.getBeatmap().getName())) {
-                                    Engine.setPrimaryScene((Engine.getStaticScene(Scenes.TRACK)).init(track, beatmap).init());
+                                    Engine.setPrimaryScene((Engine.getStaticScene(Scenes.PLAY)).init(track, beatmap).init());
                                     return;
                                 }
                             }
