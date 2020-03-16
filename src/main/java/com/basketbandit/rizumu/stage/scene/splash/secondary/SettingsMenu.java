@@ -17,8 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class SettingsMenu extends Scene {
-
-    FontMetrics metrics16;
+    private FontMetrics metrics16;
 
     public SettingsMenu() {
         renderObject = new SettingsMenuRenderer();

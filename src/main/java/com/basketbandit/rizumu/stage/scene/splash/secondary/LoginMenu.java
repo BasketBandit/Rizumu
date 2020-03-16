@@ -22,14 +22,14 @@ import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 
 public class LoginMenu extends Scene {
-    String alphaNum = Pattern.compile("^[a-zA-Z0-9_]*$").pattern();
-    String alphaNumSpec = Pattern.compile("^[A-Za-z0-9!\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]*$").pattern();
+    private String alphaNum = Pattern.compile("^[a-zA-Z0-9_]*$").pattern();
+    private String alphaNumSpec = Pattern.compile("^[A-Za-z0-9!\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]*$").pattern();
 
-    TextLine username;
-    TextLine password;
-    TextLine selected;
+    private TextLine username;
+    private TextLine password;
+    private TextLine selected;
 
-    FontMetrics metrics16;
+    private FontMetrics metrics16;
 
     public LoginMenu() {
         renderObject = new LoginMenuRenderer();
