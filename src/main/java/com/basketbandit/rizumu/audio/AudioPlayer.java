@@ -9,24 +9,21 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-public class AudioPlayer extends Thread {
+public final class AudioPlayer {
     private static final Logger log = LoggerFactory.getLogger(AudioPlayer.class);
     private MediaPlayer player;
-    private float volume;
+    private double volume;
 
     public AudioPlayer(float volume) {
         this.volume = volume;
     }
 
-    public void changeTrack(String path) {
-        player = new MediaPlayer(new Media(new File(path).toURI().toString()));
-        player.setVolume(volume);
-        player.setOnStopped(player::dispose);
-        player.setOnEndOfMedia(player::dispose);
+    public void load(String path) {
+        load(new Media(new File(path).toURI().toString()));
         log.info("Track changed: " + path + ", volume: " + volume + ".");
     }
 
-    public void changeTrack(Media media) {
+    public void load(Media media) {
         player = new MediaPlayer(media);
         player.setVolume(volume);
         player.setOnStopped(player::dispose);
@@ -34,9 +31,9 @@ public class AudioPlayer extends Thread {
         log.info("Track changed: " + media.getSource() + ", volume: " + volume);
     }
 
-    public void hotChangeTrack(String path) {
-        stopMedia();
-        changeTrack(path);
+    public void hotLoad(String path) {
+        stop();
+        load(path);
         play();
     }
 
@@ -50,34 +47,38 @@ public class AudioPlayer extends Thread {
      * @param identifier {@link String}
      */
     public void play(String identifier) {
+        if(identifier.equals("track-hit")) {
+            return; // volume of clip plays causes stuttering (my assumption is due to overhead of threads starting/terminating several times a second)
+        }
         Sound.getAudioClip(identifier).play(volume);
     }
 
-    public void pauseMedia() {
+    public void pause() {
         player.pause();
     }
 
-    public void resumeMedia() {
+    public void resume() {
         player.play();
     }
 
-    public void stopMedia() {
+    public void stop() {
         player.stop();
     }
 
-    public float getVolume() {
-        return volume;
+    public double getVolume() {
+        return player.getVolume();
     }
 
-    public void setVolume(float volume) {
+    public void setVolume(double volume) {
         this.volume = volume;
+        player.setVolume(volume);
     }
 
     /**
      * Position of currently playing media as a percentage.
      * @return {@link Integer}
      */
-    public double getMediaPosition() {
+    public double getPosition() {
         return player.getCurrentTime().toMillis() != 0 ? (player.getCurrentTime().toMillis() / player.getTotalDuration().toMillis()) * 100 : 0.0;
     }
 }

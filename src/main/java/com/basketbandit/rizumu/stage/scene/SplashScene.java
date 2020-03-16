@@ -64,7 +64,7 @@ public class SplashScene extends Scene {
         KeyAdapters.setKeyAdapter("splash", null);
 
         if(Engine.getSecondaryScene() == null) {
-            audioPlayer.changeTrack(Sound.getMedia("menu-music"));
+            audioPlayer.load(Sound.getMedia("menu-music"));
             audioPlayer.play();
         }
         return this;
@@ -114,7 +114,7 @@ public class SplashScene extends Scene {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(buttons.get("settingsButton").isHovered()) {
                     effectPlayer.play("menu-click");
-                    audioPlayer.stopMedia();
+                    audioPlayer.stop();
                     Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SETTINGS).init());
                     return;
                 }
@@ -133,7 +133,7 @@ public class SplashScene extends Scene {
                 // prevent access to menu before tracks are parsed
                 if(TrackParser.isFinished()) {
                     effectPlayer.play("menu-select2");
-                    audioPlayer.stopMedia();
+                    audioPlayer.stop();
                     Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
                 }
             }

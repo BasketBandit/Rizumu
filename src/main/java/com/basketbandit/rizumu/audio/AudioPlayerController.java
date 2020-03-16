@@ -13,13 +13,10 @@ public class AudioPlayerController {
 
     public void addAudioPlayer(String name, AudioPlayer audioPlayer) {
         audioPlayers.put(name, audioPlayer);
-        audioPlayer.setName(name);
-        audioPlayer.start();
     }
 
     public void removeAudioPlayer(String player) {
         audioPlayers.remove(player);
-
     }
 
     public static AudioPlayer getAudioPlayer(String player) {

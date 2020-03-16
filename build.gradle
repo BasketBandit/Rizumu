@@ -1,5 +1,4 @@
 plugins {
-    id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.8'
 }
@@ -14,7 +13,7 @@ tasks.withType(JavaCompile) {
 }
 
 javafx {
-    version = '13'
+    version = '14'
     modules = [ 'javafx.controls', 'javafx.media' ]
 }
 
@@ -40,6 +39,7 @@ ext {
     commonsIO                    = '2.6'
     mysqlConnectorJava           = '8.0.18'
     springSecurity               = '5.2.2.RELEASE'
+    javaFX                       = '14'
     jUnit                        = '4.12'
 }
 
@@ -52,5 +52,6 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: hikaricp
     compile group: 'mysql', name: 'mysql-connector-java', version: mysqlConnectorJava
     compile group: 'org.springframework.security', name: 'spring-security-crypto', version: springSecurity
+    compile group: 'org.openjfx', name: 'javafx-media', version: javaFX
     testCompile group: 'junit', name: 'junit', version: jUnit
 }

@@ -34,9 +34,6 @@ public class Engine extends Thread {
 
     public Engine() {
         this.setName("Engine");
-    }
-
-    public void run() {
         // initialises system configs
         new Configuration();
 
@@ -69,7 +66,10 @@ public class Engine extends Thread {
         staticScenes.put(Scenes.RESULTS, new ResultsScene());
 
         setPrimaryScene(staticScenes.get(Scenes.SPLASH).init());
+    }
 
+    @Override
+    public void run() {
         long time = System.currentTimeMillis();
         long lastTime = System.nanoTime();
         double unprocessed = 0.0;
