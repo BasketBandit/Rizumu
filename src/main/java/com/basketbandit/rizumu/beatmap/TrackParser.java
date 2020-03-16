@@ -14,25 +14,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class TrackParser {
     private static final Logger log = LoggerFactory.getLogger(TrackParser.class);
 
-    private HashMap<String, File> trackFiles;
-    private HashMap<String, Track> trackObjects;
+    private HashMap<String, File> trackFiles = new HashMap<>();
+    private HashMap<String, Track> trackObjects = new HashMap<>();
     private static boolean finished = true;
     private static String loadingTrack = "Loading...";
 
     public TrackParser(String path) {
-        finished = false;
-
         trackFiles = new HashMap<>();
         trackObjects = new HashMap<>();
 
         // Checks all the files in the directory of the given path for files ending in .yaml, then tries to parse them as beatmaps.
         try(Stream<Path> walk = Files.walk(Paths.get(path))) {
+            finished = false;
             walk.parallel().filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> {
                 File file = s.toFile();
                 Track track = parseTrack(file);
@@ -41,12 +39,12 @@ public class TrackParser {
                 trackFiles.put(name, file);
                 trackObjects.put(name, track);
             });
+            loadingTrack = "Click to start!";
+            finished = true;
+            log.info(trackFiles.size() + " track file(s) located");
         } catch(Exception ex) {
             log.error("An error occurred while running the {} class, message: {}", this.getClass().getSimpleName(), ex.getMessage(), ex);
         }
-
-        finished = true;
-        log.info(trackFiles.size() + " track file(s) located");
     }
 
     public Track parseTrack(File file) {
@@ -54,14 +52,12 @@ public class TrackParser {
             Track track = new ObjectMapper(new YAMLFactory()).readValue(new FileReader(file), Track.class);
             track.setTrackInfo(file.getParent(), file.getName(), file);
 
-            // all of this to determine the length of the track...
-            AtomicInteger a = new AtomicInteger();
+            // determine length of track (because media is lazy)
             MediaPlayer m = new MediaPlayer(new Media(new File(track.getAudioFilePath()).toURI().toString()));
-            m.setOnReady(() -> a.set((int) m.getMedia().getDuration().toSeconds()));
-            while(a.get() == 0) {
-                int x =+ 1;
+            while(track.getTrackLength() == 0) {
+                track.setTrackLength((int) m.getMedia().getDuration().toMillis());
+                Thread.sleep(1);
             }
-            track.setTrackLength(a.get());
 
             return track;
         } catch(Exception ex) {

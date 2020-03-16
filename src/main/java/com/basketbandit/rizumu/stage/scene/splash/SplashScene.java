@@ -79,9 +79,7 @@ public class SplashScene extends Scene {
 
             g.setFont(Fonts.default24);
             g.setColor(Color.BLACK);
-            if(!TrackParser.isFinished()) {
-                g.drawString(TrackParser.getLoadingTrack(), Alignment.center(TrackParser.getLoadingTrack(), g.getFontMetrics(Fonts.default24), 0, Configuration.getWidth()), (float) (Configuration.getHeight()/2.0 + 150));
-            }
+            g.drawString(TrackParser.getLoadingTrack(), Alignment.center(TrackParser.getLoadingTrack(), g.getFontMetrics(Fonts.default24), 0, Configuration.getWidth()), (float) (Configuration.getHeight()/2.0 + 150));
 
             buttons.values().forEach(b -> {
                 g.setColor(b.getColor());

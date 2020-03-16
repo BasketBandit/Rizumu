@@ -19,6 +19,7 @@ import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import com.basketbandit.rizumu.stage.scene.Scene;
 import com.basketbandit.rizumu.stage.scene.play.scondary.PauseMenu;
+import com.basketbandit.rizumu.stage.scene.play.scondary.ResultsMenu;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -36,6 +37,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayScene extends Scene {
     private PauseMenu pauseMenu = new PauseMenu();
+    private ResultsMenu resultsMenu = new ResultsMenu();
 
     protected Track track;
     protected Beatmap beatmap;
@@ -88,7 +90,7 @@ public class PlayScene extends Scene {
             ((TrackRenderer) renderObject).titleBar = new Container(0, 0, Configuration.getWidth(), 50);
 
             ScheduleHandler.registerUniqueJob(new BeatmapInitJob(this)); // load beatmap notes, start audio, etc.
-            ScheduleHandler.registerUniqueJob(new BeatmapEndJob(this, track.getTrackLength()*1000));
+            ScheduleHandler.registerUniqueJob(new BeatmapEndJob(this, track.getTrackLength()));
         }
 
         return this;
@@ -96,6 +98,10 @@ public class PlayScene extends Scene {
 
     public PauseMenu getPauseMenu() {
         return pauseMenu;
+    }
+
+    public ResultsMenu getResultsMenu() {
+        return resultsMenu;
     }
 
     public Score getScore() {

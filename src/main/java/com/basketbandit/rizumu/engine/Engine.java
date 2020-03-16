@@ -41,10 +41,11 @@ public class Engine extends Thread {
         // initialises system configs
         new Configuration();
 
-        // initialises renderer
-        renderer = new Renderer();
+        // start parsing tracks as early a possible
+        new Thread(() -> trackParser = new TrackParser(Configuration.getTracksPath()), "TrackParser").start();
 
-        // initialises ticker
+        // initialises renderer/ticker
+        renderer = new Renderer();
         ticker = new Ticker();
 
         // initialise database connection
@@ -200,10 +201,6 @@ public class Engine extends Thread {
 
     public static boolean secondaryRenderObjectIsNull() {
         return renderer.secondaryRenderObjectIsNull();
-    }
-
-    public static void setTrackParser(TrackParser parser) {
-        trackParser = parser;
     }
 
     public static TrackParser getTrackParser() {

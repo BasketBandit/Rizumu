@@ -43,7 +43,7 @@ public class Track {
     private String filePath;
     private String fileName;
     private File file;
-    private int trackLength; // seconds
+    private int trackLength; // milliseconds
 
     public Track setTrackInfo(String filePath, String fileName, File file) {
         this.filePath = filePath + "/"; // file.getParent() leaves out trailing slash
@@ -107,7 +107,8 @@ public class Track {
     }
 
     public String getFormattedTrackLength() {
-        return ((trackLength/60) % 60) + ":" + ((((trackLength % 60)+"").length() < 2) ? "0" + (trackLength % 60) : (trackLength % 60));
+        int t = trackLength/1000;
+        return ((t/60) % 60) + ":" + ((((t % 60)+"").length() < 2) ? "0" + (t % 60) : (t % 60));
     }
 
     @JsonProperty("start_delay")
