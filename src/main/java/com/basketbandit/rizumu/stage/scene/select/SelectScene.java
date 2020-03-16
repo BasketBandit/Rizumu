@@ -1,14 +1,13 @@
 package com.basketbandit.rizumu.stage.scene.select;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.engine.Engine;
-import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
 import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.media.Image;
@@ -51,8 +50,6 @@ public class SelectScene extends Scene {
 
     @Override
     public SelectScene init(Object... object) {
-        Engine.setTrackParser(new TrackParser(Configuration.getTracksPath()));
-
         MouseAdapters.setMouseAdapter("menu", mouseAdapter);
         KeyAdapters.setKeyAdapter("menu", keyAdapter);
 
