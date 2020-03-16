@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.object;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Fonts;
 

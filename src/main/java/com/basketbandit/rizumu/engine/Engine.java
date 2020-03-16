@@ -1,13 +1,18 @@
-package com.basketbandit.rizumu;
+package com.basketbandit.rizumu.engine;
 
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.database.Connection;
-import com.basketbandit.rizumu.resource.Image;
-import com.basketbandit.rizumu.resource.Sound;
+import com.basketbandit.rizumu.media.Image;
+import com.basketbandit.rizumu.media.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
+import com.basketbandit.rizumu.stage.scene.menu.MenuScene;
+import com.basketbandit.rizumu.stage.scene.splash.SplashScene;
+import com.basketbandit.rizumu.stage.scene.track.TrackScene;
+import com.basketbandit.rizumu.stage.scene.track.scondary.ResultsScene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +39,6 @@ public class Engine extends Thread {
 
     public Engine() {
         this.setName("Engine");
-    }
-
-    public void run() {
         // initialises system configs
         new Configuration();
 
@@ -63,13 +65,15 @@ public class Engine extends Thread {
         new Image();
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
-        staticScenes.put(Scenes.SETTINGS, new SettingsScene());
         staticScenes.put(Scenes.MENU, new MenuScene());
         staticScenes.put(Scenes.TRACK, new TrackScene());
         staticScenes.put(Scenes.RESULTS, new ResultsScene());
 
         setPrimaryScene(staticScenes.get(Scenes.SPLASH).init());
+    }
 
+    @Override
+    public void run() {
         long time = System.currentTimeMillis();
         long lastTime = System.nanoTime();
         double unprocessed = 0.0;
@@ -142,7 +146,7 @@ public class Engine extends Thread {
         primaryScene = scene;
         renderer.setPrimaryRenderObject(scene.getRenderObject());
         ticker.setPrimaryTickObject(scene.getTickObject());
-        log.info("Primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+        log.info("Primary render/tick objects changed: " + (scene.getRenderObject() != null ? scene.getRenderObject().getClass().getSimpleName() : "null") + ";" + (scene.getTickObject() != null ? scene.getTickObject().getClass().getSimpleName() : "null"));
     }
 
     public static Scene getPrimaryScene() {
@@ -155,7 +159,7 @@ public class Engine extends Thread {
         if(scene != null) {
             renderer.setSecondaryRenderObject(scene.getRenderObject());
             ticker.setSecondaryTickObject(scene.getTickObject());
-            log.info("Secondary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+            log.info("Secondary render/tick objects changed: " + (scene.getRenderObject() != null ? scene.getRenderObject().getClass().getSimpleName() : "null") + ";" + (scene.getTickObject() != null ? scene.getTickObject().getClass().getSimpleName() : "null"));
             return;
         }
 

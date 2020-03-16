@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.resource;
+package com.basketbandit.rizumu.media;
 
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;

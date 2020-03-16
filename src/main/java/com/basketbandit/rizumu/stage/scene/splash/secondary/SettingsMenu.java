@@ -1,13 +1,13 @@
-package com.basketbandit.rizumu.stage.scene;
+package com.basketbandit.rizumu.stage.scene.splash.secondary;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Engine;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
-import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.stage.scene.Scene;
+import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
 
 import java.awt.*;
@@ -16,28 +16,36 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SettingsScene extends Scene {
+public class SettingsMenu extends Scene {
+    private FontMetrics metrics16;
 
-    public SettingsScene() {
-        renderObject = new SettingsRenderer();
-        tickObject = new SettingsTicker();
-        mouseAdapter = new SettingsMouseAdapter();
-        keyAdapter = new SettingsKeyAdapter();
+    public SettingsMenu() {
+        renderObject = new SettingsMenuRenderer();
+        tickObject = null;
+        mouseAdapter = new SettingsMenuMouseAdapter();
+        keyAdapter = new SettingsMenuKeyAdapter();
 
         buttons.put("frameRateButton", new Button(Configuration.getWidth() - 120, Configuration.getHeight() - 70, 100, 50));
     }
 
     @Override
-    public SettingsScene init(Object... object) {
+    public SettingsMenu init(Object... object) {
         MouseAdapters.setMouseAdapter("settings", mouseAdapter);
         KeyAdapters.setKeyAdapter("settings", keyAdapter);
         return this;
     }
 
-    private class SettingsRenderer implements RenderObject {
+    private class SettingsMenuRenderer implements RenderObject {
 
         @Override
         public void render(Graphics2D g) {
+            if(metrics16 == null) {
+                metrics16 = g.getFontMetrics(Fonts.default16);
+            }
+
+            g.setColor(Colours.DARK_GREY_90);
+            g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
+
             // background
             g.setFont(Fonts.default12);
 
@@ -53,13 +61,7 @@ public class SettingsScene extends Scene {
         }
     }
 
-    private class SettingsTicker implements TickObject {
-        @Override
-        public void tick() {
-        }
-    }
-
-    private class SettingsMouseAdapter extends MouseAdapter {
+    private class SettingsMenuMouseAdapter extends MouseAdapter {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
@@ -87,13 +89,13 @@ public class SettingsScene extends Scene {
         }
     }
 
-    public class SettingsKeyAdapter extends KeyAdapter {
+    public class SettingsMenuKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SPLASH).init());
+                Engine.getPrimaryScene().init();
+                Engine.setSecondaryScene(null);
             }
         }
     }
 }
-

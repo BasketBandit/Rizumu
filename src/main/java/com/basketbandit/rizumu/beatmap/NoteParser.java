@@ -4,7 +4,7 @@ import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Segment;
-import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.media.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

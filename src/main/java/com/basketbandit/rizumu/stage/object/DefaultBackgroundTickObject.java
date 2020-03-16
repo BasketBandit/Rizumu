@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.stage.object;
 
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.utility.Cursors;
 

@@ -1,7 +1,7 @@
-package com.basketbandit.rizumu.stage.scene;
+package com.basketbandit.rizumu.stage.scene.menu;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
@@ -11,11 +11,12 @@ import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.media.Image;
 import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.stage.scene.Scene;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -74,7 +75,7 @@ public class MenuScene extends Scene {
             selectedButton = trackButtons.get(5);
             selectedLeaderboard = Database.getScores(selectedButton.getTrack(), selectedButton.getBeatmap());
             menuBackgroundImage = selectedButton.getTrack().getImage();
-            audioPlayer.hotChangeTrack(selectedButton.getTrack().getAudioFilePath());
+            audioPlayer.hotLoad(selectedButton.getTrack().getAudioFilePath(), true);
         }
 
         menuBackgroundOpacity = 1.0f;
@@ -181,7 +182,7 @@ public class MenuScene extends Scene {
                     if(t.isHovered()) {
                         if(selectedButton.getId() == t.getId()) {
                             effectPlayer.play("menu-select2");
-                            audioPlayer.stopMedia();
+                            audioPlayer.stop();
                             Track track = Engine.getTrackParser().parseTrack(t.getTrack().getFile()); // re-parse the map
                             for(Beatmap beatmap : track.getBeatmaps()) {
                                 if(beatmap.getName().equals(t.getBeatmap().getName())) {
@@ -191,7 +192,7 @@ public class MenuScene extends Scene {
                             }
                         } else {
                             effectPlayer.play("menu-click");
-                            audioPlayer.hotChangeTrack(t.getTrack().getAudioFilePath());
+                            audioPlayer.hotLoad(t.getTrack().getAudioFilePath(), true);
                             selectedButton = t;
                             selectedLeaderboard = Database.getScores(t.getTrack(), t.getBeatmap());
                             menuBackgroundOpacity = 0.05f;
@@ -229,7 +230,7 @@ public class MenuScene extends Scene {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                audioPlayer.stopMedia();
+                audioPlayer.stop();
                 Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SPLASH).init());
             }
         }

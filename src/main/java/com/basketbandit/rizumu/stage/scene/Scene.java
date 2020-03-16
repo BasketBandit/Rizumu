@@ -13,18 +13,18 @@ import java.awt.event.MouseAdapter;
 import java.util.HashMap;
 
 public abstract class Scene {
-    Logger log = LoggerFactory.getLogger(Scene.class);
+    protected Logger log = LoggerFactory.getLogger(Scene.class);
 
-    RenderObject renderObject;
-    TickObject tickObject;
+    protected RenderObject renderObject;
+    protected TickObject tickObject;
 
-    MouseAdapter mouseAdapter;
-    KeyAdapter keyAdapter;
+    protected MouseAdapter mouseAdapter;
+    protected KeyAdapter keyAdapter;
 
-    AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
-    AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
+    protected AudioPlayer audioPlayer = AudioPlayerController.getAudioPlayer("music");
+    protected AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
 
-    HashMap<String, Button> buttons = new HashMap<>();
+    protected HashMap<String, Button> buttons = new HashMap<>();
 
     public RenderObject getRenderObject() {
         return renderObject;

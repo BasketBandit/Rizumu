@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.resource;
+package com.basketbandit.rizumu.media;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

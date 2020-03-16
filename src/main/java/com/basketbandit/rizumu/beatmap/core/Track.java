@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.beatmap.core;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.media.Image;
 import com.basketbandit.rizumu.utility.extension.AffineTransformEx;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

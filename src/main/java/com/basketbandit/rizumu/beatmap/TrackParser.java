@@ -59,7 +59,7 @@ public class TrackParser {
             MediaPlayer m = new MediaPlayer(new Media(new File(track.getAudioFilePath()).toURI().toString()));
             m.setOnReady(() -> a.set((int) m.getMedia().getDuration().toSeconds()));
             while(a.get() == 0) {
-                System.currentTimeMillis();
+                int x =+ 1;
             }
             track.setTrackLength(a.get());
 

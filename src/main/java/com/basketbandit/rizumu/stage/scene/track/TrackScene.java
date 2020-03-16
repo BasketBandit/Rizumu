@@ -1,7 +1,7 @@
-package com.basketbandit.rizumu.stage.scene;
+package com.basketbandit.rizumu.stage.scene.track;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.NoteParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
@@ -19,6 +19,7 @@ import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.stage.scene.Scene;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -224,7 +225,7 @@ public class TrackScene extends Scene {
             menuCooldownWarning = (System.currentTimeMillis() - menuCooldown) < 1000;
 
             // update progress bar
-            progressBar.width = (int) ((Configuration.getWidth()/100.0) * audioPlayer.getMediaPosition());
+            progressBar.width = (int) ((Configuration.getWidth()/100.0) * audioPlayer.getPosition());
 
             // stuff related to opacity
             hitKeyFlashes.forEach(keyFlash -> {
@@ -383,7 +384,7 @@ public class TrackScene extends Scene {
             MouseAdapters.setMouseAdapter("pause", mouseAdapter);
             KeyAdapters.setKeyAdapter("pause", null);
 
-            audioPlayer.pauseMedia();
+            audioPlayer.pause();
             return this;
         }
 
@@ -425,7 +426,7 @@ public class TrackScene extends Scene {
                 if(e.getButton() == MouseEvent.BUTTON1) {
                     // 'resume' button, close the pause menu
                     if(buttons.get("resumeButton").isHovered()) {
-                        audioPlayer.resumeMedia();
+                        audioPlayer.resume();
                         effectPlayer.play("menu-click2");
                         TrackScene.this.init();
                         Engine.setSecondaryScene(null);
@@ -437,7 +438,7 @@ public class TrackScene extends Scene {
                     // 'restart' button, restart the beatmap
                     if(buttons.get("restartButton").isHovered()) {
                         effectPlayer.play("menu-click3");
-                        audioPlayer.stopMedia();
+                        audioPlayer.stop();
                         Engine.setSecondaryScene(null);
                         ScheduleHandler.cancelExecution();
 
@@ -454,7 +455,7 @@ public class TrackScene extends Scene {
                     // 'quit' button, go back to the main menu
                     if(buttons.get("quitButton").isHovered()) {
                         effectPlayer.play("menu-click4");
-                        audioPlayer.stopMedia();
+                        audioPlayer.stop();
                         ScheduleHandler.cancelExecution();
                         Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
                         Engine.setSecondaryScene(null);
