@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu.stage.scene;
+package com.basketbandit.rizumu.stage.scene.track;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.engine.Engine;
@@ -19,6 +19,7 @@ import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
+import com.basketbandit.rizumu.stage.scene.Scene;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;

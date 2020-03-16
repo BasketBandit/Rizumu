@@ -4,7 +4,7 @@ import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.Task;
 import com.basketbandit.rizumu.stage.Scenes;
-import com.basketbandit.rizumu.stage.scene.TrackScene;
+import com.basketbandit.rizumu.stage.scene.track.TrackScene;
 
 public class BeatmapEndTask implements Task {
     private final TrackScene scene;

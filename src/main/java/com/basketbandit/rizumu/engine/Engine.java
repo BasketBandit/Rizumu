@@ -9,6 +9,10 @@ import com.basketbandit.rizumu.media.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;
+import com.basketbandit.rizumu.stage.scene.menu.MenuScene;
+import com.basketbandit.rizumu.stage.scene.splash.SplashScene;
+import com.basketbandit.rizumu.stage.scene.track.TrackScene;
+import com.basketbandit.rizumu.stage.scene.track.scondary.ResultsScene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +65,6 @@ public class Engine extends Thread {
         new Image();
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
-        staticScenes.put(Scenes.SETTINGS, new SettingsScene());
         staticScenes.put(Scenes.MENU, new MenuScene());
         staticScenes.put(Scenes.TRACK, new TrackScene());
         staticScenes.put(Scenes.RESULTS, new ResultsScene());
