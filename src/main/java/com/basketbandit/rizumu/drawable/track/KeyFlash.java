@@ -2,7 +2,7 @@ package com.basketbandit.rizumu.drawable.track;
 
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.media.Image;
 
 public class KeyFlash {
     private java.awt.Image image = Image.getBufferedImage("hitflash-body").getScaledInstance(Configuration.getDefaultNoteWidth()+1, 150, 0); // +1 to width to plug up any 1/2 pixel gaps

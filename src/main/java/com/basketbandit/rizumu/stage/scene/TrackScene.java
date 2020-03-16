@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.NoteParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;

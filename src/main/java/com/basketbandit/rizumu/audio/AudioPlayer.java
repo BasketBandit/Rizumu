@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.audio;
 
-import com.basketbandit.rizumu.resource.Sound;
+import com.basketbandit.rizumu.media.Sound;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;

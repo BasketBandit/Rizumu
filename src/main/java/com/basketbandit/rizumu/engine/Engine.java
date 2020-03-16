@@ -1,10 +1,11 @@
-package com.basketbandit.rizumu;
+package com.basketbandit.rizumu.engine;
 
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.database.Connection;
-import com.basketbandit.rizumu.resource.Image;
-import com.basketbandit.rizumu.resource.Sound;
+import com.basketbandit.rizumu.media.Image;
+import com.basketbandit.rizumu.media.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.*;

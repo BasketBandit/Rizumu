@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.input;
 
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 
 import java.awt.event.MouseAdapter;
 import java.util.HashMap;

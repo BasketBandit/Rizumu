@@ -1,4 +1,4 @@
-package com.basketbandit.rizumu;
+package com.basketbandit.rizumu.engine;
 
 import com.basketbandit.rizumu.stage.object.DefaultBackgroundTickObject;
 import com.basketbandit.rizumu.stage.object.TickObject;

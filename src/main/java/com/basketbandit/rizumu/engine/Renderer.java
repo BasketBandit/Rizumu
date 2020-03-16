@@ -1,5 +1,6 @@
-package com.basketbandit.rizumu;
+package com.basketbandit.rizumu.engine;
 
+import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.stage.object.DefaultBackgroundRenderObject;
 import com.basketbandit.rizumu.stage.object.DefaultSystemRenderObject;

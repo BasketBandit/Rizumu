@@ -1,7 +1,7 @@
 package com.basketbandit.rizumu.stage.scene;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.beatmap.TrackParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Track;
@@ -11,7 +11,7 @@ import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.TrackButton;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.resource.Image;
+import com.basketbandit.rizumu.media.Image;
 import com.basketbandit.rizumu.score.Score;
 import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;

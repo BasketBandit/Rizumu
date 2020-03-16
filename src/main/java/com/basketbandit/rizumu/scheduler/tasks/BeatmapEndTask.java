@@ -1,6 +1,6 @@
 package com.basketbandit.rizumu.scheduler.tasks;
 
-import com.basketbandit.rizumu.Engine;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.Task;
 import com.basketbandit.rizumu.stage.Scenes;
