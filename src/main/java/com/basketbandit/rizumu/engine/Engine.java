@@ -146,7 +146,7 @@ public class Engine extends Thread {
         primaryScene = scene;
         renderer.setPrimaryRenderObject(scene.getRenderObject());
         ticker.setPrimaryTickObject(scene.getTickObject());
-        log.info("Primary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+        log.info("Primary render/tick objects changed: " + (scene.getRenderObject() != null ? scene.getRenderObject().getClass().getSimpleName() : "null") + ";" + (scene.getTickObject() != null ? scene.getTickObject().getClass().getSimpleName() : "null"));
     }
 
     public static Scene getPrimaryScene() {
@@ -159,7 +159,7 @@ public class Engine extends Thread {
         if(scene != null) {
             renderer.setSecondaryRenderObject(scene.getRenderObject());
             ticker.setSecondaryTickObject(scene.getTickObject());
-            log.info("Secondary render/tick objects changed: " + scene.getRenderObject().getClass().getSimpleName() + ";" + scene.getTickObject().getClass().getSimpleName());
+            log.info("Secondary render/tick objects changed: " + (scene.getRenderObject() != null ? scene.getRenderObject().getClass().getSimpleName() : "null") + ";" + (scene.getTickObject() != null ? scene.getTickObject().getClass().getSimpleName() : "null"));
             return;
         }
 
