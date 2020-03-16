@@ -65,6 +65,7 @@ public class SplashScene extends Scene {
 
         if(Engine.getSecondaryScene() == null) {
             audioPlayer.load(Sound.getMedia("menu-music"));
+            audioPlayer.loop();
             audioPlayer.play();
         }
         return this;

@@ -4,6 +4,7 @@ import com.basketbandit.rizumu.media.Sound;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +32,12 @@ public final class AudioPlayer {
         log.info("Track changed: " + media.getSource() + ", volume: " + volume);
     }
 
-    public void hotLoad(String path) {
+    public void hotLoad(String path, boolean loop) {
         stop();
         load(path);
+        if(loop) {
+            loop();
+        }
         play();
     }
 
@@ -63,6 +67,10 @@ public final class AudioPlayer {
 
     public void stop() {
         player.stop();
+    }
+
+    public void loop() {
+        player.setOnEndOfMedia(() -> player.seek(Duration.millis(0)));
     }
 
     public double getVolume() {

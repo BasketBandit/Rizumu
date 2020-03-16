@@ -74,7 +74,7 @@ public class MenuScene extends Scene {
             selectedButton = trackButtons.get(5);
             selectedLeaderboard = Database.getScores(selectedButton.getTrack(), selectedButton.getBeatmap());
             menuBackgroundImage = selectedButton.getTrack().getImage();
-            audioPlayer.hotLoad(selectedButton.getTrack().getAudioFilePath());
+            audioPlayer.hotLoad(selectedButton.getTrack().getAudioFilePath(), true);
         }
 
         menuBackgroundOpacity = 1.0f;
@@ -191,7 +191,7 @@ public class MenuScene extends Scene {
                             }
                         } else {
                             effectPlayer.play("menu-click");
-                            audioPlayer.hotLoad(t.getTrack().getAudioFilePath());
+                            audioPlayer.hotLoad(t.getTrack().getAudioFilePath(), true);
                             selectedButton = t;
                             selectedLeaderboard = Database.getScores(t.getTrack(), t.getBeatmap());
                             menuBackgroundOpacity = 0.05f;
