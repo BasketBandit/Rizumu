@@ -17,6 +17,6 @@ public class BeatmapEndTask implements Task {
     public void run() {
         scene.getAudioPlayer().stop();
         ScheduleHandler.cancelExecution();
-        Engine.setPrimaryScene(Engine.getStaticScene(Scenes.RESULTS).init(scene.getScore()));
+        Engine.setSecondaryScene(Engine.getStaticScene(Scenes.RESULTS).init(scene.getScore()));
     }
 }
