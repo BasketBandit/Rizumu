@@ -1,25 +1,24 @@
 package com.basketbandit.rizumu.stage.scene.track;
 
 import com.basketbandit.rizumu.Configuration;
-import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.beatmap.NoteParser;
 import com.basketbandit.rizumu.beatmap.core.Beatmap;
 import com.basketbandit.rizumu.beatmap.core.Note;
 import com.basketbandit.rizumu.beatmap.core.Track;
-import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.drawable.Container;
 import com.basketbandit.rizumu.drawable.track.*;
+import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
 import com.basketbandit.rizumu.scheduler.ScheduleHandler;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapEndJob;
 import com.basketbandit.rizumu.scheduler.jobs.BeatmapInitJob;
 import com.basketbandit.rizumu.score.Score;
-import com.basketbandit.rizumu.stage.Scenes;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import com.basketbandit.rizumu.stage.scene.Scene;
+import com.basketbandit.rizumu.stage.scene.track.scondary.PauseMenu;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
@@ -27,8 +26,6 @@ import com.basketbandit.rizumu.utility.Fonts;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
@@ -111,6 +108,10 @@ public class TrackScene extends Scene {
 
     public Beatmap getBeatmap() {
         return beatmap;
+    }
+
+    public void setMenuCooldown(long menuCooldown) {
+        this.menuCooldown = menuCooldown;
     }
 
     private class TrackRenderer implements RenderObject {
@@ -284,7 +285,7 @@ public class TrackScene extends Scene {
                     effectPlayer.play("menu-click");
                     menuCooldownWarning = ((menuCooldown = System.currentTimeMillis()) != 0); // != because we always want this value to return true; this is a quick and dirty way of setting both fields at once.
                     ScheduleHandler.pauseExecution(); // Still possible to slightly dsync audio by spamming pause. (need to investigate)
-                    Engine.setSecondaryScene(pauseMenu.init());
+                    Engine.setSecondaryScene(pauseMenu.init(TrackScene.this));
                     return;
                 }
             }
@@ -360,108 +361,6 @@ public class TrackScene extends Scene {
 
         public boolean isDown(int keyCode) {
             return keys[keyCode];
-        }
-    }
-
-    /**
-     * PauseMenu subclass, not given a separate class file due to it only being used in the context of a TrackScene.
-     */
-    public class PauseMenu extends Scene {
-        FontMetrics metrics16;
-
-        PauseMenu() {
-            renderObject = new PauseMenuRenderer();
-            tickObject = new PauseMenuTicker();
-            mouseAdapter = new PauseMenuMouseAdapter();
-
-            buttons.put("resumeButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75));
-            buttons.put("restartButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75));
-            buttons.put("quitButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75));
-        }
-
-        @Override
-        public PauseMenu init(Object... objects) {
-            MouseAdapters.setMouseAdapter("pause", mouseAdapter);
-            KeyAdapters.setKeyAdapter("pause", null);
-
-            audioPlayer.pause();
-            return this;
-        }
-
-        private class PauseMenuRenderer implements RenderObject {
-            @Override
-            public void render(Graphics2D g) {
-                if(metrics16 == null) {
-                    metrics16 = g.getFontMetrics(Fonts.default16);
-                }
-
-                g.setColor(Colours.DARK_GREY_90);
-                g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
-
-                g.setColor(Color.BLACK);
-                buttons.values().forEach(g::draw);
-                g.setColor(Color.DARK_GRAY);
-                buttons.values().forEach(g::fill);
-
-                g.setFont(Fonts.default16);
-                g.setColor(Color.WHITE);
-                int[] center = Alignment.centerBoth("Resume", g.getFontMetrics(Fonts.default16), buttons.get("resumeButton"));
-                g.drawString("Resume", center[0], center[1]);
-                center = Alignment.centerBoth("Restart", g.getFontMetrics(Fonts.default16), buttons.get("restartButton"));
-                g.drawString("Restart", center[0], center[1]);
-                center = Alignment.centerBoth("Quit", g.getFontMetrics(Fonts.default16), buttons.get("quitButton"));
-                g.drawString("Quit", center[0], center[1]);
-            }
-        }
-
-        private class PauseMenuTicker implements TickObject {
-            @Override
-            public void tick() {
-            }
-        }
-
-        private class PauseMenuMouseAdapter extends MouseAdapter {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if(e.getButton() == MouseEvent.BUTTON1) {
-                    // 'resume' button, close the pause menu
-                    if(buttons.get("resumeButton").isHovered()) {
-                        audioPlayer.resume();
-                        effectPlayer.play("menu-click2");
-                        TrackScene.this.init();
-                        Engine.setSecondaryScene(null);
-                        ScheduleHandler.resumeExecution();
-                        menuCooldown = System.currentTimeMillis();
-                        return;
-                    }
-
-                    // 'restart' button, restart the beatmap
-                    if(buttons.get("restartButton").isHovered()) {
-                        effectPlayer.play("menu-click3");
-                        audioPlayer.stop();
-                        Engine.setSecondaryScene(null);
-                        ScheduleHandler.cancelExecution();
-
-                        Track t = Engine.getTrackParser().parseTrack(track.getFile()); // forgive me for the horrible variable naming...
-                        for(Beatmap b: t.getBeatmaps()) {
-                            if(b.getName().equals(beatmap.getName())) {
-                                Engine.setPrimaryScene((Engine.getStaticScene(Scenes.TRACK)).init(t, b));
-                                return;
-                            }
-                        }
-                        return;
-                    }
-
-                    // 'quit' button, go back to the main menu
-                    if(buttons.get("quitButton").isHovered()) {
-                        effectPlayer.play("menu-click4");
-                        audioPlayer.stop();
-                        ScheduleHandler.cancelExecution();
-                        Engine.setPrimaryScene(Engine.getStaticScene(Scenes.MENU).init());
-                        Engine.setSecondaryScene(null);
-                    }
-                }
-            }
         }
     }
 }
