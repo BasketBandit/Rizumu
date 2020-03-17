@@ -42,19 +42,7 @@ public class Configuration {
                 log.info("Successfully created directory created at: " + userDirectory);
             }
 
-            try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File(userDirectory + File.separator + "rizumu.ini").getAbsoluteFile()))) {
-                bw.write("width = 1280");
-                bw.newLine();
-                bw.write("height = 720");
-                bw.newLine();
-                bw.write("fullscreen = true");
-                bw.newLine();
-                bw.write("framerate_unlocked = true");
-                bw.newLine();
-                bw.write("songs_directory = " + userDirectory + File.separator + "tracks");
-            } catch(Exception ex) {
-                log.error("An error occurred during directory setup, message: {}", ex.getMessage(), ex);
-            }
+            writeConfigurationFile();
         }
 
         try(BufferedReader reader = new BufferedReader(new FileReader(new File(userDirectory + File.separator + "rizumu.ini")))) {
@@ -75,12 +63,39 @@ public class Configuration {
         defaultBeatmapXPosition = (int) (250 * scale);
     }
 
+    /**
+     * Writes a configuration file to disk for the current settings.
+     */
+    public static void writeConfigurationFile() {
+        try(BufferedWriter bw = new BufferedWriter(new FileWriter(new File(userDirectory + File.separator + "rizumu.ini").getAbsoluteFile()))) {
+            bw.write("width = " + width);
+            bw.newLine();
+            bw.write("height = " + height);
+            bw.newLine();
+            bw.write("fullscreen = " + fullscreen);
+            bw.newLine();
+            bw.write("framerate_unlocked = " + unlockedFramerate);
+            bw.newLine();
+            bw.write("songs_directory = " + userDirectory + File.separator + "tracks");
+        } catch(Exception ex) {
+            log.error("An error occurred during directory setup, message: {}", ex.getMessage(), ex);
+        }
+    }
+
     public static int getHeight() {
         return height;
     }
 
+    public static void setHeight(int h) {
+        height = h;
+    }
+
     public static int getWidth() {
         return width;
+    }
+
+    public static void setWidth(int w) {
+        width = w;
     }
 
     public static double getTickRateNs() {

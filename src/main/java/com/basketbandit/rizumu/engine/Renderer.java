@@ -48,7 +48,7 @@ public class Renderer extends Canvas {
         if(Configuration.isFullscreen()) {
             frame.setUndecorated(true);
             device.setFullScreenWindow(frame);
-            device.setDisplayMode(new DisplayMode(Configuration.getWidth(), Configuration.getHeight(), 32, 60));
+            device.setDisplayMode(new DisplayMode(Configuration.getWidth(), Configuration.getHeight(), device.getDisplayMode().getBitDepth(), device.getDisplayMode().getRefreshRate()));
         }
 
         frame.setLocationRelativeTo(null);
