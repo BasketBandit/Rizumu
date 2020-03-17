@@ -21,7 +21,6 @@ import java.awt.event.MouseEvent;
 import java.util.regex.Pattern;
 
 public class LoginMenu extends Scene {
-    private String alphaNum = Pattern.compile("^[a-zA-Z0-9_]*$").pattern();
     private String alphaNumSpec = Pattern.compile("^[A-Za-z0-9!\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]*$").pattern();
 
     private TextInput selected;
@@ -65,7 +64,7 @@ public class LoginMenu extends Scene {
             buttons.values().forEach(g::draw);
             textInputs.values().forEach(g::draw);
 
-            g.setColor(Color.DARK_GRAY);
+            g.setColor(Colours.DARK_GREY);
             buttons.values().forEach(g::fill);
             textInputs.forEach((key, value) -> {
                 g.setColor(selected != null && selected.equals(value) ? Colours.BLUE : Color.DARK_GRAY);
@@ -131,34 +130,18 @@ public class LoginMenu extends Scene {
                 return;
             }
 
-            // only modify username text line if it is focused
-            if(selected.equals(textInputs.get("username"))) {
-                if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                    textInputs.get("username").deleteChar();
-                    return;
+            // only modify text input if it is focused
+            textInputs.forEach((key, value) -> {
+                if(selected.equals(value)) {
+                    if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                        value.deleteChar();
+                        return;
+                    }
+                    if(value.getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
+                        value.append(e.getKeyChar() + "");
+                    }
                 }
-                if(textInputs.get("username").getText().length() < 17 && (e.getKeyChar()+"").matches(alphaNum)) {
-                    textInputs.get("username").append(e.getKeyChar() + "");
-                }
-            }
-
-            // only modify password text line if it is focused
-            if(selected.equals(textInputs.get("password"))) {
-                if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                    textInputs.get("password").deleteChar();
-                    return;
-                }
-                if(textInputs.get("password").getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
-                    textInputs.get("password").append(e.getKeyChar() + "");
-                }
-            }
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-            if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                selected.deleteChar();
-            }
+            });
         }
     }
 }
