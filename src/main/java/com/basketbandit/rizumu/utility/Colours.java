@@ -7,12 +7,12 @@ public class Colours {
 
     public static final Color WHITE_20 = new Color(255,255,255, 50);
 
-    public static final Color DARK_GREY = new Color(25, 25, 25, 255);
+    public static final Color DARK_GREY = new Color(25, 25, 25);
     public static final Color DARK_GREY_90 = new Color(25, 25, 25, 230);
     public static final Color DARK_GREY_75 = new Color(25, 25, 25, 192);
     public static final Color DARK_GREY_50 = new Color(25, 25, 25, 128);
 
-    public static final Color MEDIUM_GREY = new Color(125, 125, 125, 255);
+    public static final Color MEDIUM_GREY = new Color(125, 125, 125);
     public static final Color MEDIUM_GREY_75 = new Color(125, 125, 125, 192);
     public static final Color MEDIUM_GREY_25 = new Color(125, 125, 125, 64);
     public static final Color MEDIUM_GREY_10 = new Color(125, 125, 125, 25);
@@ -25,4 +25,5 @@ public class Colours {
     public static final Color BLUE_25 = new Color(50, 150, 220, 64);
 
     public static final Color GOLD = new Color(255, 215, 0);
+    public static final Color GOLD_25 = new Color(255, 215, 0, 64);
 }

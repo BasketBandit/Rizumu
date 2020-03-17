@@ -222,6 +222,15 @@ public class PlayScene extends Scene {
                 g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);  // truncates timer to 3dp
             }
 
+            // logged in notifier
+            if(Configuration.getUser() == null) {
+                g.setColor(Colours.GOLD_25);
+                g.fillRect(Configuration.getWidth() - 400, Configuration.getHeight() - 50, 400, 50);
+                g.setFont(Fonts.default16);
+                g.setColor(Color.WHITE);
+                center = Alignment.centerBoth("Playing as guest, scores will NOT be saved!", metrics16, Configuration.getWidth() - 400, Configuration.getHeight() - 50, 400, 50);
+                g.drawString("Playing as guest, scores will NOT be saved!", center[0], center[1]);
+            }
         }
     }
 
