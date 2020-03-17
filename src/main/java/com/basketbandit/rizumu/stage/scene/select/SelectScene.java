@@ -130,25 +130,33 @@ public class SelectScene extends Scene {
                 g.setColor(Color.WHITE);
                 g.drawString("HIGHSCORES", Configuration.getWidth() - 390, 62);
 
-                int i = 0;
-                for(Score score: selectedLeaderboard) {
-                    g.setColor(Colours.DARK_GREY_75);
-                    g.fillRect(Configuration.getWidth() - 400, 75 + 76*i, 400, 75);
-                    g.setColor(Color.WHITE);
-                    g.setFont(Fonts.default12);
-                    g.drawString(score.getUsername(), Configuration.getWidth() - 390, 92 + 76*i);
-                    g.drawString(score.getAccuracyString() + ", MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76*i);
-                    g.setFont(Fonts.default24);
-                    g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 120 + 76*i);
-                    i++;
-                }
+                if(selectedLeaderboard != null) {
+                    int i = 0;
+                    for(Score score : selectedLeaderboard) {
+                        g.setColor(Colours.DARK_GREY_75);
+                        g.fillRect(Configuration.getWidth() - 400, 75 + 76 * i, 400, 75);
+                        g.setColor(Color.WHITE);
+                        g.setFont(Fonts.default12);
+                        g.drawString(score.getUsername(), Configuration.getWidth() - 390, 92 + 76 * i);
+                        g.drawString(score.getAccuracyString() + ", MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76 * i);
+                        g.setFont(Fonts.default24);
+                        g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 120 + 76 * i);
+                        i++;
+                    }
 
-                if(i == 0) {
+                    if(i == 0) {
+                        g.setColor(Colours.DARK_GREY_75);
+                        g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
+                        g.setColor(Color.WHITE);
+                        g.setFont(Fonts.default24);
+                        g.drawString("none :(", Configuration.getWidth() - 390, 102);
+                    }
+                } else {
                     g.setColor(Colours.DARK_GREY_75);
                     g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
                     g.setColor(Color.WHITE);
                     g.setFont(Fonts.default24);
-                    g.drawString(":(", Configuration.getWidth() - 390, 102);
+                    g.drawString("Loading...", Configuration.getWidth() - 390, 102);
                 }
             }
         }
@@ -191,7 +199,8 @@ public class SelectScene extends Scene {
                             effectPlayer.play("menu-click");
                             audioPlayer.hotLoad(t.getTrack().getAudioFilePath(), true);
                             selectedButton = t;
-                            selectedLeaderboard = Database.getScores(t.getTrack(), t.getBeatmap());
+                            selectedLeaderboard = null; // set the leaderboard to null so we can check if it's loading or not, since the asynchronous database call returns an empty list if nothing is found.
+                            new Thread(() -> selectedLeaderboard = Database.getScores(t.getTrack(), t.getBeatmap()), "Leaderboard Thread").start();
                             menuBackgroundOpacity = 0.05f;
                             prevBackgroundImage = menuBackgroundImage;
                             menuBackgroundImage = t.getTrack().getImage();
