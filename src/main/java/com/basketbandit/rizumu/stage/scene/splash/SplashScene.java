@@ -92,6 +92,8 @@ public class SplashScene extends Scene {
                 g.drawString("Login", Alignment.center("Login", g.getFontMetrics(Fonts.default12), buttons.get("loginButton")), buttons.get("loginButton").y + buttons.get("loginButton").height/2 + 4);
             } else {
                 g.drawString("Logout", Alignment.center("Logout", g.getFontMetrics(Fonts.default12), buttons.get("logoutButton")), buttons.get("logoutButton").y + buttons.get("logoutButton").height/2 + 4);
+                g.setColor(Color.BLACK);
+                g.drawString("Logged in as: " + Configuration.getUser(), (float) (buttons.get("logoutButton").getMaxX() + 10), buttons.get("logoutButton").y + buttons.get("logoutButton").height/2.0f + 4);
             }
 
             g.drawImage(settingsIcon, AffineTransform.getTranslateInstance(Configuration.getWidth() - 70, Configuration.getHeight() - 65), null);
