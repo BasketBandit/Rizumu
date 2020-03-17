@@ -29,9 +29,9 @@ public class PauseMenu extends Scene {
         tickObject = null;
         mouseAdapter = new PauseMenuMouseAdapter();
 
-        buttons.put("resumeButton", new com.basketbandit.rizumu.drawable.Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75));
-        buttons.put("restartButton", new com.basketbandit.rizumu.drawable.Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75));
-        buttons.put("quitButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75));
+        buttons.put("resumeButton", new com.basketbandit.rizumu.drawable.Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75).setButtonText("Resume"));
+        buttons.put("restartButton", new com.basketbandit.rizumu.drawable.Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75).setButtonText("Restart"));
+        buttons.put("quitButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75).setButtonText("Quit"));
     }
 
     @Override
@@ -51,22 +51,20 @@ public class PauseMenu extends Scene {
                 metrics16 = g.getFontMetrics(Fonts.default16);
             }
 
+            g.setFont(Fonts.default16);
             g.setColor(Colours.DARK_GREY_90);
             g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
 
-            g.setColor(Color.BLACK);
-            buttons.values().forEach(g::draw);
-            g.setColor(Color.DARK_GRAY);
-            buttons.values().forEach(g::fill);
-
-            g.setFont(Fonts.default16);
-            g.setColor(Color.WHITE);
-            int[] center = Alignment.centerBoth("Resume", g.getFontMetrics(Fonts.default16), buttons.get("resumeButton"));
-            g.drawString("Resume", center[0], center[1]);
-            center = Alignment.centerBoth("Restart", g.getFontMetrics(Fonts.default16), buttons.get("restartButton"));
-            g.drawString("Restart", center[0], center[1]);
-            center = Alignment.centerBoth("Quit", g.getFontMetrics(Fonts.default16), buttons.get("quitButton"));
-            g.drawString("Quit", center[0], center[1]);
+            // draw all the buttons
+            buttons.forEach((key, button) -> {
+                g.setColor(Colours.BLACK);
+                g.draw(button);
+                g.setColor(Colours.DARK_GREY);
+                g.fill(button);
+                g.setColor(Colours.WHITE);
+                centerBoth = Alignment.centerBoth(button.getButtonText(), metrics16, button);
+                g.drawString(button.getButtonText(), centerBoth[0], centerBoth[1]);
+            });
         }
     }
 
