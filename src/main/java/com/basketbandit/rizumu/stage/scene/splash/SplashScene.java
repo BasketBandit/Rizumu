@@ -6,6 +6,7 @@ import com.basketbandit.rizumu.drawable.Button;
 import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
+import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.media.Image;
 import com.basketbandit.rizumu.media.Sound;
 import com.basketbandit.rizumu.stage.Scenes;
@@ -17,6 +18,7 @@ import com.basketbandit.rizumu.stage.scene.splash.secondary.SettingsMenu;
 import com.basketbandit.rizumu.utility.Alignment;
 import com.basketbandit.rizumu.utility.Colours;
 import com.basketbandit.rizumu.utility.Fonts;
+import com.basketbandit.rizumu.utility.Polygons;
 import com.basketbandit.rizumu.utility.extension.AffineTransformEx;
 
 import java.awt.*;
@@ -32,6 +34,7 @@ public class SplashScene extends Scene {
     private BufferedImage logo;
     private java.awt.Image background;
     private java.awt.Image settingsIcon;
+    private Polygon settingsTriangle = Polygons.rightTriangle(Configuration.getWidth()-125, Configuration.getHeight()-125, 125, 125);
     private float x = 0;
 
     public SplashScene() {
@@ -96,6 +99,8 @@ public class SplashScene extends Scene {
                 g.drawString("Logged in as: " + Configuration.getUser(), (float) (buttons.get("logoutButton").getMaxX() + 10), buttons.get("logoutButton").y + buttons.get("logoutButton").height/2.0f + 4);
             }
 
+            g.setColor(Colours.DARK_GREY);
+            g.fillPolygon(settingsTriangle);
             g.drawImage(settingsIcon, AffineTransform.getTranslateInstance(Configuration.getWidth() - 70, Configuration.getHeight() - 65), null);
         }
     }
@@ -111,7 +116,7 @@ public class SplashScene extends Scene {
         @Override
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
-                if(buttons.get("settingsButton").isHovered()) {
+                if(settingsTriangle.contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
                     effectPlayer.play("menu-click");
                     Engine.setSecondaryScene(settingsMenu.init());
                     return;

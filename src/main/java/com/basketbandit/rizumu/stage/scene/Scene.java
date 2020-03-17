@@ -26,6 +26,8 @@ public abstract class Scene {
 
     protected HashMap<String, Button> buttons = new HashMap<>();
 
+    protected int[] centerBoth;
+
     public RenderObject getRenderObject() {
         return renderObject;
     }
