@@ -34,10 +34,14 @@ public class TrackParser {
             walk.parallel().filter(Files::isRegularFile).filter(file -> file.toFile().getName().endsWith(".yaml")).forEach(s -> {
                 File file = s.toFile();
                 Track track = parseTrack(file);
-                String name = track.getArtist()+track.getName();
-                loadingTrack = track.getArtist() + " - " + track.getName();
-                trackFiles.put(name, file);
-                trackObjects.put(name, track);
+                if(track != null) {
+                    String name = track.getArtist() + track.getName();
+                    loadingTrack = track.getArtist() + " - " + track.getName();
+                    trackFiles.put(name, file);
+                    trackObjects.put(name, track);
+                } else {
+                    log.error(file.getPath() + " is malformed... excluding from track list.");
+                }
             });
             loadingTrack = "Click to start!";
             finished = true;
