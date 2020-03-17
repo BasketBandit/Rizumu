@@ -168,10 +168,12 @@ public class SettingsMenu extends Scene {
             textInputs.forEach((key, value) -> {
                 if(selected.equals(value)) {
                     if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                        effectPlayer.play("key-click");
                         value.deleteChar();
                         return;
                     }
                     if(value.getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
+                        effectPlayer.play("key-click");
                         value.append(e.getKeyChar() + "");
                     }
                 }

@@ -26,6 +26,7 @@ public class Sound {
         inputStreams.put("menu-select2", getClass().getResourceAsStream("/assets/sound/selectc5g5c6.mp3"));
         inputStreams.put("track-hit", getClass().getResourceAsStream("/assets/sound/hit.mp3"));
         inputStreams.put("track-combobreak", getClass().getResourceAsStream("/assets/sound/combobreak.mp3"));
+        inputStreams.put("key-click", getClass().getResourceAsStream("/assets/sound/keyclick.mp3"));
 
         for(String identifier: inputStreams.keySet()) {
             try {

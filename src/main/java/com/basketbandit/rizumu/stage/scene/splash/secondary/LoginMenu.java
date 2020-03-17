@@ -65,7 +65,7 @@ public class LoginMenu extends Scene {
             g.setColor(Colours.DARK_GREY);
             buttons.values().forEach(g::fill);
             textInputs.forEach((key, value) -> {
-                g.setColor(selected != null && selected.equals(value) ? Colours.BLUE : Color.DARK_GRAY);
+                g.setColor(selected != null && selected.equals(value) ? Colours.BLUE : Colours.DARK_GREY);
                 g.fill(value);
                 g.setColor(Color.WHITE);
                 g.fill(value.getInnerBounds());
@@ -98,7 +98,11 @@ public class LoginMenu extends Scene {
                 if(buttons.get("loginButton").isHovered()) {
                     if(Database.login(textInputs.get("username").getText(), textInputs.get("password").getText())) {
                         Configuration.setUser(textInputs.get("username").getText());
+                        effectPlayer.play("menu-select2");
                         log.info("Successfully logged in as: " + textInputs.get("username").getText());
+                    } else {
+                        effectPlayer.play("menu-click2");
+                        log.info("Unsuccessful login as: " + textInputs.get("username").getText());
                     }
 
                     Engine.getPrimaryScene().init();
@@ -107,6 +111,7 @@ public class LoginMenu extends Scene {
 
                 textInputs.forEach((key, value) -> {
                     if(value.isHovered()) {
+                        effectPlayer.play("menu-click");
                         selected = value;
                     }
                 });
@@ -132,10 +137,12 @@ public class LoginMenu extends Scene {
             textInputs.forEach((key, value) -> {
                 if(selected.equals(value)) {
                     if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                        effectPlayer.play("key-click");
                         value.deleteChar();
                         return;
                     }
                     if(value.getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
+                        effectPlayer.play("key-click");
                         value.append(e.getKeyChar() + "");
                     }
                 }
