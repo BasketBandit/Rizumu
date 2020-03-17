@@ -102,7 +102,7 @@ public class SelectScene extends Scene {
             int[] center = Alignment.centerBoth(buttons.get("directoryButton").getButtonText(), g.getFontMetrics(Fonts.default12), buttons.get("directoryButton"));
             g.setColor(buttons.get("directoryButton").getColor());
             g.fill(buttons.get("directoryButton"));
-            g.setColor(Color.WHITE);
+            g.setColor(Colours.WHITE);
             g.drawString(buttons.get("directoryButton").getButtonText(), center[0], center[1]);
 
             // dynamic beatmap track buttons
@@ -116,7 +116,7 @@ public class SelectScene extends Scene {
                 g.setColor((t == selectedButton) ? Colours.BLUE : t.getColor());
                 g.drawRect(t.x, t.y, t.width, t.height);
 
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 g.drawString(t.getButtonText(), center[0], center[1]); // track title/artist
                 g.drawString(t.getBeatmap().getName(), Alignment.right(t.getBeatmap().getName(), metrics, t.x, t.width) - 10, (int) t.getMinY() + 20); // beatmap difficulty
                 g.drawString(t.getBeatmap().getKeys() + "K", Alignment.right(t.getBeatmap().getKeys() + "K", metrics, t.x, t.width) - 10, (int) t.getMaxY() - 10); // key count
@@ -127,7 +127,7 @@ public class SelectScene extends Scene {
             if(selectedButton != null) {
                 g.setColor(Colours.DARK_GREY_75);
                 g.fillRect(Configuration.getWidth() - 400, 45, 400, 25);
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 g.drawString("HIGHSCORES", Configuration.getWidth() - 390, 62);
 
                 if(selectedLeaderboard != null) {
@@ -135,7 +135,7 @@ public class SelectScene extends Scene {
                     for(Score score : selectedLeaderboard) {
                         g.setColor(Colours.DARK_GREY_75);
                         g.fillRect(Configuration.getWidth() - 400, 75 + 76 * i, 400, 75);
-                        g.setColor(Color.WHITE);
+                        g.setColor(Colours.WHITE);
                         g.setFont(Fonts.default12);
                         g.drawString(score.getUsername(), Configuration.getWidth() - 390, 92 + 76 * i);
                         g.drawString(score.getAccuracyString() + ", MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76 * i);
@@ -147,14 +147,14 @@ public class SelectScene extends Scene {
                     if(i == 0) {
                         g.setColor(Colours.DARK_GREY_75);
                         g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
-                        g.setColor(Color.WHITE);
+                        g.setColor(Colours.WHITE);
                         g.setFont(Fonts.default24);
                         g.drawString("none :(", Configuration.getWidth() - 390, 102);
                     }
                 } else {
                     g.setColor(Colours.DARK_GREY_75);
                     g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
-                    g.setColor(Color.WHITE);
+                    g.setColor(Colours.WHITE);
                     g.setFont(Fonts.default24);
                     g.drawString("Loading...", Configuration.getWidth() - 390, 102);
                 }

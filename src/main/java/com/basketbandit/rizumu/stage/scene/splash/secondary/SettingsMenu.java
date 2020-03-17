@@ -68,12 +68,12 @@ public class SettingsMenu extends Scene {
             // draw all text inputs
             textInputs.forEach((key, value) -> {
                 centerBoth = Alignment.centerBoth(value.getText(), metrics16, value.getBounds());
-                g.setColor(selected != null && selected.getBounds().equals(value.getBounds()) ? Colours.BLUE : Color.DARK_GRAY);
+                g.setColor(selected != null && selected.getBounds().equals(value.getBounds()) ? Colours.BLUE : Colours.DARK_GREY);
                 g.fill(value);
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 g.drawString(key, value.x + 5, value.y - 10); // label
                 g.fill(value.getInnerBounds());
-                g.setColor(Color.BLACK);
+                g.setColor(Colours.BLACK);
                 g.drawString(value.getText(), centerBoth[0], centerBoth[1]); // inner text
             });
 
@@ -92,7 +92,7 @@ public class SettingsMenu extends Scene {
             // draw text for all buttons
             buttons.forEach((key, value) -> {
                 centerBoth = Alignment.centerBoth(value.getButtonText(), metrics16, value);
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 g.drawString(value.getButtonText(), centerBoth[0], centerBoth[1]);
             });
         }

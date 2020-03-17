@@ -190,7 +190,7 @@ public class PlayScene extends Scene {
             g.setColor(progressBar.getColor());
             g.fill(progressBar); // progress
 
-            g.setColor(Color.WHITE);
+            g.setColor(Colours.WHITE);
             g.setFont(Fonts.default12);
             g.drawString(score.getScore() + " (x" + score.getMultiplier() + ")", 10, 20);
             g.drawString("%: " + BigDecimal.valueOf(score.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40); // score
@@ -218,7 +218,7 @@ public class PlayScene extends Scene {
             // menu cooldown
             if(menuCooldownWarning) {
                 g.setFont(Fonts.default12);
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 g.drawString("Cannot pause for " + Math.floor((1 - (System.currentTimeMillis() - menuCooldown) / 1000.0) * 1000) / 1000 + " seconds!", 10, 70);  // truncates timer to 3dp
             }
 
@@ -227,7 +227,7 @@ public class PlayScene extends Scene {
                 g.setColor(Colours.GOLD_25);
                 g.fillRect(Configuration.getWidth() - 400, Configuration.getHeight() - 50, 400, 50);
                 g.setFont(Fonts.default16);
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 center = Alignment.centerBoth("Playing as guest, scores will NOT be saved!", metrics16, Configuration.getWidth() - 400, Configuration.getHeight() - 50, 400, 50);
                 g.drawString("Playing as guest, scores will NOT be saved!", center[0], center[1]);
             }

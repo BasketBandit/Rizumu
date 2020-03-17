@@ -58,7 +58,7 @@ public class LoginMenu extends Scene {
             g.setColor(Colours.DARK_GREY_90);
             g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
 
-            g.setColor(Color.BLACK);
+            g.setColor(Colours.BLACK);
             buttons.values().forEach(g::draw);
             textInputs.values().forEach(g::draw);
 
@@ -67,23 +67,23 @@ public class LoginMenu extends Scene {
             textInputs.forEach((key, value) -> {
                 g.setColor(selected != null && selected.equals(value) ? Colours.BLUE : Colours.DARK_GREY);
                 g.fill(value);
-                g.setColor(Color.WHITE);
+                g.setColor(Colours.WHITE);
                 g.fill(value.getInnerBounds());
             });
 
             g.setFont(Fonts.default16);
-            g.setColor(Color.WHITE);
+            g.setColor(Colours.WHITE);
 
             int[] center = Alignment.centerBoth("Login", g.getFontMetrics(Fonts.default16), buttons.get("loginButton"));
             g.drawString("Login", center[0], center[1]);
 
             // if username is blank, draw placeholder
-            g.setColor(textInputs.get("username").getText().isEmpty() ? Color.GRAY : Color.BLACK);
+            g.setColor(textInputs.get("username").getText().isEmpty() ? Color.GRAY : Colours.BLACK);
             center = Alignment.centerBoth(textInputs.get("username").getText().isEmpty() ? "Password" : textInputs.get("username").getText(), metrics16, textInputs.get("username").getBounds());
             g.drawString(textInputs.get("username").getText().isEmpty() ? "Username" : textInputs.get("username").getText(), center[0], center[1]);
 
             // if password is blank, draw placeholder
-            g.setColor(textInputs.get("password").getText().isEmpty() ? Color.GRAY : Color.BLACK);
+            g.setColor(textInputs.get("password").getText().isEmpty() ? Color.GRAY : Colours.BLACK);
             center = Alignment.centerBoth(textInputs.get("password").getText().isEmpty() ? "Password" : "•".repeat(textInputs.get("password").getText().length()), metrics16, textInputs.get("password").getBounds());
             g.drawString(textInputs.get("password").getText().isEmpty() ? "Password" : "•".repeat(textInputs.get("password").getText().length()), center[0], center[1]);
         }

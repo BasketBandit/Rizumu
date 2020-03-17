@@ -5,7 +5,10 @@ import java.awt.*;
 public class Colours {
     public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
 
+    public static final Color WHITE = new Color(255,255,255);
     public static final Color WHITE_20 = new Color(255,255,255, 50);
+
+    public static final Color BLACK = new Color(0,0,0);
 
     public static final Color DARK_GREY = new Color(25, 25, 25);
     public static final Color DARK_GREY_90 = new Color(25, 25, 25, 230);

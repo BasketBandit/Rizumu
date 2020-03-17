@@ -19,7 +19,6 @@ import java.awt.event.MouseEvent;
 
 public class ResultsMenu extends Scene {
     private Score score;
-    private Image backgroundImage;
     private boolean uploaded = false;
 
     public ResultsMenu() {
@@ -36,7 +35,6 @@ public class ResultsMenu extends Scene {
         KeyAdapters.setKeyAdapter("results", null);
 
         this.score = (Score) object[0];
-        this.backgroundImage = score.getImage();
         if(Configuration.getUserId() != -1) {
             uploaded = Database.uploadScore(score);
         }
@@ -49,7 +47,7 @@ public class ResultsMenu extends Scene {
             g.setColor(Colours.DARK_GREY_90);
             g.fillRect(0, 0, Configuration.getWidth(), Configuration.getHeight());
 
-            g.setColor(Color.WHITE);
+            g.setColor(Colours.WHITE);
             if(Configuration.getUserId() == -1) {
                 g.drawString("Login to submit scores!", 10, 30);
             } else {
@@ -60,14 +58,14 @@ public class ResultsMenu extends Scene {
                 }
             }
 
-            g.setColor(Color.DARK_GRAY);
+            g.setColor(Colours.DARK_GREY);
             g.fill(buttons.get("track_select"));
 
             g.setFont(Fonts.default12);
-            g.setColor(Color.WHITE);
+            g.setColor(Colours.WHITE);
             g.drawString("Exit!", (int)buttons.get("track_select").getMinX(), (int)buttons.get("track_select").getCenterY());
 
-            g.setColor(Color.WHITE);
+            g.setColor(Colours.WHITE);
             g.drawString(score.getAccuracyString(), 80, 80);
             g.drawString("Highest Combo: " + score.getHighestCombo() + "!", 80, 100);
         }
