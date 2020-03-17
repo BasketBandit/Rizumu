@@ -150,7 +150,7 @@ public class SettingsMenu extends Scene {
         }
     }
 
-    public class SettingsMenuKeyAdapter extends KeyAdapter {
+    private class SettingsMenuKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {

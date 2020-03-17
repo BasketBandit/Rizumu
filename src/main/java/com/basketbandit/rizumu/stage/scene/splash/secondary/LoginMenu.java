@@ -22,10 +22,8 @@ import java.util.regex.Pattern;
 
 public class LoginMenu extends Scene {
     private String alphaNumSpec = Pattern.compile("^[A-Za-z0-9!\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]*$").pattern();
-
-    private TextInput selected;
-
     private FontMetrics metrics16;
+    private TextInput selected;
 
     public LoginMenu() {
         renderObject = new LoginMenuRenderer();
