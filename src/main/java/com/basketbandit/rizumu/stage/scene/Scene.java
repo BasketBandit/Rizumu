@@ -3,6 +3,7 @@ package com.basketbandit.rizumu.stage.scene;
 import com.basketbandit.rizumu.audio.AudioPlayer;
 import com.basketbandit.rizumu.audio.AudioPlayerController;
 import com.basketbandit.rizumu.drawable.Button;
+import com.basketbandit.rizumu.drawable.TextInput;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.object.TickObject;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public abstract class Scene {
     protected AudioPlayer effectPlayer = AudioPlayerController.getAudioPlayer("effect");
 
     protected HashMap<String, Button> buttons = new HashMap<>();
-
+    protected HashMap<String, TextInput> textInputs = new HashMap<>();
     protected int[] centerBoth;
 
     public RenderObject getRenderObject() {

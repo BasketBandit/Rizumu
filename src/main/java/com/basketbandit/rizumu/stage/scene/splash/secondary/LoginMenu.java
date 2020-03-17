@@ -3,11 +3,10 @@ package com.basketbandit.rizumu.stage.scene.splash.secondary;
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.database.Database;
 import com.basketbandit.rizumu.drawable.Button;
-import com.basketbandit.rizumu.drawable.TextLine;
+import com.basketbandit.rizumu.drawable.TextInput;
 import com.basketbandit.rizumu.engine.Engine;
 import com.basketbandit.rizumu.input.KeyAdapters;
 import com.basketbandit.rizumu.input.MouseAdapters;
-import com.basketbandit.rizumu.input.MouseMovementAdapter;
 import com.basketbandit.rizumu.stage.object.RenderObject;
 import com.basketbandit.rizumu.stage.scene.Scene;
 import com.basketbandit.rizumu.utility.Alignment;
@@ -25,9 +24,7 @@ public class LoginMenu extends Scene {
     private String alphaNum = Pattern.compile("^[a-zA-Z0-9_]*$").pattern();
     private String alphaNumSpec = Pattern.compile("^[A-Za-z0-9!\"#$%&'()*+,-./:;<=>?@\\[\\]^_`{|}~]*$").pattern();
 
-    private TextLine username;
-    private TextLine password;
-    private TextLine selected;
+    private TextInput selected;
 
     private FontMetrics metrics16;
 
@@ -37,8 +34,8 @@ public class LoginMenu extends Scene {
         mouseAdapter = new LoginMenuMouseAdapter();
         keyAdapter = new LoginMenuKeyAdapter();
 
-        username = new TextLine((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75, 10);
-        password = new TextLine((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75, 10);
+        textInputs.put("username", new TextInput((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75, 10));
+        textInputs.put("password", new TextInput((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75, 10));
 
         buttons.put("loginButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75));
     }
@@ -48,9 +45,9 @@ public class LoginMenu extends Scene {
         MouseAdapters.setMouseAdapter("login", mouseAdapter);
         KeyAdapters.setKeyAdapter("login", keyAdapter);
 
-        username.setText("");
-        password.setText("");
-        selected = username;
+        textInputs.get("username").setText("");
+        textInputs.get("password").setText("");
+        selected = textInputs.get("username");
         return this;
     }
 
@@ -66,20 +63,16 @@ public class LoginMenu extends Scene {
 
             g.setColor(Color.BLACK);
             buttons.values().forEach(g::draw);
-            g.draw(username);
-            g.draw(password);
+            textInputs.values().forEach(g::draw);
 
             g.setColor(Color.DARK_GRAY);
             buttons.values().forEach(g::fill);
-
-            g.setColor(selected != null && selected.equals(username) ? Colours.BLUE : Color.DARK_GRAY);
-            g.fill(username);
-            g.setColor(selected != null && selected.equals(password) ? Colours.BLUE : Color.DARK_GRAY);
-            g.fill(password);
-
-            g.setColor(Color.white);
-            g.fill(username.getInnerBounds());
-            g.fill(password.getInnerBounds());
+            textInputs.forEach((key, value) -> {
+                g.setColor(selected != null && selected.equals(value) ? Colours.BLUE : Color.DARK_GRAY);
+                g.fill(value);
+                g.setColor(Color.WHITE);
+                g.fill(value.getInnerBounds());
+            });
 
             g.setFont(Fonts.default16);
             g.setColor(Color.WHITE);
@@ -88,14 +81,14 @@ public class LoginMenu extends Scene {
             g.drawString("Login", center[0], center[1]);
 
             // if username is blank, draw placeholder
-            g.setColor(username.getText().isEmpty() ? Color.GRAY : Color.BLACK);
-            center = Alignment.centerBoth(username.getText().isEmpty() ? "Password" : username.getText(), metrics16, username.getBounds());
-            g.drawString(username.getText().isEmpty() ? "Username" : username.getText(), center[0], center[1]);
+            g.setColor(textInputs.get("username").getText().isEmpty() ? Color.GRAY : Color.BLACK);
+            center = Alignment.centerBoth(textInputs.get("username").getText().isEmpty() ? "Password" : textInputs.get("username").getText(), metrics16, textInputs.get("username").getBounds());
+            g.drawString(textInputs.get("username").getText().isEmpty() ? "Username" : textInputs.get("username").getText(), center[0], center[1]);
 
             // if password is blank, draw placeholder
-            g.setColor(password.getText().isEmpty() ? Color.GRAY : Color.BLACK);
-            center = Alignment.centerBoth(password.getText().isEmpty() ? "Password" : "•".repeat(password.getText().length()), metrics16, password.getBounds());
-            g.drawString(password.getText().isEmpty() ? "Password" : "•".repeat(password.getText().length()), center[0], center[1]);
+            g.setColor(textInputs.get("password").getText().isEmpty() ? Color.GRAY : Color.BLACK);
+            center = Alignment.centerBoth(textInputs.get("password").getText().isEmpty() ? "Password" : "•".repeat(textInputs.get("password").getText().length()), metrics16, textInputs.get("password").getBounds());
+            g.drawString(textInputs.get("password").getText().isEmpty() ? "Password" : "•".repeat(textInputs.get("password").getText().length()), center[0], center[1]);
         }
     }
 
@@ -106,22 +99,20 @@ public class LoginMenu extends Scene {
                 selected = null;
 
                 if(buttons.get("loginButton").isHovered()) {
-                    if(Database.login(username.getText(), password.getText())) {
-                        Configuration.setUser(username.getText());
-                        log.info("Successfully logged in as: " + username.getText());
+                    if(Database.login(textInputs.get("username").getText(), textInputs.get("password").getText())) {
+                        Configuration.setUser(textInputs.get("username").getText());
+                        log.info("Successfully logged in as: " + textInputs.get("username").getText());
                     }
 
                     Engine.getPrimaryScene().init();
                     Engine.setSecondaryScene(null); // important to do this second to stop audio being interrupted
                 }
 
-                if(username.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
-                    selected = username;
-                }
-
-                if(password.getBounds().contains(MouseMovementAdapter.getX(), MouseMovementAdapter.getY())) {
-                    selected = password;
-                }
+                textInputs.forEach((key, value) -> {
+                    if(value.isHovered()) {
+                        selected = value;
+                    }
+                });
             }
         }
     }
@@ -136,29 +127,29 @@ public class LoginMenu extends Scene {
 
             // change which text line is selected with tab key
             if(e.getKeyChar() == KeyEvent.VK_TAB) {
-                selected = (selected == null || selected.equals(password)) ? username : password;
+                selected = (selected == null || selected.equals(textInputs.get("password"))) ? textInputs.get("username") : textInputs.get("password");
                 return;
             }
 
             // only modify username text line if it is focused
-            if(selected.equals(username)) {
+            if(selected.equals(textInputs.get("username"))) {
                 if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                    username.deleteChar();
+                    textInputs.get("username").deleteChar();
                     return;
                 }
-                if(username.getText().length() < 17 && (e.getKeyChar()+"").matches(alphaNum)) {
-                    username.append(e.getKeyChar() + "");
+                if(textInputs.get("username").getText().length() < 17 && (e.getKeyChar()+"").matches(alphaNum)) {
+                    textInputs.get("username").append(e.getKeyChar() + "");
                 }
             }
 
             // only modify password text line if it is focused
-            if(selected.equals(password)) {
+            if(selected.equals(textInputs.get("password"))) {
                 if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-                    password.deleteChar();
+                    textInputs.get("password").deleteChar();
                     return;
                 }
-                if(password.getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
-                    password.append(e.getKeyChar() + "");
+                if(textInputs.get("password").getText().length() < 256 && (e.getKeyChar()+"").matches(alphaNumSpec)) {
+                    textInputs.get("password").append(e.getKeyChar() + "");
                 }
             }
         }
