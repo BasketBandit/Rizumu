@@ -94,24 +94,16 @@ public class NoteParser {
     }
 
     public static int getKey(int num) {
-        switch(num) {
-            case 0:
-                return KeyEvent.VK_Q;
-            case 1:
-                return KeyEvent.VK_W;
-            case 2:
-                return KeyEvent.VK_E;
-            case 3:
-                return KeyEvent.VK_R;
-            case 4:
-                return KeyEvent.VK_T;
-            case 5:
-                return KeyEvent.VK_Y;
-            case 6:
-                return KeyEvent.VK_U;
-            default:
-                return KeyEvent.VK_UNDEFINED;
-        }
+        return switch (num) {
+            case 0 -> KeyEvent.VK_Q;
+            case 1 -> KeyEvent.VK_W;
+            case 2 -> KeyEvent.VK_E;
+            case 3 -> KeyEvent.VK_R;
+            case 4 -> KeyEvent.VK_T;
+            case 5 -> KeyEvent.VK_Y;
+            case 6 -> KeyEvent.VK_U;
+            default -> KeyEvent.VK_UNDEFINED;
+        };
     }
 }
 
