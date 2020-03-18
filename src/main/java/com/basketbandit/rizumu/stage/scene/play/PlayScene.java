@@ -165,16 +165,20 @@ public class PlayScene extends Scene {
             // notes
             notes.stream().filter(note -> note.getMaxY() > 0).forEach(note -> {
                 if(note.getNoteType().equals("single_long")) {
+                    if(note.isMissed()) {
+                        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.25f)); // if note is missed, turn down the opacity!
+                    }
                     g.drawImage(note.getBody(), AffineTransform.getTranslateInstance(note.x + 3, note.y), null); // body
                     g.drawImage(note.getHead(), AffineTransform.getTranslateInstance(note.x, note.y + (note.height - Configuration.getDefaultNoteHeight())), null); // tail
                 }
                 g.drawImage(note.getHead(), AffineTransform.getTranslateInstance(note.x, note.y), null); // head
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1)); // make sure to reset opacity!
             });
 
             // hit flashes
             for(int i = 0; i < hitKeyFlashes.size(); i++) {
                 int imageXPos = (Configuration.getDefaultBeatmapXPosition() + (int)(Configuration.getNoteGap()*2.50) + ((Configuration.getDefaultNoteWidth()+Configuration.getNoteGap())*i));
-                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, hitKeyFlashes.get(i).getOpacity()));
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, hitKeyFlashes.get(i).getOpacity())); // fade out effect
                 g.drawImage(hitKeyFlashes.get(i).getImage(), imageXPos, (int) (registrarMx.getY() - 150), null);
             }
             g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1)); // make sure to reset opacity
@@ -273,7 +277,6 @@ public class PlayScene extends Scene {
                 if((note.getMaxY() - Configuration.getDefaultNoteHeight()) >= extendedRegistrar.getMinY() && !note.isHeld() && !note.isMissed() ) {
                     missed = true;
                     note.setMissed();
-                    note.setColor(Colours.DARK_GREY_50);
                 }
 
                 if(missed) {
@@ -349,7 +352,7 @@ public class PlayScene extends Scene {
             keys[e.getKeyCode()] = false;
 
             // process the release of single_long
-            notes.stream().filter(note -> note.getNoteType().equals("single_long") && note.getKey() == e.getKeyCode()).forEach(note -> {
+            notes.stream().filter(note -> note.getKey() == e.getKeyCode() && note.getNoteType().equals("single_long")).forEach(note -> {
                 // create a rectangle which represents the tail of a single_long.
                 Rectangle tail = new Rectangle(note.x, note.y, note.width, Configuration.getDefaultNoteHeight());
 
