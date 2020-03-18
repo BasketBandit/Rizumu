@@ -35,9 +35,9 @@ repositories {
 
 ext {
     slf4jSimple                  = '2.0.0-alpha1'
-    jacksonAnnotations           = '2.10.2'
-    jacksonDatabind              = '2.10.2'
-    jacksonDataFormatYAML        = '2.10.2'
+    jacksonAnnotations           = '2.10.3'
+    jacksonDatabind              = '2.10.3'
+    jacksonDataFormatYAML        = '2.10.3'
     hikaricp                     = '3.4.1'
     commonsIO                    = '2.6'
     mysqlConnectorJava           = '8.0.18'
