@@ -13,6 +13,10 @@ Key:
 - *Beatmap*: An object which defines where each note is placed in both time and position *(which key corresponds to which note)* 
 - *Note*: The representation of a hittable object within a beatmap.
 
+## Controls
+* In its current state, the key binds for Rizumu are hard-coded, but I hope to change this in the future.
+* There are a number of different track modes in Rizumu, from 4 keys to 7 key songs, and the notes are bound to these keys in order from left to right: `Q`, `W`, `E`, `R`, `T`, `Y`.
+
 ~ Album of below screenshots - https://imgur.com/a/YPqSpOP
 
 ## Splash Scene
