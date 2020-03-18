@@ -148,6 +148,7 @@ public class ResultsMenu extends Scene {
         public void mousePressed(MouseEvent e) {
             if(e.getButton() == MouseEvent.BUTTON1) {
                 if(buttons.get("track_select").isHovered()) {
+                    effectPlayer.play("menu-click");
                     Engine.setPrimaryScene(Engine.getStaticScene(Scenes.SELECT).init());
                     Engine.setSecondaryScene(null);
                 }
