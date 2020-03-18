@@ -58,9 +58,9 @@ public class PauseMenu extends Scene {
             // draw all the buttons
             buttons.forEach((key, button) -> {
                 g.setColor(Colours.BLACK);
-                g.draw(button);
-                g.setColor(Colours.DARK_GREY);
                 g.fill(button);
+                g.setColor(Colours.DARK_GREY);
+                g.fillRect(button.x+1, button.y+1, button.width-2, button.height-2);
                 g.setColor(Colours.WHITE);
                 centerBoth = Alignment.centerBoth(button.getButtonText(), metrics16, button);
                 g.drawString(button.getButtonText(), centerBoth[0], centerBoth[1]);

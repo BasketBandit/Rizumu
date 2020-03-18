@@ -31,10 +31,9 @@ public class LoginMenu extends Scene {
         mouseAdapter = new LoginMenuMouseAdapter();
         keyAdapter = new LoginMenuKeyAdapter();
 
-        textInputs.put("username", new TextInput((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) - 25, 400, 75, 10));
-        textInputs.put("password", new TextInput((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 75, 10));
-
-        buttons.put("loginButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 145, 400, 75));
+        textInputs.put("username", new TextInput((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3), 400, 50, 5));
+        textInputs.put("password", new TextInput((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 60, 400, 50, 5));
+        buttons.put("loginButton", new Button((Configuration.getWidth()/2) - 200, (Configuration.getHeight()/3) + 120, 400, 50));
     }
 
     @Override

@@ -32,7 +32,7 @@ public class SettingsMenu extends Scene {
         keyAdapter = new SettingsMenuKeyAdapter();
 
         buttons.put("frameRateButton", new Button((Configuration.getWidth()/2) - 250, (Configuration.getHeight()/3) + 90, 500, 50).setButtonText("Unlocked Framerate"));
-        buttons.put("fullScreenButton", new Button((Configuration.getWidth()/2) - 250, (Configuration.getHeight()/3) + 170, 500, 50).setButtonText("FullScreen"));
+        buttons.put("fullScreenButton", new Button((Configuration.getWidth()/2) - 250, (Configuration.getHeight()/3) + 170, 500, 50).setButtonText("Fullscreen"));
         buttons.put("cancelButton", new Button((Configuration.getWidth()/2) - 250, (Configuration.getHeight()/3) + 250, 245, 50).setButtonText("Cancel"));
         buttons.put("saveButton", new Button((Configuration.getWidth()/2) + 5, (Configuration.getHeight()/3) + 250, 245, 50).setButtonText("Save"));
 
