@@ -326,7 +326,7 @@ public class PlayScene extends Scene {
                         accuracyLabel.setState("MX", Colours.GOLD);
                     } else if(registrarEx.intersects(head)) {
                         score.incrementExHit();
-                        accuracyLabel.setState("EX", Color.GREEN);
+                        accuracyLabel.setState("EX", Colours.GREEN);
                     } else {
                         score.incrementNmHit();
                         accuracyLabel.setState("NM", Colours.BLUE);
@@ -365,7 +365,7 @@ public class PlayScene extends Scene {
                             accuracyLabel.setState("MX", Colours.GOLD);
                         } else if(registrarEx.intersects(tail)) {
                             score.incrementExHit();
-                            accuracyLabel.setState("EX", Color.GREEN);
+                            accuracyLabel.setState("EX", Colours.GREEN);
                         } else {
                             score.incrementNmHit();
                             accuracyLabel.setState("NM", Colours.BLUE);

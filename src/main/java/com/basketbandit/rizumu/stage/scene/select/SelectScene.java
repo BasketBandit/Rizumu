@@ -26,8 +26,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SelectScene extends Scene {
@@ -141,7 +143,7 @@ public class SelectScene extends Scene {
                         g.drawString(score.getUsername(), Configuration.getWidth() - 390, 117 + 76 * i);
                         g.drawString(score.getAccuracy() + "%, MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 165 + 76 * i);
                         g.setFont(Fonts.default24);
-                        g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 145 + 76 * i);
+                        g.drawString(NumberFormat.getNumberInstance(Locale.UK).format(score.getScore()) + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 145 + 76 * i);
                         i++;
                     }
 
