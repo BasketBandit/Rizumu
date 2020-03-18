@@ -15,10 +15,6 @@ public class AudioPlayerController {
         audioPlayers.put(name, audioPlayer);
     }
 
-    public void removeAudioPlayer(String player) {
-        audioPlayers.remove(player);
-    }
-
     public static AudioPlayer getAudioPlayer(String player) {
         return audioPlayers.get(player);
     }

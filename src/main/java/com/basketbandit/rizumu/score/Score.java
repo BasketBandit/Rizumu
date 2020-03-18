@@ -120,6 +120,10 @@ public class Score {
         return highestCombo;
     }
 
+    /**
+     * Provides a accuracy percentage (double) between 0.00 and 100.00
+     * @return double between 0.00 - 100.00
+     */
     public double getAccuracy() {
         if(getHitNotes() == 0 && missedNotes == 0) {
             return 100; // prevent NumberFormatException
@@ -127,6 +131,10 @@ public class Score {
         return BigDecimal.valueOf((double) getHitNotes() / ((double) getHitNotes() + (double) missedNotes) * 100).setScale(2, RoundingMode.DOWN).doubleValue();
     }
 
+    /**
+     * Provides a formatted {@link String} of the players accuracy as a percentage, as well as how many notes were hit in total
+     * @return {@link String}
+     */
     public String getAccuracyString() {
         return getAccuracy() + "% (" + getHitNotes() + "/" + (getHitNotes()+missedNotes) + ")";
     }

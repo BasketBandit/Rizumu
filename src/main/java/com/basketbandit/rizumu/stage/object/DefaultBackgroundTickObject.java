@@ -15,6 +15,7 @@ public class DefaultBackgroundTickObject implements TickObject {
             Engine.getFrame().setCursor(Cursors.DEFAULT_CURSOR);
         }
 
+        // if the player is hovering over a button, change the cursor to a hand
         for(Button button: (Engine.getSecondaryScene() == null) ? Engine.getPrimaryScene().getButtons().values() : Engine.getSecondaryScene().getButtons().values()) {
             if(button.isHovered()) {
                 Engine.getFrame().setCursor(Cursors.HAND_CURSOR);

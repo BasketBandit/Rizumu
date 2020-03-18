@@ -36,6 +36,11 @@ public class Image {
         return images.get(identifier);
     }
 
+    /**
+     * Provides a {@link BufferedImage} that is compatible with the {@link GraphicsEnvironment}
+     * @param image resource to convert
+     * @return {@link BufferedImage} compatible with the current {@link GraphicsEnvironment}
+     */
     public static BufferedImage toCompatibleImage(BufferedImage image) {
         GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 

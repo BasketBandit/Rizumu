@@ -101,6 +101,7 @@ public class SelectScene extends Scene {
                 g.drawImage(noSong, AffineTransform.getTranslateInstance(Configuration.getWidth()/2.0 - noSong.getWidth()/2.0, (Configuration.getHeight()/2.0) - (noSong.getHeight()/2.0)), null);
             }
 
+            // button that opens track directory on player system
             int[] center = Alignment.centerBoth(buttons.get("directoryButton").getButtonText(), g.getFontMetrics(Fonts.default12), buttons.get("directoryButton"));
             g.setColor(buttons.get("directoryButton").getColor());
             g.fill(buttons.get("directoryButton"));
@@ -136,6 +137,7 @@ public class SelectScene extends Scene {
                 if(selectedLeaderboard != null) {
                     int i = 0;
                     for(Score score: selectedLeaderboard) {
+                        // if the database thread has scores
                         g.setColor(i == 0 ? Colours.GOLD_75 : i == 1 ? Colours.SILVER_75 : i == 2 ? Colours.BRONZE_75 : Colours.DARK_GREY_75);
                         g.fillRect(Configuration.getWidth() - 400, 100 + 76 * i, 400, 75);
                         g.setColor(Colours.WHITE);
@@ -148,6 +150,7 @@ public class SelectScene extends Scene {
                     }
 
                     if(i == 0) {
+                        // if the database thread returns an empty list
                         g.setColor(Colours.DARK_GREY_75);
                         g.fillRect(Configuration.getWidth() - 400, 100, 400, 40);
                         g.setColor(Colours.WHITE);
@@ -155,6 +158,7 @@ public class SelectScene extends Scene {
                         g.drawString("none :(", Configuration.getWidth() - 390, 127);
                     }
                 } else {
+                    // placeholder text for when the database thread is still loading
                     g.setColor(Colours.DARK_GREY_75);
                     g.fillRect(Configuration.getWidth() - 400, 100, 400, 40);
                     g.setColor(Colours.WHITE);
@@ -186,6 +190,7 @@ public class SelectScene extends Scene {
                     return;
                 }
 
+                // if one of the track buttons is clicked, if it is selected, play that track, if not, select it
                 for(TrackButton t : trackButtons.values()) {
                     if(t.isHovered()) {
                         if(selectedButton.getId() == t.getId()) {

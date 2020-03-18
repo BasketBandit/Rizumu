@@ -52,6 +52,7 @@ public class Configuration {
             }
         }
 
+        // reads configuration data from generated config file
         try(BufferedReader reader = new BufferedReader(new FileReader(new File(userDirectory + File.separator + "rizumu.ini")))) {
             List<String> vals = reader.lines().map(s -> {s = s.substring(s.indexOf("=") + 1).strip(); return s;}).collect(Collectors.toList());
             width = Integer.parseInt(vals.get(0));

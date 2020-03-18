@@ -32,6 +32,11 @@ public final class AudioPlayer {
         log.info("Track changed: " + media.getSource() + ", volume: " + volume);
     }
 
+    /**
+     * Provides a method to stop, load and restart a track (with optional looping) all at once
+     * @param path location of the track
+     * @param loop boolean if the track is to loop
+     */
     public void hotLoad(String path, boolean loop) {
         stop();
         load(path);
