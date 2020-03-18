@@ -124,7 +124,7 @@ public class Score {
         if(getHitNotes() == 0 && missedNotes == 0) {
             return 100; // prevent NumberFormatException
         }
-        return new BigDecimal((double)getHitNotes()/((double)getHitNotes()+(double)missedNotes)*100).setScale(2, RoundingMode.DOWN).doubleValue();
+        return BigDecimal.valueOf((double) getHitNotes() / ((double) getHitNotes() + (double) missedNotes) * 100).setScale(2, RoundingMode.DOWN).doubleValue();
     }
 
     public String getAccuracyString() {
