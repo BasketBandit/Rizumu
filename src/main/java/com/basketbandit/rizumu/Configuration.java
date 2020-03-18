@@ -3,6 +3,7 @@ package com.basketbandit.rizumu;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -43,6 +44,12 @@ public class Configuration {
             }
 
             writeConfigurationFile();
+
+            try {
+                Desktop.getDesktop().open(new File(Configuration.getTracksPath())); // open folder if it has been created, so the player knows where it is without having to search
+            } catch(IOException ex) {
+                log.error("An error occurred while reading configuration file, message: {}", ex.getMessage(), ex);
+            }
         }
 
         try(BufferedReader reader = new BufferedReader(new FileReader(new File(userDirectory + File.separator + "rizumu.ini")))) {
