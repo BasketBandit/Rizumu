@@ -31,8 +31,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayScene extends Scene {
@@ -196,7 +198,7 @@ public class PlayScene extends Scene {
 
             g.setColor(Colours.WHITE);
             g.setFont(Fonts.default12);
-            g.drawString(score.getScore() + " (x" + score.getMultiplier() + ")", 10, 20);
+            g.drawString(NumberFormat.getNumberInstance(Locale.UK).format(score.getScore()) + " (x" + score.getMultiplier() + ")", 10, 20);
             g.drawString("%: " + BigDecimal.valueOf(score.getAccuracy()).setScale(2, RoundingMode.DOWN).doubleValue(), 10, 40); // score
 
             g.setFont(Fonts.default16);
