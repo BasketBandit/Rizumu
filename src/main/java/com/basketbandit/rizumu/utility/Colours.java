@@ -20,7 +20,8 @@ public class Colours {
     public static final Color MEDIUM_GREY_25 = new Color(125, 125, 125, 64);
     public static final Color MEDIUM_GREY_10 = new Color(125, 125, 125, 25);
 
-    public static final Color CRIMSON = new Color(220, 20, 60, 255);
+    public static final Color CRIMSON = new Color(220, 20, 60);
+    public static final Color CRIMSON_75 = new Color(220, 20, 60, 192);
 
     public static final Color BLUE = new Color(50, 150, 220, 255);
     public static final Color BLUE_75 = new Color(50, 150, 220, 192);
@@ -34,4 +35,7 @@ public class Colours {
     public static final Color SILVER_75 = new Color(192,192,192, 192);
 
     public static final Color BRONZE_75 = new Color(205, 127, 50, 192);
+
+    public static final Color GREEN = new Color(0, 127, 50);
+    public static final Color GREEN_75 = new Color(0, 127, 50, 192);
 }

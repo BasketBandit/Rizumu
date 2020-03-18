@@ -84,9 +84,9 @@ public class SettingsMenu extends Scene {
             });
 
             // colour coordinate appropriate buttons
-            g.setColor(Configuration.isFramerateUnlocked() ? Color.GREEN : Colours.CRIMSON);
+            g.setColor(Configuration.isFramerateUnlocked() ? Colours.GREEN : Colours.CRIMSON);
             g.fill(buttons.get("frameRateButton"));
-            g.setColor(Configuration.isFullscreen() ? Color.GREEN : Colours.CRIMSON);
+            g.setColor(Configuration.isFullscreen() ? Colours.GREEN : Colours.CRIMSON);
             g.fill(buttons.get("fullScreenButton"));
 
             // draw text for all buttons
