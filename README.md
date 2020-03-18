@@ -15,7 +15,7 @@ Key:
 
 ## Controls
 * In its current state, the key binds for Rizumu are hard-coded, but I hope to change this in the future.
-* There are a number of different track modes in Rizumu, from 4 keys to 7 key songs, and the notes are bound to these keys in order from left to right: `Q`, `W`, `E`, `R`, `T`, `Y`.
+* There are a number of different track modes in Rizumu, from 4 keys to 7 key songs, and the notes are bound to these keys in order from left to right: `Q`, `W`, `E`, `R`, `T`, `Y`, `U`.
 
 ~ Album of below screenshots - https://imgur.com/a/YPqSpOP
 
