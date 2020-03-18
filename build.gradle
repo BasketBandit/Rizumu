@@ -4,9 +4,10 @@ plugins {
 }
 
 group 'basketbandit'
-version '0.1.0'
+project.version '0.1.0'
 mainClassName = 'com.basketbandit.rizumu.Launch'
 sourceCompatibility = 1.11
+targetCompatibility = 1.14
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -19,7 +20,9 @@ javafx {
 
 jar {
     manifest {
-        attributes 'Main-Class': mainClassName
+        attributes(
+                'Main-Class': mainClassName
+        )
     }
     from {
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }

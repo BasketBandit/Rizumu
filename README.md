@@ -1,15 +1,15 @@
 # Rizumu
 
-This repo is the official repo for the Rizumu game project, programmed in [Java](https://go.java/), using [Gradle](https://gradle.org/) for dependencies!
+The official repo for the Rizumu game project, programmed in [Java](https://go.java/), using [Gradle](https://gradle.org/) for dependencies!
 
 ## Current State
-* Requires Java 11+ to run. (built in j13, but has j11 source compatibility if gradle did its thing!)
+* Requires Java 11+ to run. (built in J14 [18/03/2020], but has J11 source compatibility if gradle did its thing!)
 * It is possible to create a functioning jar file from the repo and run it from the command line, e.g. `java -jar Rizumu.jar`
 * Program folder is created on startup, located `/user/Documents/Rizumu` which contains a generated configuration file and tracks folder.
 
 Key: 
 - *Scene*: The abstraction of a component, e.g. SelectScene, PlayScene, SplashScene. (Commonly referred to as `Screen`)
-- *Track*: An object that represents a playable song, containing a number of beatmaps and data about the tracks audio file, background image, etc.
+- *Track*: An object that represents a playable song, containing a number of beatmaps and data about the track's audio file, background image, etc.
 - *Beatmap*: An object which defines where each note is placed in both time and position *(which key corresponds to which note)* 
 - *Note*: The representation of a hittable object within a beatmap.
 
