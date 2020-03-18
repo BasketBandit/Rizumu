@@ -134,7 +134,7 @@ public class LoginMenu extends Scene {
 
             // only modify text input if it is focused
             textInputs.forEach((key, value) -> {
-                if(selected.equals(value)) {
+                if(selected != null && selected.equals(value)) {
                     if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                         effectPlayer.play("key-click");
                         value.deleteChar();
