@@ -28,5 +28,10 @@ public class Colours {
     public static final Color BLUE_25 = new Color(50, 150, 220, 64);
 
     public static final Color GOLD = new Color(255, 215, 0);
+    public static final Color GOLD_75 = new Color(255, 215, 0, 192);
     public static final Color GOLD_25 = new Color(255, 215, 0, 64);
+
+    public static final Color SILVER_75 = new Color(192,192,192, 192);
+
+    public static final Color BRONZE_75 = new Color(205, 127, 50, 192);
 }

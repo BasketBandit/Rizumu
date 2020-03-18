@@ -126,37 +126,38 @@ public class SelectScene extends Scene {
             // leaderboards
             if(selectedButton != null) {
                 g.setColor(Colours.DARK_GREY_75);
-                g.fillRect(Configuration.getWidth() - 400, 45, 400, 25);
+                g.fillRect(Configuration.getWidth() - 400, 45, 400, 50);
+                g.setFont(Fonts.default24);
                 g.setColor(Colours.WHITE);
-                g.drawString("HIGHSCORES", Configuration.getWidth() - 390, 62);
+                g.drawString("Leaderboard", Configuration.getWidth() - 390, 80);
 
                 if(selectedLeaderboard != null) {
                     int i = 0;
-                    for(Score score : selectedLeaderboard) {
-                        g.setColor(Colours.DARK_GREY_75);
-                        g.fillRect(Configuration.getWidth() - 400, 75 + 76 * i, 400, 75);
+                    for(Score score: selectedLeaderboard) {
+                        g.setColor(i == 0 ? Colours.GOLD_75 : i == 1 ? Colours.SILVER_75 : i == 2 ? Colours.BRONZE_75 : Colours.DARK_GREY_75);
+                        g.fillRect(Configuration.getWidth() - 400, 100 + 76 * i, 400, 75);
                         g.setColor(Colours.WHITE);
                         g.setFont(Fonts.default12);
-                        g.drawString(score.getUsername(), Configuration.getWidth() - 390, 92 + 76 * i);
-                        g.drawString(score.getAccuracyString() + ", MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 140 + 76 * i);
+                        g.drawString(score.getUsername(), Configuration.getWidth() - 390, 117 + 76 * i);
+                        g.drawString(score.getAccuracy() + "%, MX: " + score.getMxHit() + ", EX: " + score.getExHit() + ", NM: " + score.getNmHit() + ", X: " + score.getMissedNotes(), Configuration.getWidth() - 390, 165 + 76 * i);
                         g.setFont(Fonts.default24);
-                        g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 120 + 76 * i);
+                        g.drawString(score.getScore() + " (" + score.getHighestCombo() + "x)", Configuration.getWidth() - 390, 145 + 76 * i);
                         i++;
                     }
 
                     if(i == 0) {
                         g.setColor(Colours.DARK_GREY_75);
-                        g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
+                        g.fillRect(Configuration.getWidth() - 400, 100, 400, 40);
                         g.setColor(Colours.WHITE);
                         g.setFont(Fonts.default24);
-                        g.drawString("none :(", Configuration.getWidth() - 390, 102);
+                        g.drawString("none :(", Configuration.getWidth() - 390, 127);
                     }
                 } else {
                     g.setColor(Colours.DARK_GREY_75);
-                    g.fillRect(Configuration.getWidth() - 400, 75, 400, 40);
+                    g.fillRect(Configuration.getWidth() - 400, 100, 400, 40);
                     g.setColor(Colours.WHITE);
                     g.setFont(Fonts.default24);
-                    g.drawString("Loading...", Configuration.getWidth() - 390, 102);
+                    g.drawString("Loading...", Configuration.getWidth() - 390, 127);
                 }
             }
         }
