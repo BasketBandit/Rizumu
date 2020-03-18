@@ -44,10 +44,6 @@ public class Engine extends Thread {
         // start parsing tracks as early a possible
         new Thread(() -> trackParser = new TrackParser(Configuration.getTracksPath()), "TrackParser").start();
 
-        // initialises renderer/ticker
-        renderer = new Renderer();
-        ticker = new Ticker();
-
         // initialise database connection
         try {
             new Connection();
@@ -63,6 +59,10 @@ public class Engine extends Thread {
 
         // initialises Image
         new Image();
+
+        // initialises renderer/ticker
+        renderer = new Renderer();
+        ticker = new Ticker();
 
         staticScenes.put(Scenes.SPLASH, new SplashScene());
         staticScenes.put(Scenes.SELECT, new SelectScene());

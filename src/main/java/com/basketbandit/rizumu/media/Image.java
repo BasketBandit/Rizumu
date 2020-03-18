@@ -14,6 +14,7 @@ public class Image {
 
     public Image() {
         try {
+            images.put("icon", ImageIO.read(getClass().getResourceAsStream("/assets/image/icon.png")));
             images.put("no-song", ImageIO.read(getClass().getResourceAsStream("/assets/image/no-song.png")));
             images.put("logo", ImageIO.read(getClass().getResourceAsStream("/assets/image/logo.png")));
             images.put("note", ImageIO.read(getClass().getResourceAsStream("/assets/image/note.png")));

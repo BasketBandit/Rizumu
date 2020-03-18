@@ -2,6 +2,7 @@ package com.basketbandit.rizumu.engine;
 
 import com.basketbandit.rizumu.Configuration;
 import com.basketbandit.rizumu.input.MouseMovementAdapter;
+import com.basketbandit.rizumu.media.Image;
 import com.basketbandit.rizumu.stage.object.DefaultBackgroundRenderObject;
 import com.basketbandit.rizumu.stage.object.DefaultSystemRenderObject;
 import com.basketbandit.rizumu.stage.object.RenderObject;
@@ -28,6 +29,7 @@ public class Renderer extends Canvas {
     private void initFrame() {
         frame = new JFrame("Rizumu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setIconImage(Image.getBufferedImage("icon"));
         frame.getContentPane().setPreferredSize(new Dimension(Configuration.getWidth(), Configuration.getHeight()));
         frame.setSize(Configuration.getWidth(), Configuration.getHeight());
         frame.setResizable(false);
