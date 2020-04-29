@@ -6,7 +6,7 @@ plugins {
 group 'basketbandit'
 project.version '0.1.0'
 mainClassName = 'com.basketbandit.rizumu.Launch'
-sourceCompatibility = 1.11
+sourceCompatibility = 1.14
 targetCompatibility = 1.14
 
 tasks.withType(JavaCompile) {
